@@ -1,0 +1,125 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #e4dfd2;
+  --color-paper: #f6f4ef;
+  --color-ink: #1c1b19;
+  --color-body: #57534a;
+  --color-muted: #6e695e;
+  --color-nav: #4a463e;
+  --color-faint: #a39c8d;
+
+  --color-green: #4e7d2e;
+  --color-green-dark: #3d6325;
+  --color-green-deep: #40503a;
+
+  --color-rust: #c0552f;
+  --color-lime: #d9f25c;
+  --color-lime-bright: #c6f000;
+
+  --color-border: #ebe7dd;
+  --color-border-soft: #e6e1d5;
+  --color-border-line: #e2dccd;
+  --color-surface: #f1ede1;
+
+  --color-green-bg: #eaf1db;
+  --color-green-border: #d6e3bc;
+
+  --color-dark-card: #262523;
+  --color-dark-border: #363430;
+  --color-dark-text: #cfcabe;
+  --color-dark-text-soft: #bdb8ac;
+  --color-dark-text-softer: #dcd7cc;
+
+  --font-display: var(--font-bricolage), sans-serif;
+  --font-body: var(--font-archivo), sans-serif;
+  --font-sticker: var(--font-bangers), cursive;
+  --font-mono: "Courier New", monospace;
+
+  --animate-marquee: kw-marquee 44s linear infinite;
+  --animate-bob-a: kw-bob 4.2s ease-in-out infinite;
+  --animate-bob-b: kw-bob 5s ease-in-out infinite;
+  --animate-spin-slow: kw-spin 11s linear infinite;
+  --animate-spin-slow-reverse: kw-spin 8s linear infinite reverse;
+}
+
+@keyframes kw-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes kw-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--r, 0deg));
+  }
+  50% {
+    transform: translateY(-10px) rotate(var(--r, 0deg));
+  }
+}
+
+@keyframes kw-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 88px;
+  }
+
+  body {
+    background: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+  }
+
+  a {
+    color: var(--color-ink);
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  a:hover {
+    color: var(--color-green);
+  }
+
+  ::selection {
+    background: var(--color-lime-bright);
+    color: var(--color-ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
