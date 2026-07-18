@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Container from "@/components/Container";
-import { legalDocs, type LegalDoc } from "@/lib/legal-data";
+import { type LegalDoc } from "@/lib/legal-data";
 import LegalBlocks from "./LegalBlocks";
 
 function pad(n: number) {
@@ -101,23 +100,6 @@ export default function LegalLayout({ doc }: { doc: LegalDoc }) {
               <p className="m-0 max-w-[640px] font-body text-lg font-medium leading-[1.6] text-dark-text">
                 {doc.intro}
               </p>
-            </div>
-
-            {/* doc switcher */}
-            <div className="mt-7 flex flex-wrap gap-2.5">
-              {legalDocs.map((d) => (
-                <Link
-                  key={d.key}
-                  href={`/legal/${d.key}`}
-                  className={`rounded-xl px-5 py-[11px] font-display text-[15px] font-bold tracking-[-0.01em] transition-all duration-150 ${
-                    d.key === doc.key
-                      ? "border-2 border-lime-bright bg-lime-bright text-ink"
-                      : "border-2 border-white/[0.22] bg-transparent text-dark-text hover:border-white/40"
-                  }`}
-                >
-                  {d.label}
-                </Link>
-              ))}
             </div>
           </Container>
         </header>
