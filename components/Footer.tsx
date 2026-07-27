@@ -29,9 +29,9 @@ export default function Footer() {
               </div>
               <div className="flex flex-col gap-2 font-medium text-body">
                 {footerOffer.map((item) => (
-                  <a key={item} href="#full-funnel" className="hover:text-green">
-                    {item}
-                  </a>
+                  <Link key={item.label} href={item.href} className="hover:text-green">
+                    {item.label}
+                  </Link>
                 ))}
               </div>
             </div>

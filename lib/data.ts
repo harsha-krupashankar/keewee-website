@@ -175,17 +175,61 @@ export const faqs = [
 ];
 
 export const footerOffer = [
-  "Awareness & Brand",
-  "Demand Generation",
-  "Conversion",
-  "Retention & Expansion",
-  "Analytics & Operations",
+  { label: "Awareness & Brand", href: "/b2b-saas-awareness-brand-agency" },
+  { label: "Demand Generation", href: "/b2b-saas-demand-generation-agency" },
+  { label: "Conversion", href: "/b2b-saas-conversion-agency" },
+  { label: "Retention & Expansion", href: "/b2b-saas-retention-expansion-agency" },
+  { label: "Analytics & Operations", href: "/b2b-saas-marketing-analytics-ops-agency" },
 ];
 
 export const footerCompany = [
-  { label: "About", href: "/#about" },
-  { label: "FAQs", href: "/#faq" },
-  { label: "Free Audit", href: "/#free-audit" },
+  { label: "About", href: "/about" },
+  { label: "Blog", href: "/blog" },
+  { label: "FAQs", href: "/faq" },
+  { label: "Free Audit", href: "/free-audit" },
   { label: "Privacy Policy", href: "/legal/privacy" },
   { label: "Terms of Service", href: "/legal/terms" },
+];
+
+export const aboutStory = [
+  "It started as a normal call. Life updates, a relationship update or two, some ranting about work. The usual.",
+  "Somewhere in that conversation, the ranting turned into something more specific: all three of us, in different jobs, had run into the same wall. Good execution, wherever we looked. Almost no one willing to take a real position. Marketing that played it so safe it stopped saying anything at all.",
+  "One of us said we should build the agency we kept wishing existed. Between the three of us, we had the exact skill set for it: content and positioning, demand gen and paid, and the tech to actually ship it fast. So we said it out loud, agreed on it properly, and started pitching names before the call ended.",
+  "Keewee came up. We liked it more than we could explain, checked if the domain was free, and bought it before the excitement had a chance to wear off. That part might have been a little impulsive. The decision to start the agency wasn't.",
+];
+
+export type AboutTeamMember = {
+  initials: string;
+  name: string;
+  role: string;
+  bio: string;
+  factLabel: string;
+  fact: string;
+};
+
+export const aboutTeam: AboutTeamMember[] = [
+  {
+    initials: "KP",
+    name: "Kanan Parmar",
+    role: "CEO",
+    bio: "Five-plus years in content marketing and SEO, spent figuring out how brands get found by people who weren't looking for them yet. Owns positioning, messaging, content, and SEO — everything under “why should anyone care about this company.”",
+    factLabel: "Maybe a fun fact",
+    fact: "Insists she's the funniest person in this trio. The other two have not confirmed this.",
+  },
+  {
+    initials: "NG",
+    name: "Neha Gaud",
+    role: "CMO",
+    bio: "Five-plus years running digital, paid, and email marketing for companies that needed pipeline, not vibes. Owns paid ads, email marketing, demand gen, and conversion — the parts of the funnel where the work has to actually convert.",
+    factLabel: "Not a fun fact",
+    fact: "Openly admits she's the least funny of the three. Says it so deadpan it somehow becomes the funniest thing said all week.",
+  },
+  {
+    initials: "HK",
+    name: "Harsha Krupashankar",
+    role: "CTO",
+    bio: "Five-plus years in tech, building the websites, tools, and systems that make everything else at Keewee actually ship. Owns the tech stack, automation, and product — if it needs to be built or wired together, it runs through him.",
+    factLabel: "Definitely a fun fact",
+    fact: "Probably the funniest of the three. Refuses to take credit for it, so we're taking it on his behalf.",
+  },
 ];

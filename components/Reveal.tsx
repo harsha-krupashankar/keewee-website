@@ -7,6 +7,7 @@ type RevealProps = {
   className?: string;
   delay?: number;
   y?: number;
+  id?: string;
 };
 
 export default function Reveal({
@@ -14,6 +15,7 @@ export default function Reveal({
   className = "",
   delay = 0,
   y = 22,
+  id,
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -38,6 +40,7 @@ export default function Reveal({
   return (
     <div
       ref={ref}
+      id={id}
       className={`transition duration-700 ease-out ${className}`}
       style={{
         opacity: visible ? 1 : 0,

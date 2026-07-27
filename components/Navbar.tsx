@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Button from "./Button";
 import Container from "./Container";
@@ -8,11 +9,23 @@ import Container from "./Container";
 const links = [
   { href: "#work", label: "Work" },
   { href: "#services", label: "Services" },
-  { href: "#about", label: "About" },
+  { href: "/blog", label: "Blog" },
+  { href: "/about", label: "About" },
 ];
 
-export default function Navbar() {
+type NavbarProps = {
+  minimal?: boolean;
+  ctaLabel?: string;
+  ctaHref?: string;
+};
+
+export default function Navbar({
+  minimal = false,
+  ctaLabel = "Talk to us",
+  ctaHref = "mailto:team@keewee.in",
+}: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -40,20 +53,31 @@ export default function Navbar() {
         >
           <span className="text-green">✱</span> keewee.in
         </Link>
-        <nav className="hidden gap-8 font-body text-sm font-semibold text-nav sm:flex">
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="group relative py-1 hover:text-green"
-            >
-              {link.label}
-              <span className="absolute inset-x-0 -bottom-0.5 h-[2px] origin-left scale-x-0 bg-green transition-transform duration-200 ease-out group-hover:scale-x-100" />
-            </a>
-          ))}
-        </nav>
-        <Button href="mailto:team@keewee.in" className="px-5 py-2.5 text-sm">
-          Talk to us
+        {!minimal && (
+          <nav className="hidden gap-8 font-body text-sm font-semibold text-nav sm:flex">
+            {links.map((link) => {
+              const isActive = link.href === pathname;
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className={`group relative py-1 hover:text-green ${
+                    isActive ? "text-green" : ""
+                  }`}
+                >
+                  {link.label}
+                  <span
+                    className={`absolute inset-x-0 -bottom-0.5 h-[2px] origin-left bg-green transition-transform duration-200 ease-out group-hover:scale-x-100 ${
+                      isActive ? "scale-x-100" : "scale-x-0"
+                    }`}
+                  />
+                </a>
+              );
+            })}
+          </nav>
+        )}
+        <Button href={ctaHref} className="px-5 py-2.5 text-sm">
+          {ctaLabel}
         </Button>
       </Container>
     </header>
