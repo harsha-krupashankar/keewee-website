@@ -3,8 +3,11 @@
 import { useState } from "react";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
+import Copy from "@/components/sanity/Copy";
+import Headline from "@/components/sanity/Headline";
+import type { NewsletterPage } from "@/sanity/lib/types";
 
-export default function NewsletterHero() {
+export default function NewsletterHero({ page }: { page: NewsletterPage }) {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
@@ -35,35 +38,36 @@ export default function NewsletterHero() {
           strokeWidth="3"
           strokeLinecap="round"
         />
-        <path d="M56 154h128M56 166h128M56 178h90" stroke="#E1DACB" strokeWidth="3" strokeLinecap="round" />
+        <path
+          d="M56 154h128M56 166h128M56 178h90"
+          stroke="#E1DACB"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
       </svg>
       <Container className="relative z-[2]">
         <div className="grid items-start gap-10 lg:grid-cols-[1.15fr_0.85fr]">
           <div>
-            <Reveal className="mb-5.5 inline-flex items-center gap-2.5 rounded-full border border-border bg-white px-4 py-1.5 shadow-[0_6px_18px_rgba(28,27,25,0.05)]">
-              <span className="h-2 w-2 rounded-full bg-green" />
-              <span className="font-display text-xs font-bold uppercase tracking-[0.1em] text-green">
-                Newsletter
-              </span>
-            </Reveal>
+            {page.hero?.badge && (
+              <Reveal className="mb-5.5 inline-flex items-center gap-2.5 rounded-full border border-border bg-white px-4 py-1.5 shadow-[0_6px_18px_rgba(28,27,25,0.05)]">
+                <span className="h-2 w-2 rounded-full bg-green" />
+                <span className="font-display text-xs font-bold uppercase tracking-[0.1em] text-green">
+                  {page.hero.badge}
+                </span>
+              </Reveal>
+            )}
 
             <Reveal delay={80} y={18}>
               <h1 className="mb-5.5 max-w-[640px] font-display text-[34px] font-extrabold leading-[1.05] tracking-[-0.03em] text-ink text-pretty sm:text-[46px] lg:text-[52px]">
-                Subscribe to Keewee Club, marketing tips for B2B SaaS, every{" "}
-                <span className="relative inline-block">
-                  <span className="absolute -bottom-1.5 left-[-6px] right-[-8px] h-[34%] -rotate-1 rounded-sm bg-lime" />
-                  <span className="relative">Thursday</span>
-                </span>
-                .
+                <Headline value={page.hero?.headline} />
               </h1>
             </Reveal>
 
             <Reveal delay={160} y={18}>
-              <p className="max-w-[520px] font-body text-lg font-medium leading-relaxed text-body">
-                One tactic we used this quarter, what&apos;s happening in B2B
-                SaaS this week, and one thing worth stealing before your
-                competitors find it. Five minutes, once a week.
-              </p>
+              <Copy
+                value={page.hero?.intro}
+                className="max-w-[520px] font-body text-lg font-medium leading-relaxed text-body"
+              />
             </Reveal>
           </div>
 
@@ -75,10 +79,10 @@ export default function NewsletterHero() {
             {subscribed ? (
               <div className="flex flex-col items-start gap-1.5">
                 <span className="font-sticker text-2xl text-green">
-                  You&apos;re in!
+                  {page.formSuccessSticker}
                 </span>
                 <p className="font-body text-[15px] font-medium leading-relaxed text-body">
-                  First issue lands this Thursday. Check your inbox.
+                  {page.formSuccessText}
                 </p>
               </div>
             ) : (
@@ -89,10 +93,14 @@ export default function NewsletterHero() {
                   if (email) setSubscribed(true);
                 }}
               >
-                <label className="font-display text-[15px] font-extrabold tracking-[-0.01em] text-ink">
-                  Get the next issue
+                <label
+                  htmlFor="newsletter-email"
+                  className="font-display text-[15px] font-extrabold tracking-[-0.01em] text-ink"
+                >
+                  {page.formTitle}
                 </label>
                 <input
+                  id="newsletter-email"
                   type="email"
                   required
                   value={email}
@@ -104,11 +112,13 @@ export default function NewsletterHero() {
                   type="submit"
                   className="rounded-xl bg-green px-5.5 py-3.5 font-display text-base font-bold text-white shadow-[3px_3px_0_#1C1B19] transition-all duration-150 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0_#1C1B19] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-[3px]"
                 >
-                  Subscribe now
+                  {page.formButtonLabel}
                 </button>
-                <p className="mt-0.5 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-faint">
-                  Free. One email a week. Leave whenever you want.
-                </p>
+                {page.formDisclaimer && (
+                  <p className="mt-0.5 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-faint">
+                    {page.formDisclaimer}
+                  </p>
+                )}
               </form>
             )}
           </Reveal>

@@ -1,8 +1,10 @@
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
-import type { ServiceDoc } from "@/lib/service-data";
+import type { ServicePage } from "@/sanity/lib/types";
 
-export default function ServiceDifferently({ doc }: { doc: ServiceDoc }) {
+export default function ServiceDifferently({ doc }: { doc: ServicePage }) {
+  if (!doc.differently?.length) return null;
+
   return (
     <section className="relative overflow-hidden bg-ink py-14 text-paper md:py-16">
       <div
@@ -20,7 +22,7 @@ export default function ServiceDifferently({ doc }: { doc: ServiceDoc }) {
       </div>
       <Container className="relative z-[2]">
         <Reveal className="mb-3.5 font-mono text-xs font-bold uppercase tracking-[1.4px] text-lime">
-          // What we do differently
+          {"// What we do differently"}
         </Reveal>
         <Reveal delay={60}>
           <h2 className="mb-8 max-w-[720px] font-display text-[28px] font-extrabold leading-[1.02] tracking-[-0.03em] text-paper sm:text-[36px] lg:text-[42px]">
@@ -29,9 +31,9 @@ export default function ServiceDifferently({ doc }: { doc: ServiceDoc }) {
         </Reveal>
 
         <div className="grid gap-x-10 gap-y-3.5 md:grid-cols-2">
-          {doc.differently.map((d, i) => (
+          {doc.differently.map((point, i) => (
             <Reveal
-              key={i}
+              key={point}
               delay={120 + i * 50}
               className="flex items-start gap-3.5 border-t border-dark-border pt-4"
             >
@@ -39,7 +41,7 @@ export default function ServiceDifferently({ doc }: { doc: ServiceDoc }) {
                 ✓
               </span>
               <p className="font-body text-[15px] font-medium leading-relaxed text-dark-text">
-                {d}
+                {point}
               </p>
             </Reveal>
           ))}

@@ -3,8 +3,13 @@
 import { useState } from "react";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
-import type { ServiceDoc } from "@/lib/service-data";
+import type { ServicePage } from "@/sanity/lib/types";
 
+/**
+ * Qualification ranges. These are commercial banding rather than page copy —
+ * they must stay identical across all five service pages for the submissions to
+ * be comparable, so they live in code rather than in the CMS.
+ */
 const arrOptions = [
   "Under $300K",
   "$300K to $1M",
@@ -27,7 +32,7 @@ const budgetOptions = [
 const inputClass =
   "rounded-xl border border-border-soft bg-[#FBFAF6] px-3.5 py-3 font-body text-[15px] text-ink outline-none placeholder:text-faint focus:border-green focus:shadow-[0_0_0_3px_rgba(198,240,0,0.35)]";
 
-export default function ServiceQuoteForm({ doc }: { doc: ServiceDoc }) {
+export default function ServiceQuoteForm({ doc }: { doc: ServicePage }) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [submitted, setSubmitted] = useState(false);
 
@@ -110,38 +115,40 @@ export default function ServiceQuoteForm({ doc }: { doc: ServiceDoc }) {
                   </select>
                 </label>
 
-                <div className="mb-6">
-                  <span className="mb-3 block font-display text-[13px] font-bold text-ink">
-                    Which {doc.serviceScope} services are you interested in?
-                  </span>
-                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                    {doc.serviceCheckboxes.map((label) => {
-                      const on = selected.has(label);
-                      return (
-                        <button
-                          key={label}
-                          type="button"
-                          onClick={() => toggle(label)}
-                          aria-pressed={on}
-                          className="flex w-full items-center gap-2.5 rounded-lg px-1 py-1.5 text-left focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-2"
-                        >
-                          <span
-                            className={`flex h-[22px] w-[22px] flex-shrink-0 items-center justify-center rounded-[6px] border-2 text-[13px] font-extrabold transition-colors ${
-                              on
-                                ? "border-ink bg-green text-white"
-                                : "border-border-soft bg-[#FBFAF6] text-transparent"
-                            }`}
+                {doc.serviceCheckboxes && doc.serviceCheckboxes.length > 0 && (
+                  <div className="mb-6">
+                    <span className="mb-3 block font-display text-[13px] font-bold text-ink">
+                      Which {doc.serviceScope} services are you interested in?
+                    </span>
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                      {doc.serviceCheckboxes.map((label) => {
+                        const on = selected.has(label);
+                        return (
+                          <button
+                            key={label}
+                            type="button"
+                            onClick={() => toggle(label)}
+                            aria-pressed={on}
+                            className="flex w-full items-center gap-2.5 rounded-lg px-1 py-1.5 text-left focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-2"
                           >
-                            ✓
-                          </span>
-                          <span className="font-body text-sm font-semibold leading-tight text-ink">
-                            {label}
-                          </span>
-                        </button>
-                      );
-                    })}
+                            <span
+                              className={`flex h-[22px] w-[22px] flex-shrink-0 items-center justify-center rounded-[6px] border-2 text-[13px] font-extrabold transition-colors ${
+                                on
+                                  ? "border-ink bg-green text-white"
+                                  : "border-border-soft bg-[#FBFAF6] text-transparent"
+                              }`}
+                            >
+                              ✓
+                            </span>
+                            <span className="font-body text-sm font-semibold leading-tight text-ink">
+                              {label}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <label className="mb-5.5 flex max-w-[340px] flex-col gap-1.5">
                   <span className="font-display text-[13px] font-bold text-ink">

@@ -1,6 +1,11 @@
 import Container from "@/components/Container";
+import Copy from "@/components/sanity/Copy";
+import Headline from "@/components/sanity/Headline";
+import type { PageHero } from "@/sanity/lib/types";
 
-export default function BlogHero() {
+export default function BlogHero({ hero }: { hero?: PageHero | null }) {
+  if (!hero) return null;
+
   return (
     <section className="relative overflow-hidden bg-paper pb-14 pt-16 sm:pb-16 sm:pt-20">
       <div
@@ -16,6 +21,7 @@ export default function BlogHero() {
           WebkitTextStroke: "2px #E1DACB",
           transform: "rotate(-4deg)",
         }}
+        aria-hidden
       >
         *
       </div>
@@ -24,25 +30,21 @@ export default function BlogHero() {
       </div>
 
       <Container className="relative z-[3] flex flex-col items-center text-center">
-        <div className="mb-5.5 inline-flex items-center gap-2.5 rounded-full border border-border bg-white px-4 py-1.5 shadow-[0_6px_18px_rgba(28,27,25,0.05)]">
-          <span className="h-2 w-2 rounded-full bg-green" />
-          <span className="font-display text-xs font-bold uppercase tracking-[0.09em] text-green">
-            The Keewee blog
-          </span>
-        </div>
+        {hero.badge && (
+          <div className="mb-5.5 inline-flex items-center gap-2.5 rounded-full border border-border bg-white px-4 py-1.5 shadow-[0_6px_18px_rgba(28,27,25,0.05)]">
+            <span className="h-2 w-2 rounded-full bg-green" />
+            <span className="font-display text-xs font-bold uppercase tracking-[0.09em] text-green">
+              {hero.badge}
+            </span>
+          </div>
+        )}
         <h1 className="mb-5 max-w-[800px] font-display text-[40px] font-extrabold leading-[1.02] tracking-[-0.035em] text-ink sm:text-[54px] lg:text-[68px]">
-          Marketing blog{" "}
-          <span className="relative z-0 inline-block">
-            <span className="absolute inset-x-[-8px] bottom-1.5 z-[-1] h-[34%] -rotate-1 rounded bg-lime" />
-            goldmine!
-          </span>
+          <Headline value={hero.headline} />
         </h1>
-        <p className="max-w-[660px] font-body text-lg font-medium leading-relaxed text-body sm:text-[19px]">
-          Literally the best content on B2B SaaS marketing. Positioning, SEO,
-          demand gen, paid media, conversion, and everything in between.
-          Written by the people doing the work, not summarizing someone
-          else&apos;s newsletter.
-        </p>
+        <Copy
+          value={hero.intro}
+          className="max-w-[660px] font-body text-lg font-medium leading-relaxed text-body sm:text-[19px]"
+        />
       </Container>
     </section>
   );

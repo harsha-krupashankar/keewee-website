@@ -1,8 +1,9 @@
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
-import type { ServiceDoc } from "@/lib/service-data";
+import Copy from "@/components/sanity/Copy";
+import type { ServicePage } from "@/sanity/lib/types";
 
-export default function ServiceProblem({ doc }: { doc: ServiceDoc }) {
+export default function ServiceProblem({ doc }: { doc: ServicePage }) {
   return (
     <section className="relative overflow-hidden border-y border-border-soft bg-surface py-13 md:py-14">
       <div
@@ -15,22 +16,19 @@ export default function ServiceProblem({ doc }: { doc: ServiceDoc }) {
       <Container className="relative">
         <div className="max-w-[820px]">
           <Reveal className="mb-4 font-mono text-xs font-bold uppercase tracking-[1.4px] text-rust">
-            // The problem
+            {"// The problem"}
           </Reveal>
           <Reveal delay={60}>
             <h2 className="mb-6 font-display text-[28px] font-extrabold leading-[1.04] tracking-[-0.03em] text-ink text-pretty sm:text-[36px] lg:text-[44px]">
               {doc.problemHeadline}
             </h2>
           </Reveal>
-          <div className="flex flex-col gap-4">
-            {doc.problemBody.map((p, i) => (
-              <Reveal key={i} delay={120 + i * 60}>
-                <p className="font-body text-base font-medium leading-relaxed text-body">
-                  {p}
-                </p>
-              </Reveal>
-            ))}
-          </div>
+          <Reveal delay={120}>
+            <Copy
+              value={doc.problemBody}
+              className="font-body text-base font-medium leading-relaxed text-body"
+            />
+          </Reveal>
         </div>
       </Container>
     </section>

@@ -1,8 +1,16 @@
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
-import type { ServiceDoc } from "@/lib/service-data";
+import type { Link as LinkValue, ServicePage } from "@/sanity/lib/types";
 
-export default function ServiceTalkToUs({ doc }: { doc: ServiceDoc }) {
+export default function ServiceTalkToUs({
+  doc,
+  cta,
+}: {
+  doc: ServicePage;
+  cta?: LinkValue | null;
+}) {
+  if (!doc.talkHeadline) return null;
+
   return (
     <section className="py-8 md:pb-16 md:pt-10">
       <Container>
@@ -24,15 +32,19 @@ export default function ServiceTalkToUs({ doc }: { doc: ServiceDoc }) {
             <h2 className="mb-4.5 font-display text-[28px] font-extrabold leading-[1.04] tracking-[-0.035em] text-pretty sm:text-[38px] lg:text-[46px]">
               {doc.talkHeadline}
             </h2>
-            <p className="mb-6.5 max-w-[640px] font-body text-base font-medium leading-relaxed text-dark-text">
-              {doc.talkBody}
-            </p>
-            <a
-              href="mailto:team@keewee.in"
-              className="inline-block rounded-xl bg-green px-7.5 py-4 font-display text-[17px] font-bold text-white shadow-[3px_3px_0_rgba(0,0,0,0.5)] transition-all duration-150 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0_rgba(0,0,0,0.5)] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-[3px]"
-            >
-              Book a call with us
-            </a>
+            {doc.talkBody && (
+              <p className="mb-6.5 max-w-[640px] font-body text-base font-medium leading-relaxed text-dark-text">
+                {doc.talkBody}
+              </p>
+            )}
+            {cta && (
+              <a
+                href={cta.href}
+                className="inline-block rounded-xl bg-green px-7.5 py-4 font-display text-[17px] font-bold text-white shadow-[3px_3px_0_rgba(0,0,0,0.5)] transition-all duration-150 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0_rgba(0,0,0,0.5)] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-[3px]"
+              >
+                {cta.label}
+              </a>
+            )}
           </div>
         </Reveal>
       </Container>

@@ -1,8 +1,13 @@
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
-import { forYouPointers } from "@/lib/free-audit-data";
+import Headline from "@/components/sanity/Headline";
+import type { FreeAuditPage } from "@/sanity/lib/types";
 
-export default function FreeAuditForYou() {
+export default function FreeAuditForYou({ page }: { page: FreeAuditPage }) {
+  const header = page.forYouHeader;
+  const pointers = page.forYouPointers ?? [];
+  if (!pointers.length) return null;
+
   return (
     <section className="relative overflow-hidden bg-ink py-14 text-paper md:py-16">
       <div
@@ -12,22 +17,27 @@ export default function FreeAuditForYou() {
           backgroundSize: "16px 16px",
         }}
       />
-      <div className="pointer-events-none absolute -top-7 right-8 select-none font-display text-[150px] font-extrabold text-[#262523]">
+      <div
+        className="pointer-events-none absolute -top-7 right-8 select-none font-display text-[150px] font-extrabold text-[#262523]"
+        aria-hidden
+      >
         ✱
       </div>
       <Container className="relative z-[2] max-w-[780px]">
         <Reveal>
-          <span className="mb-3.5 block font-mono text-xs font-bold uppercase tracking-[1.4px] text-lime">
-            {"// Is this for you?"}
-          </span>
+          {header?.eyebrow && (
+            <span className="mb-3.5 block font-mono text-xs font-bold uppercase tracking-[1.4px] text-lime">
+              {header.eyebrow}
+            </span>
+          )}
           <h2 className="mb-8 font-display text-[28px] font-extrabold leading-[1.06] tracking-[-0.03em] text-paper sm:text-[42px]">
-            This call is worth your time if any of these sound familiar.
+            <Headline value={header?.headline} />
           </h2>
         </Reveal>
         <div className="flex flex-col">
-          {forYouPointers.map((p, i) => (
+          {pointers.map((pointer, i) => (
             <Reveal
-              key={p}
+              key={pointer}
               delay={i * 40}
               className="flex items-start gap-3.5 border-t border-[#33322E] py-4"
             >
@@ -35,7 +45,7 @@ export default function FreeAuditForYou() {
                 ✓
               </span>
               <p className="font-body text-base font-medium leading-relaxed text-[#D7D2C6]">
-                {p}
+                {pointer}
               </p>
             </Reveal>
           ))}

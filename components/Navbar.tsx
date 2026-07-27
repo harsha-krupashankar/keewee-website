@@ -5,24 +5,21 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Button from "./Button";
 import Container from "./Container";
-
-const links = [
-  { href: "#work", label: "Work" },
-  { href: "#services", label: "Services" },
-  { href: "/blog", label: "Blog" },
-  { href: "/about", label: "About" },
-];
+import type { Link as LinkValue } from "@/sanity/lib/types";
 
 type NavbarProps = {
+  siteName: string;
+  links?: LinkValue[] | null;
+  cta?: LinkValue | null;
+  /** Landing pages drop the nav links so a single CTA carries the page. */
   minimal?: boolean;
-  ctaLabel?: string;
-  ctaHref?: string;
 };
 
 export default function Navbar({
+  siteName,
+  links = [],
+  cta,
   minimal = false,
-  ctaLabel = "Talk to us",
-  ctaHref = "mailto:team@keewee.in",
 }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
@@ -51,15 +48,15 @@ export default function Navbar({
           href="/"
           className="flex items-center gap-2 font-display text-[22px] font-extrabold tracking-tight text-ink transition-transform duration-150 hover:-rotate-1"
         >
-          <span className="text-green">✱</span> keewee.in
+          <span className="text-green">✱</span> {siteName}
         </Link>
-        {!minimal && (
+        {!minimal && !!links?.length && (
           <nav className="hidden gap-8 font-body text-sm font-semibold text-nav sm:flex">
             {links.map((link) => {
               const isActive = link.href === pathname;
               return (
                 <a
-                  key={link.href}
+                  key={`${link.href}-${link.label}`}
                   href={link.href}
                   className={`group relative py-1 hover:text-green ${
                     isActive ? "text-green" : ""
@@ -76,9 +73,11 @@ export default function Navbar({
             })}
           </nav>
         )}
-        <Button href={ctaHref} className="px-5 py-2.5 text-sm">
-          {ctaLabel}
-        </Button>
+        {cta && (
+          <Button href={cta.href} className="px-5 py-2.5 text-sm">
+            {cta.label}
+          </Button>
+        )}
       </Container>
     </header>
   );

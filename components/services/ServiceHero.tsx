@@ -1,9 +1,16 @@
 import Button from "@/components/Button";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
-import type { ServiceDoc } from "@/lib/service-data";
+import Headline from "@/components/sanity/Headline";
+import type { Link as LinkValue, ServicePage } from "@/sanity/lib/types";
 
-export default function ServiceHero({ doc }: { doc: ServiceDoc }) {
+export default function ServiceHero({
+  doc,
+  cta,
+}: {
+  doc: ServicePage;
+  cta?: LinkValue | null;
+}) {
   return (
     <section className="relative overflow-hidden bg-paper pb-14 pt-14 md:pb-16 md:pt-16">
       <div
@@ -16,6 +23,7 @@ export default function ServiceHero({ doc }: { doc: ServiceDoc }) {
       <div
         className="pointer-events-none absolute right-[-24px] top-3.5 hidden select-none font-display text-[230px] font-extrabold leading-[0.8] tracking-[-0.04em] text-transparent [-webkit-text-stroke:2px_#E1DACB] lg:block"
         style={{ transform: "rotate(-4deg)" }}
+        aria-hidden
       >
         *
       </div>
@@ -30,12 +38,7 @@ export default function ServiceHero({ doc }: { doc: ServiceDoc }) {
 
           <Reveal delay={80} y={18}>
             <h1 className="mb-6 font-display text-[42px] font-extrabold leading-[0.99] tracking-[-0.035em] text-ink text-pretty sm:text-[56px] lg:text-[72px]">
-              {doc.heroA}
-              <span className="relative inline-block">
-                <span className="absolute -bottom-1.5 left-[-4px] right-[-6px] h-[35%] -rotate-1 rounded-sm bg-lime" />
-                <span className="relative">{doc.heroHi}</span>
-              </span>
-              {doc.heroB}
+              <Headline value={doc.heroHeadline} />
             </h1>
           </Reveal>
 
@@ -45,11 +48,13 @@ export default function ServiceHero({ doc }: { doc: ServiceDoc }) {
             </p>
           </Reveal>
 
-          <Reveal delay={240} y={18}>
-            <Button href="mailto:team@keewee.in" className="px-7.5 py-4 text-[17px]">
-              Book a call with us
-            </Button>
-          </Reveal>
+          {cta && (
+            <Reveal delay={240} y={18}>
+              <Button href={cta.href} className="px-7.5 py-4 text-[17px]">
+                {cta.label}
+              </Button>
+            </Reveal>
+          )}
         </div>
       </Container>
     </section>

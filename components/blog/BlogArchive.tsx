@@ -1,49 +1,69 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Container from "@/components/Container";
-import { blogCategories, blogSummaries, type BlogCategory } from "@/lib/blog-data";
+import Headline from "@/components/sanity/Headline";
 import BlogPostCard from "./BlogPostCard";
+import type { Category, PostSummary, SectionHeader } from "@/sanity/lib/types";
 
 const PAGE_SIZE = 6;
+const ALL = "all";
 
-export default function BlogArchive() {
-  const [activeCategory, setActiveCategory] = useState<BlogCategory>("All");
+export default function BlogArchive({
+  header,
+  posts,
+  categories,
+}: {
+  header?: SectionHeader | null;
+  posts: PostSummary[];
+  categories: Category[];
+}) {
+  const [activeId, setActiveId] = useState<string>(ALL);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
-  const filtered =
-    activeCategory === "All"
-      ? blogSummaries
-      : blogSummaries.filter((p) => p.category === activeCategory);
+  const filtered = useMemo(
+    () =>
+      activeId === ALL
+        ? posts
+        : posts.filter((post) => post.category?._id === activeId),
+    [activeId, posts]
+  );
+
   const visiblePosts = filtered.slice(0, visibleCount);
   const showLoadMore = visibleCount < filtered.length;
 
-  function selectCategory(category: BlogCategory) {
-    setActiveCategory(category);
+  function selectCategory(id: string) {
+    setActiveId(id);
     setVisibleCount(PAGE_SIZE);
   }
+
+  // "All" is not a document — it's a UI affordance, so it is prepended here
+  // rather than living as a real category an editor could delete.
+  const pills = [{ _id: ALL, title: "All", slug: ALL }, ...categories];
 
   return (
     <section className="pb-14 sm:pb-16">
       <Container>
-        <div className="mb-5 flex items-center gap-3">
-          <span className="font-display text-[13px] font-bold uppercase tracking-[0.09em] text-green">
-            Browse by topic
-          </span>
-          <span className="flex-1 border-b border-border-line" />
-        </div>
+        {header?.eyebrow && (
+          <div className="mb-5 flex items-center gap-3">
+            <span className="font-display text-[13px] font-bold uppercase tracking-[0.09em] text-green">
+              {header.eyebrow}
+            </span>
+            <span className="flex-1 border-b border-border-line" />
+          </div>
+        )}
         <h2 className="mb-6 font-display text-[28px] font-extrabold leading-[1.04] tracking-[-0.03em] text-ink sm:text-4xl lg:text-[44px]">
-          Find exactly what you&apos;re looking for.
+          <Headline value={header?.headline} />
         </h2>
 
         <div className="mb-8 flex flex-wrap gap-2.5">
-          {blogCategories.map((category) => {
-            const on = category === activeCategory;
+          {pills.map((category) => {
+            const on = category._id === activeId;
             return (
               <button
-                key={category}
+                key={category._id}
                 type="button"
-                onClick={() => selectCategory(category)}
+                onClick={() => selectCategory(category._id)}
                 aria-pressed={on}
                 className={`cursor-pointer rounded-full px-4 py-2.5 font-display text-[13px] font-bold tracking-[-0.01em] transition-all duration-150 focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-2 ${
                   on
@@ -51,7 +71,7 @@ export default function BlogArchive() {
                     : "border border-border bg-white text-body hover:border-border-soft"
                 }`}
               >
-                {category}
+                {category.title}
               </button>
             );
           })}
@@ -59,7 +79,7 @@ export default function BlogArchive() {
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {visiblePosts.map((post) => (
-            <BlogPostCard key={post.id} post={post} />
+            <BlogPostCard key={post._id} post={post} />
           ))}
         </div>
 

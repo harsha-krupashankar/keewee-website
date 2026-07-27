@@ -1,8 +1,10 @@
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
-import type { ServiceDoc } from "@/lib/service-data";
+import type { ServicePage } from "@/sanity/lib/types";
 
-export default function ServiceTestimonial({ doc }: { doc: ServiceDoc }) {
+export default function ServiceTestimonial({ doc }: { doc: ServicePage }) {
+  if (!doc.testimonial) return null;
+
   return (
     <section className="py-8 md:py-10">
       <Container>

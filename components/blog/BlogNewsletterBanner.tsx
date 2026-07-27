@@ -3,10 +3,15 @@
 import { useState } from "react";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
+import Copy from "@/components/sanity/Copy";
+import Headline from "@/components/sanity/Headline";
+import type { BlogIndexPage } from "@/sanity/lib/types";
 
-export default function BlogNewsletterBanner() {
+export default function BlogNewsletterBanner({ page }: { page: BlogIndexPage }) {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+
+  if (!page.newsletterHeadline) return null;
 
   return (
     <section className="pb-12 sm:pb-14">
@@ -22,21 +27,14 @@ export default function BlogNewsletterBanner() {
           />
           <div className="relative z-[2] grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
             <div>
-              <span className="font-display text-[13px] font-bold uppercase tracking-[0.09em] text-lime">
-                Stay in the loop
-              </span>
-              <h2 className="my-3.5 font-display text-[28px] font-extrabold leading-[1.06] tracking-[-0.03em] sm:text-4xl lg:text-[42px]">
-                No roundups and recycled takes.
+              <h2 className="mb-3.5 font-display text-[28px] font-extrabold leading-[1.06] tracking-[-0.03em] sm:text-4xl lg:text-[42px]">
+                <Headline value={page.newsletterHeadline} />
               </h2>
-              <p className="mb-3.5 font-sticker text-lg text-lime">
-                One newsletter every week.
-              </p>
-              <p className="max-w-[460px] font-body text-[15px] font-medium leading-relaxed text-dark-text">
-                What&apos;s actually working in B2B SaaS marketing right now,
-                frameworks we&apos;re using with clients, and the occasional
-                unpopular opinion. No filler, no sponsored content, no
-                AI-generated summaries of things you already know.
-              </p>
+              <Copy
+                value={page.newsletterBody}
+                tone="dark"
+                className="max-w-[460px] font-body text-[15px] font-medium leading-relaxed text-dark-text"
+              />
             </div>
 
             <div>
@@ -53,11 +51,15 @@ export default function BlogNewsletterBanner() {
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
-                    setSubscribed(true);
+                    if (email) setSubscribed(true);
                   }}
                 >
                   <div className="mb-3 flex gap-2.5">
+                    <label htmlFor="blog-newsletter-email" className="sr-only">
+                      Work email
+                    </label>
                     <input
+                      id="blog-newsletter-email"
                       type="email"
                       required
                       value={email}
@@ -69,13 +71,9 @@ export default function BlogNewsletterBanner() {
                       type="submit"
                       className="whitespace-nowrap rounded-xl bg-green px-6.5 py-3.5 font-display text-[15px] font-bold text-white shadow-[3px_3px_0_rgba(0,0,0,0.5)] transition-all duration-150 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0_rgba(0,0,0,0.5)] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-[3px]"
                     >
-                      Subscribe
+                      {page.newsletterCta?.label ?? "Subscribe"}
                     </button>
                   </div>
-                  <p className="font-body text-[12.5px] font-medium text-faint">
-                    Read by B2B SaaS founders and marketing teams. Unsubscribe
-                    anytime.
-                  </p>
                 </form>
               )}
             </div>

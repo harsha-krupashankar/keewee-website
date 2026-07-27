@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
+import { draftMode } from "next/headers";
 import { Archivo, Bricolage_Grotesque, Bangers } from "next/font/google";
+import { VisualEditing } from "next-sanity/visual-editing";
+
+import DraftModeBanner from "@/components/sanity/DraftModeBanner";
+import { metadataFrom } from "@/lib/metadata";
+import { getSiteSettings } from "@/sanity/lib/content";
+import { PUBLISHED, SanityLive } from "@/sanity/lib/live";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -20,23 +27,39 @@ const bangers = Bangers({
   weight: "400",
 });
 
-export const metadata: Metadata = {
-  title: "keewee.in — B2B marketing with a spine.",
-  description:
-    "Most B2B marketing is AI-generated mush in a slide template. We're the agency that fixes it — sharp positioning and a full-funnel system that moves pipeline.",
-};
+/**
+ * Site-wide metadata defaults. Read with the published perspective on purpose:
+ * metadata is not visually edited, and reading cookies here would pull the
+ * document head out of the static shell for every visitor.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings(PUBLISHED);
+  return metadataFrom({ settings });
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { isEnabled: isDraftMode } = await draftMode();
+
   return (
     <html
       lang="en"
       className={`${archivo.variable} ${bricolage.variable} ${bangers.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        {isDraftMode && (
+          <>
+            <DraftModeBanner />
+            <VisualEditing />
+          </>
+        )}
+        {/* Keeps open sessions in sync with the Content Lake. */}
+        <SanityLive includeDrafts={isDraftMode} />
+      </body>
     </html>
   );
 }

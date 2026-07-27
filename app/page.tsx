@@ -1,35 +1,55 @@
-import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
-import Marquee from "@/components/Marquee";
-import Problem from "@/components/Problem";
-import FullFunnel from "@/components/FullFunnel";
-import WhyKeewee from "@/components/WhyKeewee";
-import HowItWorks from "@/components/HowItWorks";
-import Proof from "@/components/Proof";
-import FreeAudit from "@/components/FreeAudit";
-import WhoWeWorkWith from "@/components/WhoWeWorkWith";
-import Faq from "@/components/Faq";
-import FinalCta from "@/components/FinalCta";
-import Footer from "@/components/Footer";
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
-export default function Home() {
+import PerspectiveGate from "@/components/PerspectiveGate";
+import SiteShell from "@/components/SiteShell";
+import Faq from "@/components/home/Faq";
+import FinalCta from "@/components/home/FinalCta";
+import FreeAuditBanner from "@/components/home/FreeAuditBanner";
+import FullFunnel from "@/components/home/FullFunnel";
+import Hero from "@/components/home/Hero";
+import HowItWorks from "@/components/home/HowItWorks";
+import Marquee from "@/components/home/Marquee";
+import Problem from "@/components/home/Problem";
+import Proof from "@/components/home/Proof";
+import WhoWeWorkWith from "@/components/home/WhoWeWorkWith";
+import WhyKeewee from "@/components/home/WhyKeewee";
+import { metadataFrom } from "@/lib/metadata";
+import { getHomePage, getSiteSettings } from "@/sanity/lib/content";
+import { PUBLISHED, type FetchOptions } from "@/sanity/lib/live";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const [page, settings] = await Promise.all([
+    getHomePage(PUBLISHED),
+    getSiteSettings(PUBLISHED),
+  ]);
+  return metadataFrom({ seo: page?.seo, settings });
+}
+
+export default function HomeRoute() {
+  return <PerspectiveGate render={(opts) => <Content opts={opts} />} />;
+}
+
+async function Content({ opts }: { opts: FetchOptions }) {
+  const [page, settings] = await Promise.all([
+    getHomePage(opts),
+    getSiteSettings(opts),
+  ]);
+  if (!page) notFound();
+
   return (
-    <>
-      <Navbar />
-      <main>
-        <Hero />
-        <Marquee />
-        <Problem />
-        <FullFunnel />
-        <WhyKeewee />
-        <HowItWorks />
-        <Proof />
-        <FreeAudit />
-        <WhoWeWorkWith />
-        <Faq />
-        <FinalCta />
-      </main>
-      <Footer />
-    </>
+    <SiteShell opts={opts} mainClassName="">
+      <Hero page={page} />
+      <Marquee text={settings?.marqueeText} />
+      <Problem page={page} />
+      <FullFunnel page={page} />
+      <WhyKeewee page={page} />
+      <HowItWorks page={page} />
+      <Proof page={page} />
+      <FreeAuditBanner page={page} />
+      <WhoWeWorkWith page={page} />
+      <Faq page={page} />
+      <FinalCta page={page} />
+    </SiteShell>
   );
 }

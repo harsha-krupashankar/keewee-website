@@ -1,27 +1,35 @@
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
-import type { ServiceDoc } from "@/lib/service-data";
+import Copy from "@/components/sanity/Copy";
+import type { ServicePage } from "@/sanity/lib/types";
 
-export default function ServiceFaq({ doc }: { doc: ServiceDoc }) {
+export default function ServiceFaq({ doc }: { doc: ServicePage }) {
+  if (!doc.faq?.length) return null;
+
   return (
     <section className="py-8 md:py-10">
       <Container>
         <Reveal className="rounded-[24px] border border-border-soft bg-surface p-8 sm:p-10">
           <span className="mb-3.5 block font-mono text-xs font-bold uppercase tracking-[1.4px] text-green">
-            // FAQ
+            {"// FAQ"}
           </span>
           <h2 className="mb-6.5 font-display text-[26px] font-extrabold leading-[1.04] tracking-[-0.03em] text-ink sm:text-[34px]">
             Questions we get asked.
           </h2>
+          {/* Expanded rather than collapsed: these answers double as SEO copy. */}
           <div className="flex flex-col">
-            {doc.faq.map((f, i) => (
-              <div key={f.q} className={`py-5 ${i > 0 ? "border-t border-border-line" : ""}`}>
+            {doc.faq.map((item, i) => (
+              <div
+                key={item.question}
+                className={`py-5 ${i > 0 ? "border-t border-border-line" : ""}`}
+              >
                 <h3 className="mb-2 font-display text-lg font-extrabold leading-tight tracking-[-0.02em] text-ink">
-                  {f.q}
+                  {item.question}
                 </h3>
-                <p className="max-w-[820px] font-body text-[15px] font-medium leading-relaxed text-body">
-                  {f.a}
-                </p>
+                <Copy
+                  value={item.answer}
+                  className="max-w-[820px] font-body text-[15px] font-medium leading-relaxed text-body"
+                />
               </div>
             ))}
           </div>
