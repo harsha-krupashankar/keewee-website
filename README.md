@@ -106,6 +106,24 @@ Two things the seed cannot recover, because they never existed:
 
 Delete `scripts/legacy/` and `scripts/seed.ts` once the seed has run everywhere.
 
+### Never put a dot in a document `_id`
+
+Sanity reads a dot as a **path separator**, and documents under a path prefix are
+excluded from unauthenticated reads even when the dataset ACL is `public` — the
+same mechanism that keeps `drafts.*` private. The website fetches the published
+perspective **without a token** (see [Rendering and caching](#rendering-and-caching)), so a
+document with an ID like `service.analytics` is visible in the Studio and
+invisible to every visitor: the query returns nothing and the route 404s.
+
+Use `-`. `scripts/fix-dotted-ids.ts` repairs a dataset that already has dotted
+IDs — it recreates the documents under clean IDs and rewrites every `_ref` in the
+same transaction.
+
+```bash
+npm run fix-ids:dry   # print the renames
+npm run fix-ids       # apply them
+```
+
 ## Type generation
 
 Two type sources, deliberately:
@@ -136,4 +154,5 @@ rich text. The two agree today.
 | `npm run typecheck` | `tsc --noEmit`                                   |
 | `npm run lint`      | ESLint                                           |
 | `npm run seed`      | One-time content migration                       |
+| `npm run fix-ids`   | Rename documents whose `_id` contains a dot      |
 | `npm run typegen`   | Extract schema, generate GROQ result types       |

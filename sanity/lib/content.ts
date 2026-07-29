@@ -107,10 +107,12 @@ export async function getBlogIndex(opts: FetchOptions) {
 
 export async function getPost(slug: string, opts: FetchOptions) {
   "use cache";
+  // The query dereferences the author and the category, so renaming either has
+  // to invalidate the post page too — the webhook only knows document types.
   return run<T.Post>(opts, {
     query: Q.POST_QUERY,
     params: { slug },
-    tags: [TAG.post],
+    tags: [TAG.post, TAG.person, TAG.category],
   });
 }
 

@@ -51,6 +51,15 @@ After changing the schema or a query, run `npm run typegen`.
 
 ## Conventions
 
+- **Never put a dot in a document `_id`.** Sanity reads it as a path separator,
+  and path-prefixed documents are hidden from unauthenticated reads even in a
+  `public` dataset — the same mechanism that keeps `drafts.*` private. The site
+  fetches the published perspective *without a token*, so a dotted ID makes the
+  document render fine in the Studio and 404 for every visitor. Use `-`.
+- **Cache tags must cover dereferenced types.** A read tagged only with its own
+  document type goes stale when a `->` target changes: the webhook in
+  `app/api/revalidate/route.ts` invalidates by `_type` and knows nothing about
+  references. If a query dereferences `author->`, tag it with `person` too.
 - **Headlines are Portable Text.** The lime marker / green / rust accents are
   marks, rendered by `components/sanity/Headline.tsx`. Never split a headline
   into `partA` + `highlight` + `partB` string fields.

@@ -122,8 +122,16 @@ function minutesFrom(readTime: string): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
+/**
+ * Never use a dot as the separator here. Sanity reads a dot in a document ID as
+ * a path separator, and path-prefixed documents are hidden from unauthenticated
+ * reads even in a `public` dataset — the same mechanism that keeps `drafts.*`
+ * private. The website fetches the published perspective without a token, so a
+ * dotted ID makes the document invisible everywhere except the Studio.
+ * See `scripts/fix-dotted-ids.ts`.
+ */
 function idFor(prefix: string, value: string) {
-  return `${prefix}.${value}`;
+  return `${prefix}-${value}`;
 }
 
 // ---------------------------------------------------------------------------
