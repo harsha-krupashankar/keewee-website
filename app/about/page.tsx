@@ -33,7 +33,7 @@ async function Content({ opts }: { opts: FetchOptions }) {
       <AboutHero hero={page.hero} />
       <AboutWhatWeAre page={page} />
       <AboutFoundingStory page={page} />
-      <AboutTeam page={page} />
+      {/* <AboutTeam page={page} /> */}
       <DarkCtaSection
         eyebrow={page.ctaEyebrow}
         headline={page.ctaHeadline}
