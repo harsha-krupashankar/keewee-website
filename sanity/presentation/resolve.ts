@@ -27,10 +27,8 @@ export const resolve: PresentationPluginOptions["resolve"] = {
       route: "/legal/:slug",
       filter: `_type == "legalDoc" && slug.current == $slug`,
     },
-    // Service pages live at the root, so this must come last — it would
-    // otherwise swallow every single-segment path above.
     {
-      route: "/:slug",
+      route: "/services/:slug",
       filter: `_type == "servicePage" && slug.current == $slug`,
     },
   ]),
@@ -84,8 +82,8 @@ export const resolve: PresentationPluginOptions["resolve"] = {
       select: { title: "category", slug: "slug.current" },
       resolve: (doc) => ({
         locations: [
-          { title: doc?.title || "Service page", href: `/${doc?.slug}` },
-          { title: "Home", href: "/" },
+          { title: doc?.title || "Service page", href: `/services/${doc?.slug}` },
+          { title: "Services", href: "/services" },
         ],
       }),
     }),

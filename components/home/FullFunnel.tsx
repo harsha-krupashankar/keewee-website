@@ -134,7 +134,7 @@ export default function FullFunnel({ page }: { page: HomePage }) {
                   <div className="mb-2.5 flex flex-wrap items-baseline gap-3.5">
                     {stage.href ? (
                       <Link
-                        href={`/${stage.href}`}
+                        href={`/services/${stage.href}`}
                         className="transition-colors duration-150 hover:text-green"
                       >
                         {heading}
