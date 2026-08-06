@@ -18,6 +18,7 @@ export const resolve: PresentationPluginOptions["resolve"] = {
     { route: "/free-audit", filter: `_type == "freeAuditPage"` },
     { route: "/services", filter: `_type == "servicesPage"` },
     { route: "/newsletter", filter: `_type == "newsletterPage"` },
+    { route: "/prompt-library", filter: `_type == "promptLibraryPage"` },
     {
       route: "/blog/:slug",
       filter: `_type == "post" && slug.current == $slug`,
@@ -62,6 +63,12 @@ export const resolve: PresentationPluginOptions["resolve"] = {
     newsletterPage: defineLocations({
       select: {},
       resolve: () => ({ locations: [{ title: "Newsletter", href: "/newsletter" }] }),
+    }),
+    promptLibraryPage: defineLocations({
+      select: {},
+      resolve: () => ({
+        locations: [{ title: "Prompt library", href: "/prompt-library" }],
+      }),
     }),
 
     post: defineLocations({

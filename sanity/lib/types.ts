@@ -307,6 +307,51 @@ export type ServicesPage = {
   seo?: Seo | null;
 };
 
+export type PromptEntry = {
+  title: string;
+  bestTool?: string | null;
+  useCase: string;
+  promptText: string;
+  tip?: string | null;
+};
+
+export type PromptCategory = {
+  name: string;
+  tagline: string;
+  prompts: PromptEntry[];
+};
+
+export type PromptLibraryPage = {
+  heroBadge?: string | null;
+  heroStickerA?: string | null;
+  heroStickerB?: string | null;
+  heroHeadline?: Headline | null;
+  heroIntro?: RichText | null;
+  heroCta?: Link | null;
+  heroBadges?: string[] | null;
+
+  whyLabel?: string | null;
+  whyHeadline: string;
+  whyBody?: RichText | null;
+
+  aiLabel?: string | null;
+  aiHeadline?: string | null;
+  aiIntro?: string | null;
+  aiPlatforms?: TitledCard[] | null;
+
+  warningHeadline?: string | null;
+  warningBody?: string | null;
+
+  categories: PromptCategory[];
+
+  ctaLabel?: string | null;
+  ctaHeadline?: Headline | null;
+  ctaBody?: RichText | null;
+  ctaButton?: Link | null;
+
+  seo?: Seo | null;
+};
+
 // --- Collections ----------------------------------------------------------
 
 export type Category = {

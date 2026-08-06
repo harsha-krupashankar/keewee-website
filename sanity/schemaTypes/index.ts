@@ -17,6 +17,7 @@ import {
   serviceCategory,
   titledCard,
 } from "./objects/primitives";
+import { promptCategory, promptEntry } from "./objects/promptLibrary";
 import {
   legalClause,
   legalContact,
@@ -42,6 +43,7 @@ import { faqPage } from "./pages/faqPage";
 import { freeAuditPage } from "./pages/freeAuditPage";
 import { homePage } from "./pages/homePage";
 import { newsletterPage } from "./pages/newsletterPage";
+import { promptLibraryPage } from "./pages/promptLibraryPage";
 import { servicesPage } from "./pages/servicesPage";
 
 /**
@@ -58,6 +60,7 @@ export const SINGLETON_TYPES = [
   "freeAuditPage",
   "newsletterPage",
   "servicesPage",
+  "promptLibraryPage",
 ] as const;
 
 export type SingletonType = (typeof SINGLETON_TYPES)[number];
@@ -88,6 +91,8 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   legalNote,
   legalContact,
   legalSection,
+  promptEntry,
+  promptCategory,
 
   // Singletons — one document each.
   siteSettings,
@@ -98,6 +103,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   freeAuditPage,
   newsletterPage,
   servicesPage,
+  promptLibraryPage,
 
   // Collections.
   post,

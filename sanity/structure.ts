@@ -47,6 +47,12 @@ export const structure: StructureResolver = (S) =>
         .title("Newsletter page")
         .id("newsletterPage")
         .child(S.document().schemaType("newsletterPage").documentId("newsletterPage")),
+      S.listItem()
+        .title("Prompt library page")
+        .id("promptLibraryPage")
+        .child(
+          S.document().schemaType("promptLibraryPage").documentId("promptLibraryPage")
+        ),
 
       S.divider(),
 

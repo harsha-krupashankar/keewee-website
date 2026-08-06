@@ -198,39 +198,49 @@ export type PostBody = Array<
     }
 >;
 
-export type ServicesPage = {
+export type PromptLibraryPage = {
   _id: string;
-  _type: "servicesPage";
+  _type: "promptLibraryPage";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  hero?: PageHero;
-  heroSecondaryCta?: Link;
-  categories?: Array<
+  heroBadge?: string;
+  heroStickerA?: string;
+  heroStickerB?: string;
+  heroHeadline: Headline;
+  heroIntro?: RichText;
+  heroCta?: Link;
+  heroBadges?: Array<string>;
+  whyLabel?: string;
+  whyHeadline: string;
+  whyBody?: RichText;
+  aiLabel?: string;
+  aiHeadline?: string;
+  aiIntro?: string;
+  aiPlatforms?: Array<
     {
       _key: string;
-    } & ServiceCategory
+    } & TitledCard
   >;
-  auditHeadline?: Headline;
-  auditBody?: RichText;
-  auditButton?: Link;
-  quoteEyebrow?: string;
-  quoteHeadline?: Headline;
-  quoteIntro?: RichText;
-  quoteGoalsLabel?: string;
-  quoteGoals?: Array<string>;
-  quoteServicesLabel?: string;
-  quoteServiceGroups?: Array<
+  warningHeadline?: string;
+  warningBody?: string;
+  categories: Array<
     {
       _key: string;
-    } & CheckboxGroup
+    } & PromptCategory
   >;
-  quoteMessagePlaceholder?: string;
-  quoteButtonLabel?: string;
-  quoteNote?: string;
-  quoteSuccessSticker?: string;
-  quoteSuccessText?: string;
+  ctaLabel?: string;
+  ctaHeadline?: Headline;
+  ctaBody?: RichText;
+  ctaButton?: Link;
   seo?: Seo;
+};
+
+export type Link = {
+  _type: "link";
+  label: string;
+  href: string;
+  openInNewTab?: boolean;
 };
 
 export type RichText = Array<{
@@ -268,11 +278,39 @@ export type Headline = Array<{
   _key: string;
 }>;
 
-export type Link = {
-  _type: "link";
-  label: string;
-  href: string;
-  openInNewTab?: boolean;
+export type ServicesPage = {
+  _id: string;
+  _type: "servicesPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  hero?: PageHero;
+  heroSecondaryCta?: Link;
+  categories?: Array<
+    {
+      _key: string;
+    } & ServiceCategory
+  >;
+  auditHeadline?: Headline;
+  auditBody?: RichText;
+  auditButton?: Link;
+  quoteEyebrow?: string;
+  quoteHeadline?: Headline;
+  quoteIntro?: RichText;
+  quoteGoalsLabel?: string;
+  quoteGoals?: Array<string>;
+  quoteServicesLabel?: string;
+  quoteServiceGroups?: Array<
+    {
+      _key: string;
+    } & CheckboxGroup
+  >;
+  quoteMessagePlaceholder?: string;
+  quoteButtonLabel?: string;
+  quoteNote?: string;
+  quoteSuccessSticker?: string;
+  quoteSuccessText?: string;
+  seo?: Seo;
 };
 
 export type PageHero = {
@@ -523,6 +561,26 @@ export type SiteSettings = {
   >;
   footerNote?: string;
   defaultSeo?: Seo;
+};
+
+export type PromptCategory = {
+  _type: "promptCategory";
+  name: string;
+  tagline: string;
+  prompts: Array<
+    {
+      _key: string;
+    } & PromptEntry
+  >;
+};
+
+export type PromptEntry = {
+  _type: "promptEntry";
+  title: string;
+  bestTool?: string;
+  useCase: string;
+  promptText: string;
+  tip?: string;
 };
 
 export type LegalSection = {
@@ -820,10 +878,11 @@ export type AllSanitySchemaTypes =
   | Figure
   | Category
   | PostBody
-  | ServicesPage
+  | PromptLibraryPage
+  | Link
   | RichText
   | Headline
-  | Link
+  | ServicesPage
   | PageHero
   | NewsletterPage
   | SectionHeader
@@ -834,6 +893,8 @@ export type AllSanitySchemaTypes =
   | AboutPage
   | HomePage
   | SiteSettings
+  | PromptCategory
+  | PromptEntry
   | LegalSection
   | LegalContact
   | LegalNote
@@ -1444,6 +1505,71 @@ export type SERVICES_PAGE_QUERY_RESULT = {
 } | null;
 
 // Source: sanity/lib/queries.ts
+// Variable: PROMPT_LIBRARY_PAGE_QUERY
+// Query: *[_type == "promptLibraryPage"][0]{    heroBadge,    heroStickerA,    heroStickerB,    heroHeadline,    heroIntro,    heroCta { label, href, openInNewTab },    heroBadges,    whyLabel,    whyHeadline,    whyBody,    aiLabel,    aiHeadline,    aiIntro,    aiPlatforms[] { title, description, tag },    warningHeadline,    warningBody,    categories[] {      name,      tagline,      prompts[] {        title,        bestTool,        useCase,        promptText,        tip      }    },    ctaLabel,    ctaHeadline,    ctaBody,    ctaButton { label, href, openInNewTab },    seo { title, description, noIndex, image {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions} }  }
+export type PROMPT_LIBRARY_PAGE_QUERY_RESULT = {
+  heroBadge: string | null;
+  heroStickerA: string | null;
+  heroStickerB: string | null;
+  heroHeadline: Headline;
+  heroIntro: RichText | null;
+  heroCta: {
+    label: string;
+    href: string;
+    openInNewTab: boolean | null;
+  } | null;
+  heroBadges: Array<string> | null;
+  whyLabel: string | null;
+  whyHeadline: string;
+  whyBody: RichText | null;
+  aiLabel: string | null;
+  aiHeadline: string | null;
+  aiIntro: string | null;
+  aiPlatforms: Array<{
+    title: string;
+    description: string;
+    tag: string | null;
+  }> | null;
+  warningHeadline: string | null;
+  warningBody: string | null;
+  categories: Array<{
+    name: string;
+    tagline: string;
+    prompts: Array<{
+      title: string;
+      bestTool: string | null;
+      useCase: string;
+      promptText: string;
+      tip: string | null;
+    }>;
+  }>;
+  ctaLabel: string | null;
+  ctaHeadline: Headline | null;
+  ctaBody: RichText | null;
+  ctaButton: {
+    label: string;
+    href: string;
+    openInNewTab: boolean | null;
+  } | null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    noIndex: boolean | null;
+    image: {
+      _type: "figure";
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string;
+      caption?: string;
+      lqip: string | null;
+      dimensions: SanityImageDimensions | null;
+    } | null;
+  } | null;
+} | null;
+
+// Source: sanity/lib/queries.ts
 // Variable: BLOG_INDEX_QUERY
 // Query: *[_type == "blogIndexPage"][0]{    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },    topReadsHeader { eyebrow, headline, sticker, intro },    archiveHeader { eyebrow, headline, sticker, intro },    newsletterHeadline,    newsletterBody,    newsletterCta { label, href, openInNewTab },    ctaHeadline,    ctaBody,    ctaButtons { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },    seo { title, description, noIndex, image {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions} },    "topReads": *[_type == "post" && featured == true && defined(slug.current)]      | order(publishedAt desc)[0...3] {  _id,  title,  "slug": slug.current,  dek,  publishedAt,  "readTime": coalesce(    readTime,    math::max([1, round(length(pt::text(body)) / 5 / 220)])  ),  heroImage {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  category-> { _id, title, "slug": slug.current }},    "posts": *[_type == "post" && defined(slug.current)]      | order(publishedAt desc) {  _id,  title,  "slug": slug.current,  dek,  publishedAt,  "readTime": coalesce(    readTime,    math::max([1, round(length(pt::text(body)) / 5 / 220)])  ),  heroImage {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  category-> { _id, title, "slug": slug.current }},    "categories": *[_type == "category"] | order(order asc, title asc) { _id, title, "slug": slug.current }  }
 export type BLOG_INDEX_QUERY_RESULT = {
@@ -1850,6 +1976,7 @@ declare module "@sanity/client" {
     '\n  *[_type == "freeAuditPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    navCtaLabel,\n    coverHeader { eyebrow, headline, sticker, intro },\n    coverCards[] { title, description, tag },\n    forYouHeader { eyebrow, headline, sticker, intro },\n    forYouPointers,\n    deliverablesHeader { eyebrow, headline, sticker, intro },\n    deliverables[] { title, description, tag },\n    faqHeader { eyebrow, headline, sticker, intro },\n    faqItems[] { question, answer },\n    proofHeader { eyebrow, headline, sticker, intro },\n    proofSticker,\n    proofBody,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': FREE_AUDIT_PAGE_QUERY_RESULT;
     '\n  *[_type == "newsletterPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    formTitle,\n    formButtonLabel,\n    formDisclaimer,\n    formSuccessSticker,\n    formSuccessText,\n    whyHeader { eyebrow, headline, sticker, intro },\n    whyReasons[] { title, description, tag },\n    insideHeader { eyebrow, headline, sticker, intro },\n    insideItems[] { title, description, tag },\n    afterHoursHeader { eyebrow, headline, sticker, intro },\n    afterHoursBody,\n    ctaEyebrow,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n    ctaSecondaryLabel,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': NEWSLETTER_PAGE_QUERY_RESULT;
     '\n  *[_type == "servicesPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    heroSecondaryCta { label, href, openInNewTab },\n    categories[] {\n      name,\n      headline,\n      intro,\n      layout,\n      featureSticker,\n      items[] { title, description, tag }\n    },\n    auditHeadline,\n    auditBody,\n    auditButton { label, href, openInNewTab },\n    quoteEyebrow,\n    quoteHeadline,\n    quoteIntro,\n    quoteGoalsLabel,\n    quoteGoals,\n    quoteServicesLabel,\n    quoteServiceGroups[] { title, options },\n    quoteMessagePlaceholder,\n    quoteButtonLabel,\n    quoteNote,\n    quoteSuccessSticker,\n    quoteSuccessText,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': SERVICES_PAGE_QUERY_RESULT;
+    '\n  *[_type == "promptLibraryPage"][0]{\n    heroBadge,\n    heroStickerA,\n    heroStickerB,\n    heroHeadline,\n    heroIntro,\n    heroCta { label, href, openInNewTab },\n    heroBadges,\n\n    whyLabel,\n    whyHeadline,\n    whyBody,\n\n    aiLabel,\n    aiHeadline,\n    aiIntro,\n    aiPlatforms[] { title, description, tag },\n\n    warningHeadline,\n    warningBody,\n\n    categories[] {\n      name,\n      tagline,\n      prompts[] {\n        title,\n        bestTool,\n        useCase,\n        promptText,\n        tip\n      }\n    },\n\n    ctaLabel,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': PROMPT_LIBRARY_PAGE_QUERY_RESULT;
     '\n  *[_type == "blogIndexPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    topReadsHeader { eyebrow, headline, sticker, intro },\n    archiveHeader { eyebrow, headline, sticker, intro },\n    newsletterHeadline,\n    newsletterBody,\n    newsletterCta { label, href, openInNewTab },\n    ctaHeadline,\n    ctaBody,\n    ctaButtons { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} },\n    "topReads": *[_type == "post" && featured == true && defined(slug.current)]\n      | order(publishedAt desc)[0...3] {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n},\n    "posts": *[_type == "post" && defined(slug.current)]\n      | order(publishedAt desc) {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n},\n    "categories": *[_type == "category"] | order(order asc, title asc) { _id, title, "slug": slug.current }\n  }\n': BLOG_INDEX_QUERY_RESULT;
     '\n  *[_type == "post" && defined(slug.current)]{ "slug": slug.current }\n': POST_SLUGS_QUERY_RESULT;
     '\n  *[_type == "post" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    dek,\n    publishedAt,\n    "readTime": coalesce(\n      readTime,\n      math::max([1, round(length(pt::text(body)) / 5 / 220)])\n    ),\n    heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    category-> { _id, title, "slug": slug.current },\n    author-> {\n  _id,\n  name,\n  role,\n  initials,\n  photo {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  bio,\n  funFact\n},\n    body[]{\n      ...,\n      _type == "figure" => { ..., "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions }\n    },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} },\n    "related": select(\n      count(related) > 0 => related[]-> {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n},\n      *[_type == "post" && slug.current != $slug && category._ref == ^.category._ref]\n        | order(publishedAt desc)[0...3] {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n}\n    )\n  }\n': POST_QUERY_RESULT;

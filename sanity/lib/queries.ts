@@ -270,6 +270,51 @@ export const SERVICES_PAGE_QUERY = defineQuery(/* groq */ `
   }
 `);
 
+// --- Prompt library ---------------------------------------------------------
+
+export const PROMPT_LIBRARY_PAGE_QUERY = defineQuery(/* groq */ `
+  *[_type == "promptLibraryPage"][0]{
+    heroBadge,
+    heroStickerA,
+    heroStickerB,
+    heroHeadline,
+    heroIntro,
+    heroCta ${LINK},
+    heroBadges,
+
+    whyLabel,
+    whyHeadline,
+    whyBody,
+
+    aiLabel,
+    aiHeadline,
+    aiIntro,
+    aiPlatforms[] ${CARD},
+
+    warningHeadline,
+    warningBody,
+
+    categories[] {
+      name,
+      tagline,
+      prompts[] {
+        title,
+        bestTool,
+        useCase,
+        promptText,
+        tip
+      }
+    },
+
+    ctaLabel,
+    ctaHeadline,
+    ctaBody,
+    ctaButton ${LINK},
+
+    seo ${SEO}
+  }
+`);
+
 // --- Blog -----------------------------------------------------------------
 
 export const BLOG_INDEX_QUERY = defineQuery(/* groq */ `

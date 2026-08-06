@@ -39,6 +39,7 @@ import {
 import { legalDocs } from "./legacy/legal-data";
 import { whatYouGet, whySubscribe } from "./legacy/newsletter-data";
 import { serviceDocs } from "./legacy/service-data";
+import { promptCategories } from "./prompt-library-data";
 import {
   quoteGoals,
   quoteServiceGroups,
@@ -712,6 +713,91 @@ docs.push({
     title: "B2B SaaS Marketing Services — keewee.in",
     description:
       "Full-funnel B2B SaaS marketing across every stage — from making your positioning sharp to filling your pipeline to converting the traffic you're already paying for.",
+  },
+});
+
+// --- Prompt library page ----------------------------------------------------
+
+docs.push({
+  _id: "promptLibraryPage",
+  _type: "promptLibraryPage",
+  heroBadge: "Resources / Prompt Library",
+  heroStickerA: "30+ PROMPTS!",
+  heroStickerB: "GENERIC OUTPUT",
+  heroHeadline: headline(
+    "The prompt library that gets you a first draft worth ",
+    ["keeping.", "highlight"]
+  ),
+  heroIntro: richText(
+    "\"Write me a LinkedIn post\" gets you something that reads like every other LinkedIn post. These are the prompts we actually use, for every stage of B2B marketing, built to produce output you can edit and ship."
+  ),
+  heroCta: link("Jump to a category ↓", "#kw-categories"),
+  heroBadges: ["30+ prompts", "9 categories", "Free, no email wall"],
+
+  whyLabel: "// Why this exists",
+  whyHeadline: "Why most AI marketing output sounds the same.",
+  whyBody: richText(
+    "It's not the model. It's the prompt. \"Write a blog post about X\" gives the model zero context, so it writes the most average version of that blog post it can assemble. Give it your ICP, your voice, your competitors, and one example of what good looks like. The output changes.",
+    "Every prompt below follows the same structure: role, context, constraints, and a format that forces a specific answer instead of a vague one. We wrote these running campaigns for ourselves and our clients. Copy the one you need, fill in the brackets, and go."
+  ),
+
+  aiLabel: "// Which AI to use where",
+  aiHeadline: "Which AI to use where.",
+  aiIntro:
+    "Every prompt is tagged with the platform we'd default to. That's a preference, not a rule. Use whatever you have.",
+  aiPlatforms: keyed([
+    card(
+      "ChatGPT",
+      "The generalist. Quick drafts, brainstorming, ad copy, outbound sequences. If you've built a custom GPT on your brand voice, run the prompts there."
+    ),
+    card(
+      "Claude",
+      "Long context work where brand voice matters. Upload your brand guide, ICP doc, and reference content into a Project and reuse that context across prompts."
+    ),
+    card(
+      "Perplexity",
+      "Anything that needs to be current. Competitor research, recent news. It cites sources, which matters for AEO work and content research."
+    ),
+    card(
+      "Gemini",
+      "Strongest when connected to Google Workspace. Good for prompts that pull from Docs, Sheets, or Gmail. Solid for structured data tasks like content audits."
+    ),
+  ]),
+
+  warningHeadline: "What not to feed these prompts.",
+  warningBody:
+    "None of these need your customers' personal data, financial details, or anything confidential. Your ICP description, your voice guidelines, and your public positioning are enough. If a prompt tempts you to paste real customer records or contracts, don't. Anonymize or leave it out.",
+
+  categories: keyed(
+    promptCategories.map((category) => ({
+      _type: "promptCategory",
+      name: category.name,
+      tagline: category.tagline,
+      prompts: keyed(
+        category.prompts.map((p) => ({
+          _type: "promptEntry",
+          title: p.title,
+          bestTool: p.best,
+          useCase: p.useCase,
+          promptText: p.prompt,
+          ...(p.tip ? { tip: p.tip } : {}),
+        }))
+      ),
+    }))
+  ),
+
+  ctaLabel: "// Or skip the prompts entirely",
+  ctaHeadline: headline("Want us to just run this for you?"),
+  ctaBody: richText(
+    "These are the prompts we use ourselves. But they work best in the hands of someone who already knows what good positioning or a good landing page looks like. If you'd rather have that judgment applied to your business directly, that's what the audit call is for."
+  ),
+  ctaButton: link("Book your free audit", mailto("Free audit call")),
+
+  seo: {
+    _type: "seo",
+    title: "AI Prompt Library — keewee.in",
+    description:
+      "30+ prompts we actually use for positioning, content, SEO, social, email, outbound, ads, conversion, and reporting. Free, no email wall.",
   },
 });
 

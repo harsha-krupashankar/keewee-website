@@ -103,6 +103,14 @@ export async function getNewsletterPage(opts: FetchOptions) {
   });
 }
 
+export async function getPromptLibraryPage(opts: FetchOptions) {
+  "use cache";
+  return run<T.PromptLibraryPage>(opts, {
+    query: Q.PROMPT_LIBRARY_PAGE_QUERY,
+    tags: [TAG.promptLibraryPage],
+  });
+}
+
 // --- Blog -----------------------------------------------------------------
 
 export async function getBlogIndex(opts: FetchOptions) {
