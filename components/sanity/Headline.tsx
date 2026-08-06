@@ -22,6 +22,8 @@ const components: PortableTextComponents = {
       </span>
     ),
     green: ({ children }) => <span className="text-green">{children}</span>,
+    // For headlines sitting on an ink band, where the green reads as almost black.
+    lime: ({ children }) => <span className="text-lime">{children}</span>,
     rust: ({ children }) => <span className="text-rust">{children}</span>,
     strong: ({ children }) => <strong className="font-extrabold">{children}</strong>,
     em: ({ children }) => <em className="italic">{children}</em>,

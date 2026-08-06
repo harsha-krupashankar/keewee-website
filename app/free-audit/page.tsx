@@ -32,15 +32,8 @@ async function Content({ opts }: { opts: FetchOptions }) {
   const page = await getFreeAuditPage(opts);
   if (!page) notFound();
 
-  // This is a landing page: the nav drops its links so the single booking CTA
-  // is the only way out.
-  const navCta =
-    page.navCtaLabel && page.hero?.cta
-      ? { label: page.navCtaLabel, href: page.hero.cta.href }
-      : page.hero?.cta;
-
   return (
-    <SiteShell opts={opts} minimalNav navCta={navCta}>
+    <SiteShell opts={opts}>
       <PageHeroCentered
         hero={page.hero}
         className="pb-14 pt-16 md:pb-16 md:pt-20"

@@ -40,6 +40,10 @@ export const structure: StructureResolver = (S) =>
         .id("freeAuditPage")
         .child(S.document().schemaType("freeAuditPage").documentId("freeAuditPage")),
       S.listItem()
+        .title("Services page")
+        .id("servicesPage")
+        .child(S.document().schemaType("servicesPage").documentId("servicesPage")),
+      S.listItem()
         .title("Newsletter page")
         .id("newsletterPage")
         .child(S.document().schemaType("newsletterPage").documentId("newsletterPage")),

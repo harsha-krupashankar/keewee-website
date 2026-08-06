@@ -13,7 +13,6 @@ export const homePage = defineType({
     { name: "problem", title: "Problem" },
     { name: "funnel", title: "Full funnel" },
     { name: "why", title: "Why Keewee" },
-    { name: "how", title: "How it works" },
     { name: "who", title: "Who we work with" },
     { name: "proof", title: "Proof" },
     { name: "audit", title: "Free audit" },
@@ -141,29 +140,6 @@ export const homePage = defineType({
       type: "array",
       group: "why",
       of: [defineArrayMember({ type: "titledCard" })],
-    }),
-
-    // --- How it works -----------------------------------------------------
-    defineField({
-      name: "howHeader",
-      title: "Header",
-      type: "sectionHeader",
-      group: "how",
-    }),
-    defineField({
-      name: "howPhases",
-      title: "Phases",
-      type: "array",
-      group: "how",
-      of: [defineArrayMember({ type: "titledCard" })],
-    }),
-    defineField({
-      name: "howBanner",
-      title: "Banner",
-      type: "text",
-      rows: 2,
-      group: "how",
-      description: "The green statement bar under the three phases.",
     }),
 
     // --- Who we work with -------------------------------------------------

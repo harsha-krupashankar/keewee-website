@@ -5,12 +5,16 @@ import { postBody, richText } from "./objects/richText";
 import { pageHero } from "./objects/pageHero";
 import { seo } from "./objects/seo";
 import {
+  checkboxGroup,
   cta,
   faqItem,
   figure,
   funnelStage,
   link,
+  navGroup,
   sectionHeader,
+  socialLink,
+  serviceCategory,
   titledCard,
 } from "./objects/primitives";
 import {
@@ -38,6 +42,7 @@ import { faqPage } from "./pages/faqPage";
 import { freeAuditPage } from "./pages/freeAuditPage";
 import { homePage } from "./pages/homePage";
 import { newsletterPage } from "./pages/newsletterPage";
+import { servicesPage } from "./pages/servicesPage";
 
 /**
  * Documents that must never have more than one instance. The Studio structure
@@ -52,6 +57,7 @@ export const SINGLETON_TYPES = [
   "faqPage",
   "freeAuditPage",
   "newsletterPage",
+  "servicesPage",
 ] as const;
 
 export type SingletonType = (typeof SINGLETON_TYPES)[number];
@@ -65,11 +71,15 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   seo,
   figure,
   link,
+  navGroup,
+  socialLink,
   cta,
   sectionHeader,
   faqItem,
   titledCard,
   funnelStage,
+  serviceCategory,
+  checkboxGroup,
   legalParagraph,
   legalClause,
   legalSubheading,
@@ -87,6 +97,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   faqPage,
   freeAuditPage,
   newsletterPage,
+  servicesPage,
 
   // Collections.
   post,

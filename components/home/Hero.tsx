@@ -8,15 +8,17 @@ import type { HomePage } from "@/sanity/lib/types";
 
 export default function Hero({ page }: { page: HomePage }) {
   return (
-    <section className="overflow-hidden bg-paper pb-14 pt-16 md:pb-16 md:pt-[66px]">
+    <section className="relative overflow-hidden bg-paper pb-14 pt-16 md:pb-16 md:pt-[66px]">
+      {/* Sits on the section, not the container, so the grid runs the full
+          bleed of the hero rather than stopping at the content column. */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.045]"
+        style={{
+          backgroundImage: "radial-gradient(#1C1B19 1.3px, transparent 1.7px)",
+          backgroundSize: "17px 17px",
+        }}
+      />
       <Container className="relative">
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.045]"
-          style={{
-            backgroundImage: "radial-gradient(#1C1B19 1.3px, transparent 1.7px)",
-            backgroundSize: "17px 17px",
-          }}
-        />
         <div
           className="pointer-events-none absolute right-0 top-11 hidden select-none font-display text-[210px] font-extrabold leading-[0.8] tracking-[-0.04em] text-transparent [-webkit-text-stroke:2px_#E1DACB] lg:block"
           style={{ transform: "rotate(-4deg)" }}
@@ -95,7 +97,7 @@ export default function Hero({ page }: { page: HomePage }) {
             )}
           </Reveal>
 
-          {page.heroFootnote && (
+          {/* {page.heroFootnote && (
             <Reveal
               delay={320}
               y={12}
@@ -103,7 +105,7 @@ export default function Hero({ page }: { page: HomePage }) {
             >
               {page.heroFootnote}
             </Reveal>
-          )}
+          )} */}
         </div>
       </Container>
     </section>

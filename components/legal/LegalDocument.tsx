@@ -101,10 +101,10 @@ export default function LegalDocument({ doc }: { doc: LegalDoc }) {
         </Container>
       </header>
 
-      <Container>
-        <div className="grid grid-cols-1 gap-10 py-12 lg:grid-cols-[264px_1fr] lg:gap-16 lg:py-16">
-          <aside>
-            <div className="lg:sticky lg:top-24">
+      <Container className="py-12 lg:py-16">
+        <div className="grid grid-cols-1 overflow-clip rounded-[22px] border border-border-soft bg-paper lg:grid-cols-[264px_1fr]">
+          <aside className="border-b border-border bg-surface lg:border-b-0 lg:border-r">
+            <div className="px-6 py-8 lg:sticky lg:top-24 lg:px-[26px] lg:pb-10 lg:pt-9">
               <div className="mb-4 font-mono text-[11px] font-bold uppercase tracking-[1.2px] text-faint">
                 On this page
               </div>
@@ -140,7 +140,7 @@ export default function LegalDocument({ doc }: { doc: LegalDoc }) {
             </div>
           </aside>
 
-          <div className="max-w-[760px]">
+          <div className="max-w-[760px] px-6 py-10 lg:px-14 lg:pb-15 lg:pt-11">
             {sections.map((section) => (
               <section
                 key={section.anchor}

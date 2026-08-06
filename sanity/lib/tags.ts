@@ -21,6 +21,7 @@ export const TAG = {
   faqPage: "faqPage",
   freeAuditPage: "freeAuditPage",
   newsletterPage: "newsletterPage",
+  servicesPage: "servicesPage",
 } as const;
 
 export type Tag = (typeof TAG)[keyof typeof TAG];

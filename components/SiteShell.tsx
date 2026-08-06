@@ -2,7 +2,6 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import { getSiteSettings } from "@/sanity/lib/content";
 import type { FetchOptions } from "@/sanity/lib/live";
-import type { Link as LinkValue } from "@/sanity/lib/types";
 
 /**
  * Header + footer wrapper for every page.
@@ -10,20 +9,20 @@ import type { Link as LinkValue } from "@/sanity/lib/types";
  * Fetching site settings here rather than in each page keeps the chrome to one
  * query definition; the `'use cache'` boundary inside `getSiteSettings` means
  * the extra call per route costs nothing after the first render.
+ *
+ * The chrome is deliberately not configurable: every route gets the same nav
+ * links, the same header button, and the same footer, all straight from Site
+ * settings. `mainClassName` is the only knob, and it only sets the page
+ * background behind the sections.
  */
 export default async function SiteShell({
   opts,
   children,
   mainClassName = "bg-paper",
-  minimalNav = false,
-  navCta,
 }: {
   opts: FetchOptions;
   children: React.ReactNode;
   mainClassName?: string;
-  minimalNav?: boolean;
-  /** Overrides the global header button, e.g. on the free audit landing page. */
-  navCta?: LinkValue | null;
 }) {
   const settings = await getSiteSettings(opts);
 
@@ -31,9 +30,9 @@ export default async function SiteShell({
     <>
       <Navbar
         siteName={settings?.title ?? "keewee.in"}
+        logoMark={settings?.logoMark}
         links={settings?.headerNav}
-        cta={navCta ?? settings?.headerCta}
-        minimal={minimalNav}
+        cta={settings?.headerCta}
       />
       <main className={mainClassName}>{children}</main>
       <Footer settings={settings} />

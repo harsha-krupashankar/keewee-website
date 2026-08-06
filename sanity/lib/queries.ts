@@ -64,17 +64,23 @@ const POST_SUMMARY = /* groq */ `{
 export const SITE_SETTINGS_QUERY = defineQuery(/* groq */ `
   *[_type == "siteSettings"][0]{
     title,
+    logoMark,
     tagline,
     contactEmail,
     marqueeText,
-    headerNav[] ${LINK},
+    headerNav[] {
+      _type,
+      _type == "link" => ${LINK},
+      _type == "navGroup" => { label, links[] ${LINK} }
+    },
     headerCta ${LINK},
     footerGroups[] {
       title,
-      links[] ${LINK}
+      links[] ${LINK},
+      cta ${LINK}
     },
     footerNote,
-    socialLinks[] ${LINK},
+    socialLinks[] { platform, href },
     defaultSeo ${SEO}
   }
 `);
@@ -111,10 +117,6 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `
 
     whyHeader ${SECTION_HEADER},
     whyReasons[] ${CARD},
-
-    howHeader ${SECTION_HEADER},
-    howPhases[] ${CARD},
-    howBanner,
 
     whoHeader ${SECTION_HEADER},
     whoSegments[] ${CARD},
@@ -231,6 +233,39 @@ export const NEWSLETTER_PAGE_QUERY = defineQuery(/* groq */ `
     ctaBody,
     ctaButton ${LINK},
     ctaSecondaryLabel,
+    seo ${SEO}
+  }
+`);
+
+// --- Services index -------------------------------------------------------
+
+export const SERVICES_PAGE_QUERY = defineQuery(/* groq */ `
+  *[_type == "servicesPage"][0]{
+    hero ${HERO},
+    heroSecondaryCta ${LINK},
+    categories[] {
+      name,
+      headline,
+      intro,
+      layout,
+      featureSticker,
+      items[] ${CARD}
+    },
+    auditHeadline,
+    auditBody,
+    auditButton ${LINK},
+    quoteEyebrow,
+    quoteHeadline,
+    quoteIntro,
+    quoteGoalsLabel,
+    quoteGoals,
+    quoteServicesLabel,
+    quoteServiceGroups[] { title, options },
+    quoteMessagePlaceholder,
+    quoteButtonLabel,
+    quoteNote,
+    quoteSuccessSticker,
+    quoteSuccessText,
     seo ${SEO}
   }
 `);

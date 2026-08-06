@@ -23,6 +23,15 @@ export const siteSettings = defineType({
       initialValue: "keewee.in",
     }),
     defineField({
+      name: "logoMark",
+      title: "Logo mark",
+      type: "string",
+      group: "general",
+      description:
+        "The glyph before the site name in the header and footer. Leave empty for none.",
+      initialValue: "✱",
+    }),
+    defineField({
       name: "tagline",
       type: "string",
       group: "general",
@@ -48,7 +57,12 @@ export const siteSettings = defineType({
       title: "Header navigation",
       type: "array",
       group: "navigation",
-      of: [defineArrayMember({ type: "link" })],
+      description:
+        "Rendered in order, centred in the header. Add a Dropdown for an item that opens a menu instead of navigating.",
+      of: [
+        defineArrayMember({ type: "link" }),
+        defineArrayMember({ type: "navGroup" }),
+      ],
     }),
     defineField({
       name: "headerCta",
@@ -76,6 +90,13 @@ export const siteSettings = defineType({
               type: "array",
               of: [defineArrayMember({ type: "link" })],
             }),
+            defineField({
+              name: "cta",
+              title: "Highlighted link",
+              type: "link",
+              description:
+                "Optional. Sits below the column's links, set apart in green — e.g. a booking link.",
+            }),
           ],
           preview: {
             select: { title: "title", links: "links" },
@@ -88,18 +109,20 @@ export const siteSettings = defineType({
       ],
     }),
     defineField({
+      name: "socialLinks",
+      title: "Social links",
+      type: "array",
+      group: "navigation",
+      description:
+        "Shown as icons beside the logo in the footer. Pick the network so the right mark is used.",
+      of: [defineArrayMember({ type: "socialLink" })],
+    }),
+    defineField({
       name: "footerNote",
       title: "Footer note",
       type: "string",
       group: "navigation",
       description: "Copyright or closing line. The year is added automatically.",
-    }),
-    defineField({
-      name: "socialLinks",
-      title: "Social links",
-      type: "array",
-      group: "navigation",
-      of: [defineArrayMember({ type: "link" })],
     }),
     defineField({
       name: "defaultSeo",

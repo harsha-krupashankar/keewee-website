@@ -87,6 +87,14 @@ export async function getFreeAuditPage(opts: FetchOptions) {
   });
 }
 
+export async function getServicesPage(opts: FetchOptions) {
+  "use cache";
+  return run<T.ServicesPage>(opts, {
+    query: Q.SERVICES_PAGE_QUERY,
+    tags: [TAG.servicesPage],
+  });
+}
+
 export async function getNewsletterPage(opts: FetchOptions) {
   "use cache";
   return run<T.NewsletterPage>(opts, {

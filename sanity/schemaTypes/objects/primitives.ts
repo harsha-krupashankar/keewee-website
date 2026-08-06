@@ -51,6 +51,78 @@ export const link = defineType({
   },
 });
 
+/**
+ * The networks the footer has a mark for. Adding one here also needs its path
+ * adding to `SOCIAL_ICONS` in `components/Footer.tsx` — until then it renders
+ * as the platform's first two letters rather than a blank square.
+ */
+export const SOCIAL_PLATFORMS = [
+  { title: "LinkedIn", value: "linkedin" },
+  { title: "X (Twitter)", value: "x" },
+  { title: "Instagram", value: "instagram" },
+  { title: "YouTube", value: "youtube" },
+] as const;
+
+/** A social profile: which network, and where it points. */
+export const socialLink = defineType({
+  name: "socialLink",
+  title: "Social link",
+  type: "object",
+  fields: [
+    defineField({
+      name: "platform",
+      type: "string",
+      options: { list: SOCIAL_PLATFORMS.map(({ title, value }) => ({ title, value })) },
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "href",
+      title: "Profile URL",
+      type: "url",
+      validation: (rule) => rule.required(),
+    }),
+  ],
+  preview: {
+    select: { title: "platform", subtitle: "href" },
+    prepare: ({ title, subtitle }) => ({
+      title:
+        SOCIAL_PLATFORMS.find((p) => p.value === title)?.title ?? (title as string),
+      subtitle: subtitle as string,
+    }),
+  },
+});
+
+/**
+ * A header nav item that opens a menu instead of navigating. Sits alongside
+ * plain `link`s in `siteSettings.headerNav`; the label itself is not a
+ * destination, so there is no `href`.
+ */
+export const navGroup = defineType({
+  name: "navGroup",
+  title: "Dropdown",
+  type: "object",
+  fields: [
+    defineField({
+      name: "label",
+      type: "string",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "links",
+      type: "array",
+      of: [defineArrayMember({ type: "link" })],
+      validation: (rule) => rule.required().min(1),
+    }),
+  ],
+  preview: {
+    select: { title: "label", links: "links" },
+    prepare: ({ title, links }) => ({
+      title,
+      subtitle: `Dropdown · ${(links as unknown[] | undefined)?.length ?? 0} links`,
+    }),
+  },
+});
+
 /** Primary/secondary button pair used at the bottom of most sections. */
 export const cta = defineType({
   name: "cta",
@@ -208,6 +280,94 @@ export const funnelStage = defineType({
   ],
   preview: {
     select: { title: "title", subtitle: "tag" },
+  },
+});
+
+/**
+ * One of the five bands on the services index page.
+ *
+ * The design gives every category a different shape — a lead feature card, plain
+ * rows, a two-column grid, a dark band, big-number cards — so `layout` is stored
+ * rather than inferred. The `01 /` prefix and the `#kw-cat1` anchor are derived
+ * from array position, so reordering renumbers and re-anchors on its own.
+ */
+export const serviceCategory = defineType({
+  name: "serviceCategory",
+  title: "Service category",
+  type: "object",
+  fields: [
+    defineField({
+      name: "name",
+      type: "string",
+      description: "Follows the number in the eyebrow, e.g. “Awareness & Brand”.",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({ name: "headline", type: "headline", validation: (rule) => rule.required() }),
+    defineField({ name: "intro", title: "Intro", type: "richText" }),
+    defineField({
+      name: "layout",
+      title: "Layout",
+      type: "string",
+      options: {
+        list: [
+          { title: "Lead feature + card grid", value: "feature" },
+          { title: "Full-width rows", value: "rows" },
+          { title: "Two-column cards", value: "split" },
+          { title: "Dark band", value: "dark" },
+          { title: "Big-number cards", value: "numbered" },
+        ],
+      },
+      initialValue: "split",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "featureSticker",
+      title: "Feature sticker",
+      type: "string",
+      description:
+        "Vertical label beside the lead card, e.g. “START HERE”. Only the lead feature layout shows it.",
+    }),
+    defineField({
+      name: "items",
+      title: "Services",
+      type: "array",
+      of: [defineArrayMember({ type: "titledCard" })],
+      validation: (rule) => rule.required().min(1),
+    }),
+  ],
+  preview: {
+    select: { title: "name", layout: "layout", items: "items" },
+    prepare: ({ title, layout, items }) => ({
+      title: title ?? "Service category",
+      subtitle: `${layout ?? "—"} · ${Array.isArray(items) ? items.length : 0} services`,
+    }),
+  },
+});
+
+/** A titled block of checkbox labels. Used by the services page quote form. */
+export const checkboxGroup = defineType({
+  name: "checkboxGroup",
+  title: "Checkbox group",
+  type: "object",
+  fields: [
+    defineField({
+      name: "title",
+      type: "string",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "options",
+      type: "array",
+      of: [defineArrayMember({ type: "string" })],
+      validation: (rule) => rule.required().min(1),
+    }),
+  ],
+  preview: {
+    select: { title: "title", options: "options" },
+    prepare: ({ title, options }) => ({
+      title: title ?? "Checkbox group",
+      subtitle: Array.isArray(options) ? options.join(" · ") : undefined,
+    }),
   },
 });
 

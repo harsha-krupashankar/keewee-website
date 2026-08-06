@@ -29,7 +29,7 @@ export default function Problem({ page }: { page: HomePage }) {
         <div className="grid items-stretch gap-5 lg:grid-cols-[1.1fr_0.9fr]">
           <Reveal
             delay={120}
-            className="rounded-[18px] border border-border bg-white p-7 shadow-[0_10px_30px_rgba(28,27,25,0.05)] transition-all duration-150 hover:border-[#D9C9B8] hover:shadow-[0_16px_34px_rgba(28,27,25,0.1)] sm:p-8"
+            className="flex flex-col justify-center rounded-[18px] border border-border bg-white p-7 shadow-[0_10px_30px_rgba(28,27,25,0.05)] transition-all duration-150 hover:border-[#D9C9B8] hover:shadow-[0_16px_34px_rgba(28,27,25,0.1)] sm:p-8"
           >
             <Copy
               value={page.problemBody}

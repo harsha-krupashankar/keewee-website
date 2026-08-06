@@ -8,7 +8,6 @@ import FinalCta from "@/components/home/FinalCta";
 import FreeAuditBanner from "@/components/home/FreeAuditBanner";
 import FullFunnel from "@/components/home/FullFunnel";
 import Hero from "@/components/home/Hero";
-import HowItWorks from "@/components/home/HowItWorks";
 import Marquee from "@/components/home/Marquee";
 import Problem from "@/components/home/Problem";
 import Proof from "@/components/home/Proof";
@@ -38,13 +37,12 @@ async function Content({ opts }: { opts: FetchOptions }) {
   if (!page) notFound();
 
   return (
-    <SiteShell opts={opts} mainClassName="">
+    <SiteShell opts={opts}>
       <Hero page={page} />
       <Marquee text={settings?.marqueeText} />
       <Problem page={page} />
       <FullFunnel page={page} />
       <WhyKeewee page={page} />
-      <HowItWorks page={page} />
       <Proof page={page} />
       <FreeAuditBanner page={page} />
       <WhoWeWorkWith page={page} />

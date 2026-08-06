@@ -104,24 +104,6 @@ export const reasons = [
   },
 ];
 
-export const phases = [
-  {
-    no: "01",
-    title: "Diagnose",
-    desc: "We audit your positioning, funnel and content, then pinpoint what's actually holding growth back.",
-  },
-  {
-    no: "02",
-    title: "Build",
-    desc: "We fix the messaging, rebuild the funnel and ship the system — with your team, not around it.",
-  },
-  {
-    no: "03",
-    title: "Grow",
-    desc: "We run it, measure it and tune it until the pipeline is moving predictably.",
-  },
-];
-
 export const callItems = [
   "A teardown of your current positioning and messaging",
   "The 3 biggest leaks in your funnel, prioritized",

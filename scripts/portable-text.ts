@@ -5,7 +5,7 @@ import { randomUUID } from "node:crypto";
  * seed script. Not used at runtime — the app only ever reads Portable Text.
  */
 
-export type Mark = "strong" | "em" | "highlight" | "green" | "rust";
+export type Mark = "strong" | "em" | "highlight" | "green" | "lime" | "rust";
 
 /** A run of text, optionally carrying marks. */
 export type Span = string | [text: string, ...marks: Mark[]];

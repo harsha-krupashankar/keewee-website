@@ -16,6 +16,7 @@ export const resolve: PresentationPluginOptions["resolve"] = {
     { route: "/blog", filter: `_type == "blogIndexPage"` },
     { route: "/faq", filter: `_type == "faqPage"` },
     { route: "/free-audit", filter: `_type == "freeAuditPage"` },
+    { route: "/services", filter: `_type == "servicesPage"` },
     { route: "/newsletter", filter: `_type == "newsletterPage"` },
     {
       route: "/blog/:slug",
@@ -53,6 +54,10 @@ export const resolve: PresentationPluginOptions["resolve"] = {
     freeAuditPage: defineLocations({
       select: {},
       resolve: () => ({ locations: [{ title: "Free audit", href: "/free-audit" }] }),
+    }),
+    servicesPage: defineLocations({
+      select: {},
+      resolve: () => ({ locations: [{ title: "Services", href: "/services" }] }),
     }),
     newsletterPage: defineLocations({
       select: {},

@@ -92,18 +92,35 @@ export type FunnelStage = {
 export type FooterGroup = {
   title: string;
   links?: Link[] | null;
+  /** Optional highlighted link under the column, e.g. "Book a call". */
+  cta?: Link | null;
 };
+
+/** `platform` picks the mark; the icon set lives in `components/Footer.tsx`. */
+export type SocialLink = {
+  platform: string;
+  href: string;
+};
+
+/**
+ * A header item is either a destination or a label that opens a menu. The
+ * `_type` discriminant comes straight from the array member in `headerNav`.
+ */
+export type NavItem =
+  | ({ _type: "link" } & Link)
+  | { _type: "navGroup"; label: string; links: Link[] };
 
 export type SiteSettings = {
   title: string;
+  logoMark?: string | null;
   tagline?: string | null;
   contactEmail: string;
   marqueeText: string;
-  headerNav?: Link[] | null;
+  headerNav?: NavItem[] | null;
   headerCta?: Link | null;
   footerGroups?: FooterGroup[] | null;
   footerNote?: string | null;
-  socialLinks?: Link[] | null;
+  socialLinks?: SocialLink[] | null;
   defaultSeo?: Seo | null;
 };
 
@@ -131,10 +148,6 @@ export type HomePage = {
 
   whyHeader?: SectionHeader | null;
   whyReasons?: TitledCard[] | null;
-
-  howHeader?: SectionHeader | null;
-  howPhases?: TitledCard[] | null;
-  howBanner?: string | null;
 
   whoHeader?: SectionHeader | null;
   whoSegments?: TitledCard[] | null;
@@ -247,6 +260,50 @@ export type NewsletterPage = {
   ctaBody?: RichText | null;
   ctaButton?: Link | null;
   ctaSecondaryLabel?: string | null;
+  seo?: Seo | null;
+};
+
+/** Which of the five shapes the design gives a category band on `/services`. */
+export type ServiceCategoryLayout =
+  | "feature"
+  | "rows"
+  | "split"
+  | "dark"
+  | "numbered";
+
+export type ServiceCategory = {
+  name: string;
+  headline?: Headline | null;
+  intro?: RichText | null;
+  layout: ServiceCategoryLayout;
+  featureSticker?: string | null;
+  items: TitledCard[];
+};
+
+export type CheckboxGroup = {
+  title: string;
+  options: string[];
+};
+
+export type ServicesPage = {
+  hero?: PageHero | null;
+  heroSecondaryCta?: Link | null;
+  categories?: ServiceCategory[] | null;
+  auditHeadline?: Headline | null;
+  auditBody?: RichText | null;
+  auditButton?: Link | null;
+  quoteEyebrow?: string | null;
+  quoteHeadline?: Headline | null;
+  quoteIntro?: RichText | null;
+  quoteGoalsLabel?: string | null;
+  quoteGoals?: string[] | null;
+  quoteServicesLabel?: string | null;
+  quoteServiceGroups?: CheckboxGroup[] | null;
+  quoteMessagePlaceholder?: string | null;
+  quoteButtonLabel?: string | null;
+  quoteNote?: string | null;
+  quoteSuccessSticker?: string | null;
+  quoteSuccessText?: string | null;
   seo?: Seo | null;
 };
 

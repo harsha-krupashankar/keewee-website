@@ -25,7 +25,6 @@ import {
   funnel,
   lookalikes,
   marqueeText,
-  phases,
   reasons,
   segments,
 } from "./legacy/data";
@@ -40,6 +39,11 @@ import {
 import { legalDocs } from "./legacy/legal-data";
 import { whatYouGet, whySubscribe } from "./legacy/newsletter-data";
 import { serviceDocs } from "./legacy/service-data";
+import {
+  quoteGoals,
+  quoteServiceGroups,
+  servicesCategories,
+} from "./services-page-data";
 
 // ---------------------------------------------------------------------------
 // Client
@@ -49,6 +53,15 @@ const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production";
 const token = process.env.SANITY_API_WRITE_TOKEN;
 const dryRun = process.argv.includes("--dry");
+
+/**
+ * `--only <type>` narrows the write to one document type. Re-running the whole
+ * seed restores every page to its migrated state, which destroys real editing;
+ * this is how you land a newly added page without touching the rest.
+ */
+const onlyIndex = process.argv.indexOf("--only");
+const only = onlyIndex === -1 ? null : process.argv[onlyIndex + 1];
+if (onlyIndex !== -1 && !only) throw new Error("--only needs a document type");
 
 if (!projectId) throw new Error("Missing NEXT_PUBLIC_SANITY_PROJECT_ID");
 if (!token && !dryRun) {
@@ -328,16 +341,6 @@ docs.push({
     ),
   }),
   whyReasons: keyed(reasons.map((r) => card(r.title, r.desc))),
-
-  howHeader: sectionHeader({
-    eyebrow: "How it works",
-    headline: headline("Three phases. One team. ", ["No handoffs.", "green"]),
-  }),
-  howPhases: keyed(
-    phases.map((p) => card(p.title, p.desc, `PHASE ${p.no}`))
-  ),
-  howBanner:
-    "If the pipeline isn't moving, the deliverable count doesn't matter.",
 
   whoHeader: sectionHeader({
     eyebrow: "Who we work with",
@@ -626,6 +629,92 @@ docs.push({
   },
 });
 
+// --- Services index page ---------------------------------------------------
+
+/**
+ * The five bands differ in shape, so `layout` travels with the copy. Everything
+ * else on the page — the `01 /` prefixes, the `#kw-cat1` anchors — is derived
+ * from array position at render time.
+ */
+const categoryHeadlines: Block[][] = [
+  headline("Get found. Get known. Get ", ["remembered.", "highlight"]),
+  headline("Turn attention into ", ["pipeline.", "highlight"]),
+  headline("Stop losing ", ["buyers", "highlight"], " after they click."),
+  headline("Keep what you ", ["worked hard", "lime"], " to get."),
+  headline(
+    "Know what's working. Build the system that ",
+    ["keeps it working.", "highlight"]
+  ),
+];
+
+docs.push({
+  _id: "servicesPage",
+  _type: "servicesPage",
+  hero: {
+    _type: "pageHero",
+    badge: "Services",
+    headline: headline(
+      "Most agencies own one channel. We own your ",
+      ["entire pipeline.", "highlight"]
+    ),
+    intro: richText(
+      "Full-funnel B2B SaaS marketing across every stage — from making your positioning sharp to filling your pipeline to converting the traffic you're already paying for."
+    ),
+    cta: link("Book a free audit call", "#kw-audit"),
+  },
+  heroSecondaryCta: link("Get a custom quote →", "#kw-quote"),
+  categories: keyed(
+    servicesCategories.map((category, i) => ({
+      _type: "serviceCategory",
+      name: category.name,
+      headline: categoryHeadlines[i],
+      intro: richText(category.intro),
+      layout: category.layout,
+      ...(category.featureSticker ? { featureSticker: category.featureSticker } : {}),
+      items: keyed(category.items.map((item) => card(item.title, item.desc))),
+    }))
+  ),
+  auditHeadline: headline(
+    "Not sure which services you need? ",
+    ["That's what the audit call is for.", "lime"]
+  ),
+  auditBody: richText(
+    "Most companies come to us knowing something is broken but not exactly what. Book a free 30-minute audit call and we'll tell you where the gaps are and which services make sense for your stage and budget. No pressure, no pitch deck."
+  ),
+  auditButton: link("Book a free audit call", mailto()),
+  quoteEyebrow: "Get a custom quote",
+  quoteHeadline: headline(
+    "Tell us what you're working with. We'll come back with a plan."
+  ),
+  quoteIntro: richText(
+    "Fill this in and we'll send a custom scope and pricing within 48 hours."
+  ),
+  quoteGoalsLabel: "What's your primary marketing goal right now?",
+  quoteGoals,
+  quoteServicesLabel: "Which services are you interested in?",
+  quoteServiceGroups: keyed(
+    quoteServiceGroups.map((group) => ({
+      _type: "checkboxGroup",
+      title: group.title,
+      options: group.options,
+    }))
+  ),
+  quoteMessagePlaceholder:
+    "Tell us about your current setup, what's broken, what you've tried before, or anything that helps us understand your situation better. The more context you give, the more useful our response will be.",
+  quoteButtonLabel: "Send my details",
+  quoteNote:
+    "We respond within 48 hours. No automated reply, no generic brochure. A real person reads every submission before responding.",
+  quoteSuccessSticker: "Got it — thank you!",
+  quoteSuccessText:
+    "We respond within 48 hours. No automated reply, no generic brochure. A real person reads every submission before responding.",
+  seo: {
+    _type: "seo",
+    title: "B2B SaaS Marketing Services — keewee.in",
+    description:
+      "Full-funnel B2B SaaS marketing across every stage — from making your positioning sharp to filling your pipeline to converting the traffic you're already paying for.",
+  },
+});
+
 // --- Blog: categories, posts, index ---------------------------------------
 
 const categoryTitles = [...new Set(blogSummaries.map((p) => p.category))];
@@ -766,13 +855,18 @@ legalDocs.forEach((doc, i) => {
 // ---------------------------------------------------------------------------
 
 async function main() {
-  const byType = docs.reduce<Record<string, number>>((acc, doc) => {
+  const selected = only ? docs.filter((doc) => doc._type === only) : docs;
+  if (only && selected.length === 0) {
+    throw new Error(`No seeded documents of type "${only}"`);
+  }
+
+  const byType = selected.reduce<Record<string, number>>((acc, doc) => {
     const type = String(doc._type);
     acc[type] = (acc[type] ?? 0) + 1;
     return acc;
   }, {});
 
-  console.log(`\nSeeding ${docs.length} documents into ${projectId}/${dataset}:`);
+  console.log(`\nSeeding ${selected.length} documents into ${projectId}/${dataset}:`);
   for (const [type, count] of Object.entries(byType).sort()) {
     console.log(`  ${String(count).padStart(3)}  ${type}`);
   }
@@ -785,7 +879,7 @@ async function main() {
   // One transaction: either the whole content model lands or none of it does,
   // so a network blip can't leave half-populated references behind.
   const tx = client.transaction();
-  for (const doc of docs) {
+  for (const doc of selected) {
     tx.createOrReplace(doc as never);
   }
   await tx.commit();

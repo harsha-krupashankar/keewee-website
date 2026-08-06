@@ -24,6 +24,7 @@ export const headline = defineType({
           { title: "Italic", value: "em" },
           { title: "Lime marker", value: "highlight" },
           { title: "Green text", value: "green" },
+          { title: "Lime text", value: "lime" },
           { title: "Rust text", value: "rust" },
         ],
         annotations: [],

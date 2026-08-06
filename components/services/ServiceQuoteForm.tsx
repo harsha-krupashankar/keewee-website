@@ -3,31 +3,8 @@
 import { useState } from "react";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
+import { arrOptions, budgetOptions } from "@/lib/quote-options";
 import type { ServicePage } from "@/sanity/lib/types";
-
-/**
- * Qualification ranges. These are commercial banding rather than page copy —
- * they must stay identical across all five service pages for the submissions to
- * be comparable, so they live in code rather than in the CMS.
- */
-const arrOptions = [
-  "Under $300K",
-  "$300K to $1M",
-  "$1M to $5M",
-  "$5M to $10M",
-  "$10M to $30M",
-  "Above $30M",
-  "Prefer not to say",
-];
-
-const budgetOptions = [
-  "Under $1,500/month",
-  "$1,500 to $3,500/month",
-  "$3,500 to $7,000/month",
-  "$7,000 to $15,000/month",
-  "Above $15,000/month",
-  "Not sure yet",
-];
 
 const inputClass =
   "rounded-xl border border-border-soft bg-[#FBFAF6] px-3.5 py-3 font-body text-[15px] text-ink outline-none placeholder:text-faint focus:border-green focus:shadow-[0_0_0_3px_rgba(198,240,0,0.35)]";
