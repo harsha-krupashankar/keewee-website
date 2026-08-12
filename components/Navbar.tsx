@@ -5,18 +5,17 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Button from "./Button";
 import Container from "./Container";
+import LogoMark from "./LogoMark";
 import type { Link as LinkValue, NavItem } from "@/sanity/lib/types";
 
 type NavbarProps = {
   siteName: string;
-  logoMark?: string | null;
   links?: NavItem[] | null;
   cta?: LinkValue | null;
 };
 
 export default function Navbar({
   siteName,
-  logoMark,
   links = [],
   cta,
 }: NavbarProps) {
@@ -67,7 +66,8 @@ export default function Navbar({
           href="/"
           className="flex items-center gap-2 font-display text-[22px] font-extrabold tracking-tight text-ink transition-transform duration-150 hover:-rotate-1"
         >
-          {logoMark && <span className="text-green">{logoMark}</span>} {siteName}
+          <LogoMark className="text-green" />
+          {siteName}
         </Link>
         {!!links?.length && (
           <nav

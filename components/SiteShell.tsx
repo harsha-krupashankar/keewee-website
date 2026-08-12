@@ -31,7 +31,6 @@ export default async function SiteShell({
     <>
       <Navbar
         siteName={settings?.title ?? "keewee.in"}
-        logoMark={settings?.logoMark}
         links={settings?.headerNav}
         cta={settings?.headerCta}
       />

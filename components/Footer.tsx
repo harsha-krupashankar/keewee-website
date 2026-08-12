@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Container from "./Container";
+import LogoMark from "./LogoMark";
 import type { SiteSettings, SocialLink } from "@/sanity/lib/types";
 
 /**
@@ -55,9 +56,7 @@ export default function Footer({ settings }: { settings: SiteSettings | null }) 
         <div className="flex flex-wrap items-start justify-between gap-6">
           <div className="max-w-[280px]">
             <div className="flex items-center gap-2 font-display text-[23px] font-extrabold tracking-[-0.03em] text-ink">
-              {settings.logoMark && (
-                <span className="text-green">{settings.logoMark}</span>
-              )}{" "}
+              <LogoMark className="text-green" />
               {settings.title}
             </div>
             {!!settings.socialLinks?.length && (
