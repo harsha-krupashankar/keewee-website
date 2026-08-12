@@ -1,3 +1,4 @@
+import CookieConsent from "./consent/CookieConsent";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import { getSiteSettings } from "@/sanity/lib/content";
@@ -36,6 +37,7 @@ export default async function SiteShell({
       />
       <main className={mainClassName}>{children}</main>
       <Footer settings={settings} />
+      <CookieConsent content={settings?.cookieConsent} />
     </>
   );
 }

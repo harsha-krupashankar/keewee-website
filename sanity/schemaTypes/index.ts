@@ -18,6 +18,7 @@ import {
   titledCard,
 } from "./objects/primitives";
 import { promptCategory, promptEntry } from "./objects/promptLibrary";
+import { cookieConsent } from "./objects/cookieConsent";
 import {
   legalClause,
   legalContact,
@@ -93,6 +94,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   legalSection,
   promptEntry,
   promptCategory,
+  cookieConsent,
 
   // Singletons — one document each.
   siteSettings,

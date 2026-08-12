@@ -5,11 +5,33 @@ import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import Copy from "@/components/sanity/Copy";
 import Headline from "@/components/sanity/Headline";
+import { submitForm } from "@/lib/submit-form";
 import type { NewsletterPage } from "@/sanity/lib/types";
 
 export default function NewsletterHero({ page }: { page: NewsletterPage }) {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email || submitting) return;
+    setSubmitting(true);
+    setError(false);
+    try {
+      await submitForm({
+        formType: "subscribe",
+        source: "newsletter-page",
+        email,
+      });
+      setSubscribed(true);
+    } catch {
+      setError(true);
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   return (
     <section className="relative overflow-hidden bg-paper pb-16 pt-14 md:pb-[64px] md:pt-16">
@@ -86,13 +108,7 @@ export default function NewsletterHero({ page }: { page: NewsletterPage }) {
                 </p>
               </div>
             ) : (
-              <form
-                className="flex flex-col gap-3"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  if (email) setSubscribed(true);
-                }}
-              >
+              <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
                 <label
                   htmlFor="newsletter-email"
                   className="font-display text-[15px] font-extrabold tracking-[-0.01em] text-ink"
@@ -110,10 +126,16 @@ export default function NewsletterHero({ page }: { page: NewsletterPage }) {
                 />
                 <button
                   type="submit"
-                  className="rounded-xl bg-green px-5.5 py-3.5 font-display text-base font-bold text-white shadow-[3px_3px_0_#1C1B19] transition-all duration-150 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0_#1C1B19] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-[3px]"
+                  disabled={submitting}
+                  className="rounded-xl bg-green px-5.5 py-3.5 font-display text-base font-bold text-white shadow-[3px_3px_0_#1C1B19] transition-all duration-150 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0_#1C1B19] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-[3px] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {page.formButtonLabel}
+                  {submitting ? "Submitting…" : page.formButtonLabel}
                 </button>
+                {error && (
+                  <p className="mt-0.5 font-body text-[13px] font-semibold text-rust">
+                    Something went wrong. Please try again.
+                  </p>
+                )}
                 {page.formDisclaimer && (
                   <p className="mt-0.5 font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-faint">
                     {page.formDisclaimer}

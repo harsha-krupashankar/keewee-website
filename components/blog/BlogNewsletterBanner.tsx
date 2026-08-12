@@ -5,11 +5,33 @@ import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import Copy from "@/components/sanity/Copy";
 import Headline from "@/components/sanity/Headline";
+import { submitForm } from "@/lib/submit-form";
 import type { BlogIndexPage } from "@/sanity/lib/types";
 
 export default function BlogNewsletterBanner({ page }: { page: BlogIndexPage }) {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email || submitting) return;
+    setSubmitting(true);
+    setError(false);
+    try {
+      await submitForm({
+        formType: "subscribe",
+        source: "blog-newsletter-banner",
+        email,
+      });
+      setSubscribed(true);
+    } catch {
+      setError(true);
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   if (!page.newsletterHeadline) return null;
 
@@ -48,12 +70,7 @@ export default function BlogNewsletterBanner({ page }: { page: BlogIndexPage }) 
                   </p>
                 </div>
               ) : (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (email) setSubscribed(true);
-                  }}
-                >
+                <form onSubmit={handleSubmit}>
                   <div className="mb-3 flex gap-2.5">
                     <label htmlFor="blog-newsletter-email" className="sr-only">
                       Work email
@@ -69,11 +86,19 @@ export default function BlogNewsletterBanner({ page }: { page: BlogIndexPage }) 
                     />
                     <button
                       type="submit"
-                      className="whitespace-nowrap rounded-xl bg-green px-6.5 py-3.5 font-display text-[15px] font-bold text-white shadow-[3px_3px_0_rgba(0,0,0,0.5)] transition-all duration-150 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0_rgba(0,0,0,0.5)] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-[3px]"
+                      disabled={submitting}
+                      className="whitespace-nowrap rounded-xl bg-green px-6.5 py-3.5 font-display text-[15px] font-bold text-white shadow-[3px_3px_0_rgba(0,0,0,0.5)] transition-all duration-150 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0_rgba(0,0,0,0.5)] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-[3px] disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                      {page.newsletterCta?.label ?? "Subscribe"}
+                      {submitting
+                        ? "Submitting…"
+                        : (page.newsletterCta?.label ?? "Subscribe")}
                     </button>
                   </div>
+                  {error && (
+                    <p className="font-body text-[13px] font-semibold text-lime">
+                      Something went wrong. Please try again.
+                    </p>
+                  )}
                 </form>
               )}
             </div>

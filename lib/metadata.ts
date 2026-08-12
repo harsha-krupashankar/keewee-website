@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { SITE_URL } from "@/lib/site";
 import { urlFor } from "@/sanity/lib/image";
 import type { Seo, SiteSettings } from "@/sanity/lib/types";
 
@@ -32,6 +33,7 @@ export function metadataFrom({
     : undefined;
 
   return {
+    metadataBase: new URL(SITE_URL),
     title: resolvedTitle,
     description: resolvedDescription,
     openGraph: {

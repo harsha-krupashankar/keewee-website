@@ -7,6 +7,7 @@ import Reveal from "@/components/Reveal";
 import Copy from "@/components/sanity/Copy";
 import Headline from "@/components/sanity/Headline";
 import { arrOptions, budgetOptions } from "@/lib/quote-options";
+import { submitForm } from "@/lib/submit-form";
 import type { ServicesPage } from "@/sanity/lib/types";
 
 /**
@@ -26,6 +27,8 @@ const labelClass = "font-display text-[13px] font-bold tracking-[-0.01em] text-i
 export default function ServicesQuoteForm({ page }: { page: ServicesPage }) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(false);
 
   function toggle(key: string) {
     setSelected((prev) => {
@@ -34,6 +37,44 @@ export default function ServicesQuoteForm({ page }: { page: ServicesPage }) {
       else next.add(key);
       return next;
     });
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (submitting) return;
+    const form = new FormData(e.currentTarget);
+    const keys = Array.from(selected);
+    // `selected` keys are tagged: `g:<goal>` and `s:<group>:<option>`.
+    const goals = keys.filter((k) => k.startsWith("g:")).map((k) => k.slice(2));
+    const services = keys
+      .filter((k) => k.startsWith("s:"))
+      .map((k) => {
+        const rest = k.slice(2);
+        const i = rest.indexOf(":");
+        return i === -1 ? rest : `${rest.slice(0, i)} — ${rest.slice(i + 1)}`;
+      });
+    setSubmitting(true);
+    setError(false);
+    try {
+      await submitForm({
+        formType: "quote",
+        source: "services-index",
+        name: String(form.get("name") ?? ""),
+        email: String(form.get("email") ?? ""),
+        company: String(form.get("company") ?? ""),
+        website: String(form.get("website") ?? ""),
+        arr: String(form.get("arr") ?? ""),
+        budget: String(form.get("budget") ?? ""),
+        goals,
+        services,
+        message: String(form.get("message") ?? ""),
+      });
+      setSubmitted(true);
+    } catch {
+      setError(true);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -76,12 +117,7 @@ export default function ServicesQuoteForm({ page }: { page: ServicesPage }) {
                 </p>
               </div>
             ) : (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setSubmitted(true);
-                }}
-              >
+              <form onSubmit={handleSubmit}>
                 <div className="mb-5.5 grid gap-4.5 sm:grid-cols-2">
                   <label className="flex flex-col gap-1.5">
                     <span className={labelClass}>Full Name</span>
@@ -222,14 +258,20 @@ export default function ServicesQuoteForm({ page }: { page: ServicesPage }) {
                 <div className="flex flex-wrap items-center gap-4">
                   <button
                     type="submit"
-                    className="cursor-pointer rounded-xl bg-green px-8 py-4 font-display text-[17px] font-bold text-white shadow-[3px_3px_0_#1C1B19] transition-all duration-150 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0_#1C1B19] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-[3px]"
+                    disabled={submitting}
+                    className="cursor-pointer rounded-xl bg-green px-8 py-4 font-display text-[17px] font-bold text-white shadow-[3px_3px_0_#1C1B19] transition-all duration-150 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0_#1C1B19] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-[3px] disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    {page.quoteButtonLabel}
+                    {submitting ? "Sending…" : page.quoteButtonLabel}
                   </button>
                   <span className="max-w-[420px] font-body text-[13px] font-medium leading-[1.45] text-muted">
                     {page.quoteNote}
                   </span>
                 </div>
+                {error && (
+                  <p className="mt-4 font-body text-sm font-semibold text-rust">
+                    Something went wrong sending your details. Please try again.
+                  </p>
+                )}
               </form>
             )}
           </div>

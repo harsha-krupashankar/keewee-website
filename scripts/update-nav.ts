@@ -72,12 +72,14 @@ const social = (platform: string, href: string) => ({
 });
 
 /**
- * Placeholders — swap them in the Studio (Site settings → Navigation), no
- * deploy needed.
+ * Kept in sync with `scripts/update-socials.ts`, which patches these alone —
+ * update both if the profiles change, or a rerun here regresses them.
  */
 const socialLinks = [
-  social("linkedin", "https://www.linkedin.com/company/keewee"),
-  social("x", "https://x.com/keewee"),
+  social("linkedin", "https://www.linkedin.com/company/keewee-in/"),
+  social("instagram", "https://www.instagram.com/just.keewee"),
+  social("facebook", "https://www.facebook.com/people/Keewee/61592250895741/"),
+  social("x", "https://x.com/justkeewee"),
 ];
 
 // ---------------------------------------------------------------------------
@@ -97,11 +99,11 @@ const headerNav = [
 
 const footerGroups = [
   footerGroup("What we offer", [
-    link("Awareness & Brand", "/b2b-saas-awareness-brand-agency"),
-    link("Demand Generation", "/b2b-saas-demand-generation-agency"),
-    link("Conversion", "/b2b-saas-conversion-agency"),
-    link("Retention & Expansion", "/b2b-saas-retention-expansion-agency"),
-    link("Analytics & Operations", "/b2b-saas-marketing-analytics-ops-agency"),
+    link("Awareness & Brand", "/services/b2b-saas-awareness-brand-agency"),
+    link("Demand Generation", "/services/b2b-saas-demand-generation-agency"),
+    link("Conversion", "/services/b2b-saas-conversion-agency"),
+    link("Retention & Expansion", "/services/b2b-saas-retention-expansion-agency"),
+    link("Analytics & Operations", "/services/b2b-saas-marketing-analytics-ops-agency"),
   ], { label: "Book a call", href: "https://calendly.com/keewee/intro-call" }),
   footerGroup("Resources", [
     link("Blog", "/blog"),

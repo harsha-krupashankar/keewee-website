@@ -11,6 +11,8 @@
     "seed": "tsx --env-file=.env.local scripts/seed.ts",
     "seed:dry": "tsx --env-file=.env.local scripts/seed.ts --dry",
     "update-nav": "tsx --env-file=.env.local scripts/update-nav.ts",
+    "update-socials": "tsx --env-file=.env.local scripts/update-socials.ts",
+    "update-socials:dry": "tsx --env-file=.env.local scripts/update-socials.ts --dry",
     "fix-ids": "tsx --env-file=.env.local scripts/fix-dotted-ids.ts",
     "fix-ids:dry": "tsx --env-file=.env.local scripts/fix-dotted-ids.ts --dry",
     "typegen": "sanity schema extract --path=./sanity/extract.json --enforce-required-fields && sanity typegen generate"
@@ -20,6 +22,7 @@
     "@sanity/client": "^7.25.0",
     "@sanity/image-url": "^2.1.1",
     "@sanity/vision": "^6.6.0",
+    "@vercel/analytics": "^2.0.1",
     "next": "16.2.10",
     "next-sanity": "^13.2.2",
     "react": "19.2.4",

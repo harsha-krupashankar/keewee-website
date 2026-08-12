@@ -534,6 +534,7 @@ export type SiteSettings = {
   tagline?: string;
   contactEmail: string;
   marqueeText: string;
+  cookieConsent?: CookieConsent;
   headerNav?: Array<
     | ({
         _key: string;
@@ -561,6 +562,16 @@ export type SiteSettings = {
   >;
   footerNote?: string;
   defaultSeo?: Seo;
+};
+
+export type CookieConsent = {
+  _type: "cookieConsent";
+  enabled?: boolean;
+  title: string;
+  message: string;
+  acceptLabel: string;
+  declineLabel: string;
+  policyLink?: Link;
 };
 
 export type PromptCategory = {
@@ -737,7 +748,7 @@ export type FaqItem = {
 
 export type SocialLink = {
   _type: "socialLink";
-  platform: "linkedin" | "x" | "instagram" | "youtube";
+  platform: "linkedin" | "x" | "instagram" | "facebook" | "youtube";
   href: string;
 };
 
@@ -893,6 +904,7 @@ export type AllSanitySchemaTypes =
   | AboutPage
   | HomePage
   | SiteSettings
+  | CookieConsent
   | PromptCategory
   | PromptEntry
   | LegalSection
@@ -925,13 +937,25 @@ export type AllSanitySchemaTypes =
 
 // Source: sanity/lib/queries.ts
 // Variable: SITE_SETTINGS_QUERY
-// Query: *[_type == "siteSettings"][0]{    title,    logoMark,    tagline,    contactEmail,    marqueeText,    headerNav[] {      _type,      _type == "link" => { label, href, openInNewTab },      _type == "navGroup" => { label, links[] { label, href, openInNewTab } }    },    headerCta { label, href, openInNewTab },    footerGroups[] {      title,      links[] { label, href, openInNewTab },      cta { label, href, openInNewTab }    },    footerNote,    socialLinks[] { platform, href },    defaultSeo { title, description, noIndex, image {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions} }  }
+// Query: *[_type == "siteSettings"][0]{    title,    logoMark,    tagline,    contactEmail,    marqueeText,    cookieConsent {      enabled,      title,      message,      acceptLabel,      declineLabel,      policyLink { label, href, openInNewTab }    },    headerNav[] {      _type,      _type == "link" => { label, href, openInNewTab },      _type == "navGroup" => { label, links[] { label, href, openInNewTab } }    },    headerCta { label, href, openInNewTab },    footerGroups[] {      title,      links[] { label, href, openInNewTab },      cta { label, href, openInNewTab }    },    footerNote,    socialLinks[] { platform, href },    defaultSeo { title, description, noIndex, image {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions} }  }
 export type SITE_SETTINGS_QUERY_RESULT = {
   title: string;
   logoMark: string | null;
   tagline: string | null;
   contactEmail: string;
   marqueeText: string;
+  cookieConsent: {
+    enabled: boolean | null;
+    title: string;
+    message: string;
+    acceptLabel: string;
+    declineLabel: string;
+    policyLink: {
+      label: string;
+      href: string;
+      openInNewTab: boolean | null;
+    } | null;
+  } | null;
   headerNav: Array<
     | {
         _type: "link";
@@ -969,7 +993,7 @@ export type SITE_SETTINGS_QUERY_RESULT = {
   }> | null;
   footerNote: string | null;
   socialLinks: Array<{
-    platform: "instagram" | "linkedin" | "x" | "youtube";
+    platform: "facebook" | "instagram" | "linkedin" | "x" | "youtube";
     href: string;
   }> | null;
   defaultSeo: {
@@ -1969,7 +1993,7 @@ export type LEGAL_DOC_QUERY_RESULT = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    '\n  *[_type == "siteSettings"][0]{\n    title,\n    logoMark,\n    tagline,\n    contactEmail,\n    marqueeText,\n    headerNav[] {\n      _type,\n      _type == "link" => { label, href, openInNewTab },\n      _type == "navGroup" => { label, links[] { label, href, openInNewTab } }\n    },\n    headerCta { label, href, openInNewTab },\n    footerGroups[] {\n      title,\n      links[] { label, href, openInNewTab },\n      cta { label, href, openInNewTab }\n    },\n    footerNote,\n    socialLinks[] { platform, href },\n    defaultSeo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': SITE_SETTINGS_QUERY_RESULT;
+    '\n  *[_type == "siteSettings"][0]{\n    title,\n    logoMark,\n    tagline,\n    contactEmail,\n    marqueeText,\n    cookieConsent {\n      enabled,\n      title,\n      message,\n      acceptLabel,\n      declineLabel,\n      policyLink { label, href, openInNewTab }\n    },\n    headerNav[] {\n      _type,\n      _type == "link" => { label, href, openInNewTab },\n      _type == "navGroup" => { label, links[] { label, href, openInNewTab } }\n    },\n    headerCta { label, href, openInNewTab },\n    footerGroups[] {\n      title,\n      links[] { label, href, openInNewTab },\n      cta { label, href, openInNewTab }\n    },\n    footerNote,\n    socialLinks[] { platform, href },\n    defaultSeo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': SITE_SETTINGS_QUERY_RESULT;
     '\n  *[_type == "homePage"][0]{\n    heroBadge,\n    heroHeadline,\n    heroIntro,\n    heroCta { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },\n    heroFootnote,\n    heroStickerA,\n    heroStickerB,\n\n    problemHeader { eyebrow, headline, sticker, intro },\n    problemBody,\n    lookalikes,\n    problemSticker,\n    problemCaption,\n\n    funnelHeader { eyebrow, headline, sticker, intro },\n    funnelStages[] {\n      title,\n      tag,\n      description,\n      bullets,\n      barWidth,\n      "href": servicePage->slug.current\n    },\n    funnelOutcomeSticker,\n    funnelOutcomeText,\n\n    whyHeader { eyebrow, headline, sticker, intro },\n    whyReasons[] { title, description, tag },\n\n    whoHeader { eyebrow, headline, sticker, intro },\n    whoSegments[] { title, description, tag },\n\n    proofHeader { eyebrow, headline, sticker, intro },\n    proofBody,\n    proofCta { label, href, openInNewTab },\n    proofSticker,\n\n    auditHeader { eyebrow, headline, sticker, intro },\n    auditBody,\n    auditCta { label, href, openInNewTab },\n    auditSticker,\n    auditListTitle,\n    auditItems,\n\n    faqHeader { eyebrow, headline, sticker, intro },\n    faqItems[] { question, answer },\n\n    ctaHeadline,\n    ctaBody,\n    ctaButtons { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },\n\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': HOME_PAGE_QUERY_RESULT;
     '\n  *[_type == "aboutPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    whatWeAreEyebrow,\n    whatWeAreBody,\n    missionEyebrow,\n    missionStatement,\n    storyEyebrow,\n    storyHeadline,\n    storyBeats,\n    teamEyebrow,\n    teamHeadline,\n    teamSticker,\n    teamIntro,\n    ctaEyebrow,\n    ctaHeadline,\n    ctaBody,\n    ctaButtons { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} },\n    "team": *[_type == "person" && onTeamPage == true] | order(order asc, name asc) {\n  _id,\n  name,\n  role,\n  initials,\n  photo {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  bio,\n  funFact\n}\n  }\n': ABOUT_PAGE_QUERY_RESULT;
     '\n  *[_type == "faqPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    ctaHeadline,\n    ctaBody,\n    ctaButtons { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} },\n    "groups": *[_type == "faqGroup"] | order(order asc, title asc) {\n      _id,\n      title,\n      navLabel,\n      "slug": slug.current,\n      items[] { question, answer }\n    }\n  }\n': FAQ_PAGE_QUERY_RESULT;

@@ -60,6 +60,7 @@ export const SOCIAL_PLATFORMS = [
   { title: "LinkedIn", value: "linkedin" },
   { title: "X (Twitter)", value: "x" },
   { title: "Instagram", value: "instagram" },
+  { title: "Facebook", value: "facebook" },
   { title: "YouTube", value: "youtube" },
 ] as const;
 

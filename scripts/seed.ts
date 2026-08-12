@@ -216,6 +216,21 @@ docs.push({
   tagline: "B2B marketing with a spine.",
   contactEmail: CONTACT,
   marqueeText,
+  cookieConsent: {
+    _type: "cookieConsent",
+    // Off until non-essential tracking is added; the site sets only essential
+    // cookies today, so there is nothing to consent to yet.
+    enabled: false,
+    title: "We use cookies",
+    message:
+      "Essential cookies keep the site working and are always on. We'd also like to set analytics cookies to understand how the site is used — only with your consent.",
+    acceptLabel: "Accept",
+    declineLabel: "Decline",
+    policyLink: {
+      ...link("Cookie policy", "/legal/privacy-policy"),
+      openInNewTab: false,
+    },
+  },
   headerNav: keyed([
     link("Blog", "/blog"),
     link("About", "/about"),
@@ -227,7 +242,7 @@ docs.push({
     {
       _type: "footerGroup",
       title: "What we offer",
-      links: keyed(serviceDocs.map((doc) => link(doc.category, `/${doc.slug}`))),
+      links: keyed(serviceDocs.map((doc) => link(doc.category, `/services/${doc.slug}`))),
     },
     {
       _type: "footerGroup",

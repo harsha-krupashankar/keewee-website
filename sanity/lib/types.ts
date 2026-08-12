@@ -110,12 +110,22 @@ export type NavItem =
   | ({ _type: "link" } & Link)
   | { _type: "navGroup"; label: string; links: Link[] };
 
+export type CookieConsent = {
+  enabled?: boolean | null;
+  title?: string | null;
+  message?: string | null;
+  acceptLabel?: string | null;
+  declineLabel?: string | null;
+  policyLink?: Link | null;
+};
+
 export type SiteSettings = {
   title: string;
   logoMark?: string | null;
   tagline?: string | null;
   contactEmail: string;
   marqueeText: string;
+  cookieConsent?: CookieConsent | null;
   headerNav?: NavItem[] | null;
   headerCta?: Link | null;
   footerGroups?: FooterGroup[] | null;

@@ -68,6 +68,14 @@ export const SITE_SETTINGS_QUERY = defineQuery(/* groq */ `
     tagline,
     contactEmail,
     marqueeText,
+    cookieConsent {
+      enabled,
+      title,
+      message,
+      acceptLabel,
+      declineLabel,
+      policyLink ${LINK}
+    },
     headerNav[] {
       _type,
       _type == "link" => ${LINK},

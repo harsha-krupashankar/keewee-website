@@ -53,6 +53,12 @@ export const siteSettings = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: "cookieConsent",
+      title: "Cookie consent banner",
+      type: "cookieConsent",
+      group: "general",
+    }),
+    defineField({
       name: "headerNav",
       title: "Header navigation",
       type: "array",

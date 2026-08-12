@@ -4,6 +4,7 @@ import { useState } from "react";
 import Container from "@/components/Container";
 import Reveal from "@/components/Reveal";
 import { arrOptions, budgetOptions } from "@/lib/quote-options";
+import { submitForm } from "@/lib/submit-form";
 import type { ServicePage } from "@/sanity/lib/types";
 
 const inputClass =
@@ -12,6 +13,8 @@ const inputClass =
 export default function ServiceQuoteForm({ doc }: { doc: ServicePage }) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(false);
 
   function toggle(label: string) {
     setSelected((prev) => {
@@ -20,6 +23,33 @@ export default function ServiceQuoteForm({ doc }: { doc: ServicePage }) {
       else next.add(label);
       return next;
     });
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (submitting) return;
+    const form = new FormData(e.currentTarget);
+    setSubmitting(true);
+    setError(false);
+    try {
+      await submitForm({
+        formType: "quote",
+        source: `service-page:${doc.serviceScope}`,
+        name: String(form.get("name") ?? ""),
+        email: String(form.get("email") ?? ""),
+        company: String(form.get("company") ?? ""),
+        website: String(form.get("website") ?? ""),
+        arr: String(form.get("arr") ?? ""),
+        budget: String(form.get("budget") ?? ""),
+        services: Array.from(selected),
+        message: String(form.get("message") ?? ""),
+      });
+      setSubmitted(true);
+    } catch {
+      setError(true);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -57,12 +87,7 @@ export default function ServiceQuoteForm({ doc }: { doc: ServicePage }) {
                 </p>
               </div>
             ) : (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  setSubmitted(true);
-                }}
-              >
+              <form onSubmit={handleSubmit}>
                 <div className="mb-5.5 grid gap-4.5 sm:grid-cols-2">
                   <label className="flex flex-col gap-1.5">
                     <span className="font-display text-[13px] font-bold text-ink">Full Name</span>
@@ -154,14 +179,20 @@ export default function ServiceQuoteForm({ doc }: { doc: ServicePage }) {
                 <div className="flex flex-wrap items-center gap-4">
                   <button
                     type="submit"
-                    className="rounded-xl bg-green px-8 py-4 font-display text-[17px] font-bold text-white shadow-[3px_3px_0_#1C1B19] transition-all duration-150 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0_#1C1B19] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-[3px]"
+                    disabled={submitting}
+                    className="rounded-xl bg-green px-8 py-4 font-display text-[17px] font-bold text-white shadow-[3px_3px_0_#1C1B19] transition-all duration-150 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0_#1C1B19] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-[3px] disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    Send my details
+                    {submitting ? "Sending…" : "Send my details"}
                   </button>
                   <span className="max-w-[420px] font-body text-[13px] font-medium leading-relaxed text-muted">
                     We respond within 48 hours. A real person reads every submission.
                   </span>
                 </div>
+                {error && (
+                  <p className="mt-4 font-body text-sm font-semibold text-rust">
+                    Something went wrong sending your details. Please try again.
+                  </p>
+                )}
               </form>
             )}
           </div>

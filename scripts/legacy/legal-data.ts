@@ -448,7 +448,7 @@ export const legalDocs: LegalDoc[] = [
             ],
           },
           {
-            p: `This data is collected via cookies and analytics tools and is used to understand how our website is used and how to improve it.`,
+            p: `We use privacy-friendly, cookieless analytics (Vercel Web Analytics) to understand in aggregate how our website is used and how to improve it. It sets no cookies, stores nothing on your device, and does not identify you individually, so it runs without a consent prompt. If we ever introduce analytics that rely on cookies or otherwise collect personal data, we will only do so with your consent, requested through the cookie banner.`,
           },
           { sub: ["2.3", "Data We Collect About Your Business"] },
           { p: `In the course of delivering services, we may handle:` },
@@ -539,7 +539,7 @@ export const legalDocs: LegalDoc[] = [
           {
             d: [
               "Analytics and Website Tracking",
-              "Google Analytics 4 (GA4) is used to understand website traffic and behaviour. Google Search Console tracks search performance. Heatmap and session recording tools such as Microsoft Clarity or Hotjar may be used to understand on-site behaviour. These tools do not capture passwords or payment information.",
+              "We currently use Vercel Web Analytics, a cookieless analytics tool that reports aggregated, anonymous traffic data (such as page views and referring sites) without setting cookies or identifying individual visitors. We may in future adopt tools that require consent, such as Google Analytics 4 (GA4) for traffic and behaviour, Google Search Console for search performance, or heatmap and session recording tools such as Microsoft Clarity or Hotjar; these would only be enabled after you consent through the cookie banner. None of these tools capture passwords or payment information.",
             ],
           },
           {
@@ -679,17 +679,20 @@ export const legalDocs: LegalDoc[] = [
           {
             d: [
               "Analytics cookies:",
-              "Used to collect anonymised data about how visitors use our site, including pages visited, time on page, and traffic source. We use Google Analytics 4 for this.",
+              "Used to collect anonymised data about how visitors use our site, including pages visited, time on page, and traffic source. These are set only if you accept them, and are never loaded before you do.",
             ],
           },
           {
             d: [
               "Preference cookies:",
-              "Used to remember settings or choices you have made on the site.",
+              "Used to remember settings or choices you have made on the site, including your cookie choice itself.",
             ],
           },
           {
-            p: `You can control cookies through your browser settings. Most browsers allow you to block or delete cookies. Disabling certain cookies may affect how the website functions. We do not use advertising or retargeting cookies on our own website.`,
+            p: `When we use non-essential cookies, we ask for your consent through a banner the first time you visit. Nothing beyond essential cookies is set until you accept, and you can decline with equal ease. You can change your mind at any time by clearing this site's cookies in your browser, which brings the banner back. We do not use advertising or retargeting cookies on our own website.`,
+          },
+          {
+            p: `At present the only analytics we run is Vercel Web Analytics, which is cookieless and requires no consent (see the Data We Collect Automatically and Third-Party Tools sections). We set no advertising, retargeting, or other non-essential cookies. If we introduce any cookie-based tracking, this policy and the consent banner will be updated and your consent requested before it is enabled.`,
           },
         ],
       },

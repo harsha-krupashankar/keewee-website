@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { draftMode } from "next/headers";
 import { Archivo, Bricolage_Grotesque, Bangers } from "next/font/google";
 import { VisualEditing } from "next-sanity/visual-editing";
+import { Analytics } from "@vercel/analytics/next";
 
 import DraftModeBanner from "@/components/sanity/DraftModeBanner";
 import { metadataFrom } from "@/lib/metadata";
@@ -59,6 +60,7 @@ export default async function RootLayout({
         )}
         {/* Keeps open sessions in sync with the Content Lake. */}
         <SanityLive includeDrafts={isDraftMode} />
+        <Analytics />
       </body>
     </html>
   );
