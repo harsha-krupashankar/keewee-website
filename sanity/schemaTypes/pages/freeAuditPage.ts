@@ -9,6 +9,7 @@ export const freeAuditPage = defineType({
     { name: "cover", title: "What we cover" },
     { name: "forYou", title: "Is this for you" },
     { name: "deliverables", title: "What you get" },
+    { name: "form", title: "Booking form" },
     { name: "faq", title: "FAQ" },
     { name: "proof", title: "Proof" },
     { name: "cta", title: "Closing CTA" },
@@ -64,6 +65,39 @@ export const freeAuditPage = defineType({
       type: "array",
       group: "deliverables",
       of: [defineArrayMember({ type: "titledCard" })],
+    }),
+
+    defineField({
+      name: "formEyebrow",
+      title: "Eyebrow",
+      type: "string",
+      group: "form",
+    }),
+    defineField({
+      name: "formHeadline",
+      title: "Headline",
+      type: "string",
+      group: "form",
+    }),
+    defineField({
+      name: "formIntro",
+      title: "Intro",
+      type: "text",
+      rows: 2,
+      group: "form",
+    }),
+    defineField({
+      name: "formSuccessSticker",
+      title: "Success sticker",
+      type: "string",
+      group: "form",
+    }),
+    defineField({
+      name: "formSuccessText",
+      title: "Success message",
+      type: "text",
+      rows: 2,
+      group: "form",
     }),
 
     defineField({

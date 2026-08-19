@@ -1,0 +1,152 @@
+"use client";
+
+import { useState } from "react";
+import Container from "@/components/Container";
+import Reveal from "@/components/Reveal";
+import { submitForm } from "@/lib/submit-form";
+import type { FreeAuditPage } from "@/sanity/lib/types";
+
+const inputClass =
+  "rounded-xl border border-border-soft bg-[#FBFAF6] px-3.5 py-3 font-body text-[15px] text-ink outline-none placeholder:text-faint focus:border-green focus:shadow-[0_0_0_3px_rgba(198,240,0,0.35)]";
+
+/**
+ * The booking form for the central "Free audit" offer. Every other CTA on the
+ * site ultimately points here (`/free-audit`), so before this existed the
+ * page they all funneled into had no way to actually book one — see the
+ * "Free Audit page has no way to book a free audit" launch blocker.
+ */
+export default function FreeAuditForm({ page }: { page: FreeAuditPage }) {
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (submitting) return;
+    const form = new FormData(e.currentTarget);
+    setSubmitting(true);
+    setError(false);
+    try {
+      await submitForm({
+        formType: "quote",
+        source: "free-audit-page",
+        name: String(form.get("name") ?? ""),
+        email: String(form.get("email") ?? ""),
+        company: String(form.get("company") ?? ""),
+        website: String(form.get("website") ?? ""),
+        message: String(form.get("message") ?? ""),
+      });
+      setSubmitted(true);
+    } catch {
+      setError(true);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <section id="book-audit" className="scroll-mt-24 py-8 md:py-10">
+      <Container>
+        <Reveal className="relative overflow-hidden rounded-[24px] border border-green-border bg-green-bg p-8 shadow-[0_16px_40px_rgba(78,125,46,0.12)] sm:p-10">
+          <div
+            className="pointer-events-none absolute -bottom-8 -right-6 h-[200px] w-[240px] opacity-[0.12]"
+            style={{
+              backgroundImage: "radial-gradient(#4E7D2E 2px, transparent 2.4px)",
+              backgroundSize: "15px 15px",
+            }}
+          />
+          <div className="relative z-[2] mb-8 max-w-[760px]">
+            {page.formEyebrow && (
+              <span className="font-display text-[13px] font-bold uppercase tracking-[0.09em] text-green-dark">
+                {page.formEyebrow}
+              </span>
+            )}
+            {page.formHeadline && (
+              <h2 className="my-3 font-display text-[26px] font-extrabold leading-[1.04] tracking-[-0.035em] text-ink text-pretty sm:text-[38px]">
+                {page.formHeadline}
+              </h2>
+            )}
+            {page.formIntro && (
+              <p className="font-body text-base font-semibold leading-relaxed text-green-deep">
+                {page.formIntro}
+              </p>
+            )}
+          </div>
+
+          <div className="relative z-[2] rounded-[20px] border border-green-border bg-white p-6 shadow-[0_10px_30px_rgba(28,27,25,0.06)] sm:p-8">
+            {submitted ? (
+              <div className="py-8 text-center">
+                <div className="mb-3 font-sticker text-[32px] tracking-wide text-green">
+                  {page.formSuccessSticker || "Got it — thank you!"}
+                </div>
+                <p className="mx-auto max-w-[460px] font-body text-base font-medium leading-relaxed text-body">
+                  {page.formSuccessText ||
+                    "We respond within 48 hours. A real person reads every submission."}
+                </p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit}>
+                <div className="mb-5.5 grid gap-4.5 sm:grid-cols-2">
+                  <label className="flex flex-col gap-1.5">
+                    <span className="font-display text-[13px] font-bold text-ink">Full Name</span>
+                    <input type="text" name="name" placeholder="Your name" required className={inputClass} />
+                  </label>
+                  <label className="flex flex-col gap-1.5">
+                    <span className="font-display text-[13px] font-bold text-ink">Work Email</span>
+                    <input type="email" name="email" placeholder="you@company.com" required className={inputClass} />
+                  </label>
+                  <label className="flex flex-col gap-1.5">
+                    <span className="font-display text-[13px] font-bold text-ink">Company Name</span>
+                    <input type="text" name="company" placeholder="Your company" required className={inputClass} />
+                  </label>
+                  <label className="flex flex-col gap-1.5">
+                    <span className="font-display text-[13px] font-bold text-ink">
+                      Website (the one we&apos;ll audit)
+                    </span>
+                    <input
+                      type="text"
+                      name="website"
+                      placeholder="yourwebsite.com"
+                      required
+                      className={inputClass}
+                    />
+                  </label>
+                </div>
+
+                <label className="mb-6 flex flex-col gap-1.5">
+                  <span className="font-display text-[13px] font-bold text-ink">
+                    Anything specific you want us to look at?
+                  </span>
+                  <textarea
+                    name="message"
+                    rows={4}
+                    placeholder="Optional — tell us where it hurts most: traffic, conversion, retention, reporting."
+                    className={`${inputClass} resize-y leading-relaxed`}
+                  />
+                </label>
+
+                <div className="flex flex-wrap items-center gap-4">
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="rounded-xl bg-green px-8 py-4 font-display text-[17px] font-bold text-white shadow-[3px_3px_0_#1C1B19] transition-all duration-150 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0_#1C1B19] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-[3px] disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {submitting ? "Sending…" : "Book my free audit"}
+                  </button>
+                  <span className="max-w-[420px] font-body text-[13px] font-medium leading-relaxed text-muted">
+                    We respond within 48 hours. A real person reads every submission.
+                  </span>
+                </div>
+                {error && (
+                  <p className="mt-4 font-body text-sm font-semibold text-rust">
+                    Something went wrong sending your details. Please try again.
+                  </p>
+                )}
+              </form>
+            )}
+          </div>
+        </Reveal>
+      </Container>
+    </section>
+  );
+}

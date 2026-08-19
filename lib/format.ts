@@ -1,3 +1,5 @@
+import type { RichText } from "@/sanity/lib/types";
+
 /**
  * Display formatting for CMS values.
  *
@@ -28,4 +30,22 @@ export function formatFullDate(iso?: string): string {
 export function formatReadTime(minutes?: number): string {
   if (!minutes) return "";
   return `${minutes} min read`;
+}
+
+/**
+ * Flattens Portable Text down to plain text — for contexts that can't render
+ * blocks at all, like JSON-LD `answer` strings, where the field is only ever
+ * read by a crawler, not a person.
+ */
+export function richTextToPlainText(blocks?: RichText | null): string {
+  if (!blocks?.length) return "";
+  return blocks
+    .filter((block) => block._type === "block")
+    .map((block) =>
+      block.children
+        ?.map((child) => ("text" in child ? (child.text ?? "") : ""))
+        .join("") ?? ""
+    )
+    .join(" ")
+    .trim();
 }

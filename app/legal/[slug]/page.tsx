@@ -34,6 +34,7 @@ export async function generateMetadata({
     settings,
     title: `${doc.title} — ${settings?.title ?? "keewee.in"}`,
     description: doc.intro,
+    path: `/legal/${slug}`,
   });
 }
 

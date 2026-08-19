@@ -22,6 +22,7 @@ export default function Navbar({
   const [scrolled, setScrolled] = useState(false);
   /** Label of the open dropdown, or null. Only one can be open at a time. */
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
 
@@ -39,7 +40,10 @@ export default function Navbar({
       if (!navRef.current?.contains(event.target as Node)) setOpenMenu(null);
     };
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpenMenu(null);
+      if (event.key === "Escape") {
+        setOpenMenu(null);
+        setMobileOpen(false);
+      }
     };
     document.addEventListener("pointerdown", onPointerDown);
     document.addEventListener("keydown", onKeyDown);
@@ -48,6 +52,16 @@ export default function Navbar({
       document.removeEventListener("keydown", onKeyDown);
     };
   }, []);
+
+  // The panel covers the page, so background scrolling would just fight it.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileOpen]);
 
   return (
     <header
@@ -100,13 +114,116 @@ export default function Navbar({
             )}
           </nav>
         )}
-        {cta && (
-          <Button href={cta.href} className="px-5 py-2.5 text-sm">
-            {cta.label}
-          </Button>
-        )}
+        <div className="flex items-center gap-2.5">
+          {cta && (
+            <Button href={cta.href} className="hidden px-5 py-2.5 text-sm sm:inline-block">
+              {cta.label}
+            </Button>
+          )}
+          {!!links?.length && (
+            <button
+              type="button"
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-nav-panel"
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              onClick={() => setMobileOpen((open) => !open)}
+              className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg border border-border text-ink sm:hidden"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
+                {mobileOpen ? (
+                  <path
+                    d="M5 5l14 14M19 5L5 19"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                ) : (
+                  <path
+                    d="M4 7h16M4 12h16M4 17h16"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                )}
+              </svg>
+            </button>
+          )}
+        </div>
       </Container>
+
+      {!!links?.length && (
+        <div
+          id="mobile-nav-panel"
+          className={`overflow-hidden border-t border-border bg-paper transition-[grid-template-rows] duration-300 ease-in-out sm:hidden ${
+            mobileOpen ? "grid grid-rows-[1fr]" : "grid grid-rows-[0fr]"
+          }`}
+        >
+          <div className="overflow-hidden">
+            <Container className="flex flex-col gap-1 py-4 font-body text-base font-semibold text-nav">
+              {links.map((item) =>
+                item._type === "navGroup" ? (
+                  <div key={`mobile-group-${item.label}`} className="py-1.5">
+                    <div className="mb-1 font-display text-xs font-bold uppercase tracking-wide text-faint">
+                      {item.label}
+                    </div>
+                    <div className="flex flex-col">
+                      {item.links.map((link) => (
+                        <MobileNavLink
+                          key={`${link.href}-${link.label}`}
+                          link={link}
+                          isActive={link.href === pathname}
+                          onNavigate={() => setMobileOpen(false)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <MobileNavLink
+                    key={`${item.href}-${item.label}`}
+                    link={item}
+                    isActive={item.href === pathname}
+                    onNavigate={() => setMobileOpen(false)}
+                  />
+                ),
+              )}
+              {cta && (
+                <Button
+                  href={cta.href}
+                  className="mt-3 px-5 py-3 text-center text-sm"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {cta.label}
+                </Button>
+              )}
+            </Container>
+          </div>
+        </div>
+      )}
     </header>
+  );
+}
+
+function MobileNavLink({
+  link,
+  isActive,
+  onNavigate,
+}: {
+  link: LinkValue;
+  isActive: boolean;
+  onNavigate: () => void;
+}) {
+  return (
+    <a
+      href={link.href}
+      target={link.openInNewTab ? "_blank" : undefined}
+      rel={link.openInNewTab ? "noopener noreferrer" : undefined}
+      onClick={onNavigate}
+      className={`rounded-lg px-2.5 py-2.5 ${isActive ? "text-green" : "hover:text-green"}`}
+    >
+      {link.label}
+    </a>
   );
 }
 

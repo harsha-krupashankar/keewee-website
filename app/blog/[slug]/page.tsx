@@ -32,12 +32,21 @@ export async function generateMetadata({
   ]);
   if (!post) return {};
 
-  return metadataFrom({
+  const metadata = metadataFrom({
     seo: post.seo,
     settings,
     title: `${post.title} — ${settings?.title ?? "keewee.in"} blog`,
     description: post.dek,
+    path: `/blog/${slug}`,
   });
+
+  // A post with no body is a stub, not an article — indexing it would put an
+  // empty page in front of a search result while the real one is written.
+  if (!post.body?.length) {
+    metadata.robots = { index: false, follow: false };
+  }
+
+  return metadata;
 }
 
 export default async function BlogPostRoute({

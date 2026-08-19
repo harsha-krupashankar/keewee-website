@@ -25,6 +25,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // The sitemap and robots.txt both advertise keewee.in as canonical, but
+  // every Vercel preview — including the one this site currently answers
+  // requests on — serves the identical 30 routes. Without this, a preview
+  // discovered by a crawler competes with the real domain for the same URLs.
+  // `VERCEL_ENV` is fixed per build, so this is safe to resolve at build time.
+  async headers() {
+    if (process.env.VERCEL_ENV === "production") return [];
+    return [
+      {
+        source: "/:path*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

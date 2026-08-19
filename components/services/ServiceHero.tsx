@@ -36,7 +36,7 @@ export default function ServiceHero({
             </span>
           </Reveal>
 
-          <Reveal delay={80} y={18}>
+          <Reveal eager delay={80} y={18}>
             <h1 className="mb-6 font-display text-[42px] font-extrabold leading-[0.99] tracking-[-0.035em] text-ink text-pretty sm:text-[56px] lg:text-[72px]">
               <Headline value={doc.heroHeadline} />
             </h1>

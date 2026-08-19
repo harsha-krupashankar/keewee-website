@@ -118,10 +118,10 @@ export default function ServiceQuoteForm({ doc }: { doc: ServicePage }) {
                 </label>
 
                 {doc.serviceCheckboxes && doc.serviceCheckboxes.length > 0 && (
-                  <div className="mb-6">
-                    <span className="mb-3 block font-display text-[13px] font-bold text-ink">
+                  <fieldset className="mb-6">
+                    <legend className="mb-3 font-display text-[13px] font-bold text-ink">
                       Which {doc.serviceScope} services are you interested in?
-                    </span>
+                    </legend>
                     <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                       {doc.serviceCheckboxes.map((label) => {
                         const on = selected.has(label);
@@ -149,7 +149,7 @@ export default function ServiceQuoteForm({ doc }: { doc: ServicePage }) {
                         );
                       })}
                     </div>
-                  </div>
+                  </fieldset>
                 )}
 
                 <label className="mb-5.5 flex max-w-[340px] flex-col gap-1.5">

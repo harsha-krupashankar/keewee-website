@@ -46,7 +46,7 @@ export default function AboutHero({ hero }: { hero?: PageHero | null }) {
             </Reveal>
           )}
 
-          <Reveal delay={80} y={18}>
+          <Reveal eager delay={80} y={18}>
             <h1 className="mb-5.5 font-display text-[38px] font-extrabold leading-[1.15] tracking-[-0.035em] text-ink text-pretty sm:text-[52px] lg:text-[64px]">
               <Headline value={hero.headline} />
             </h1>

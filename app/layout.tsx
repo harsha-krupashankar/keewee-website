@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next";
 
 import DraftModeBanner from "@/components/sanity/DraftModeBanner";
 import { metadataFrom } from "@/lib/metadata";
+import { SITE_URL } from "@/lib/site";
 import { getSiteSettings } from "@/sanity/lib/content";
 import { PUBLISHED, SanityLive } from "@/sanity/lib/live";
 import "./globals.css";
@@ -44,6 +45,19 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const { isEnabled: isDraftMode } = await draftMode();
+  const settings = await getSiteSettings(PUBLISHED);
+
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: settings?.title ?? "keewee",
+    url: SITE_URL,
+    ...(settings?.tagline ? { slogan: settings.tagline } : {}),
+    ...(settings?.contactEmail ? { email: settings.contactEmail } : {}),
+    ...(settings?.socialLinks?.length
+      ? { sameAs: settings.socialLinks.map((s) => s.href) }
+      : {}),
+  };
 
   return (
     <html
@@ -51,6 +65,14 @@ export default async function RootLayout({
       className={`${archivo.variable} ${bricolage.variable} ${bangers.variable}`}
     >
       <body>
+        <script
+          type="application/ld+json"
+          // `<` is escaped so a CMS string containing "</script>" can't break
+          // out of the tag — JSON.stringify alone doesn't escape it.
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c"),
+          }}
+        />
         {children}
         {isDraftMode && (
           <>

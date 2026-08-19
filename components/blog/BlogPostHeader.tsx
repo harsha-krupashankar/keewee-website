@@ -26,7 +26,7 @@ export default function BlogPostHeader({ post }: { post: Post }) {
           </Reveal>
         )}
 
-        <Reveal delay={120} y={18}>
+        <Reveal eager delay={120} y={18}>
           <h1 className="mb-4.5 max-w-[840px] font-display text-[32px] font-extrabold leading-[1.05] tracking-[-0.035em] text-ink text-pretty sm:text-[44px] lg:text-[52px]">
             {post.title}
           </h1>

@@ -50,7 +50,7 @@ export default function ServicesHero({
             </Reveal>
           )}
 
-          <Reveal delay={80} y={18}>
+          <Reveal eager delay={80} y={18}>
             <h1 className="mb-6 text-pretty font-display text-[clamp(42px,6vw,74px)] font-extrabold leading-[0.98] tracking-[-0.035em] text-ink">
               <Headline value={hero.headline} />
             </h1>

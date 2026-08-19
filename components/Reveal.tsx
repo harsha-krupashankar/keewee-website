@@ -8,6 +8,13 @@ type RevealProps = {
   delay?: number;
   y?: number;
   id?: string;
+  /**
+   * Renders visible immediately instead of waiting on the scroll observer.
+   * Reserve for above-the-fold content — a hero `<h1>` in particular — so it
+   * never depends on JS hydration to appear: without this, the server HTML
+   * ships `opacity:0` and a slow or blocked bundle leaves the page blank.
+   */
+  eager?: boolean;
 };
 
 export default function Reveal({
@@ -16,11 +23,13 @@ export default function Reveal({
   delay = 0,
   y = 22,
   id,
+  eager = false,
 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(eager);
 
   useEffect(() => {
+    if (eager) return;
     const el = ref.current;
     if (!el) return;
 
@@ -35,7 +44,7 @@ export default function Reveal({
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [eager]);
 
   return (
     <div

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import Reveal from "./Reveal";
 import Copy from "./sanity/Copy";
 import type { FaqItem } from "@/sanity/lib/types";
@@ -26,6 +26,7 @@ export default function FaqAccordion({
   animate?: boolean;
 }) {
   const [openIndex, setOpenIndex] = useState(defaultOpen);
+  const baseId = useId();
 
   if (!items?.length) return null;
 
@@ -34,11 +35,14 @@ export default function FaqAccordion({
       <div className="flex flex-col">
         {items.map((item, i) => {
           const open = openIndex === i;
+          const panelId = `${baseId}-panel-${i}`;
           return (
             <div key={item.question} className={i > 0 ? "border-t border-[#E0DACC]" : ""}>
               <button
+                type="button"
                 onClick={() => setOpenIndex(open ? -1 : i)}
                 aria-expanded={open}
+                aria-controls={panelId}
                 className="flex w-full items-center justify-between gap-4 py-5 text-left font-display text-lg font-extrabold leading-tight tracking-[-0.02em] text-ink transition-colors duration-150 hover:text-green focus-visible:rounded-lg focus-visible:outline focus-visible:outline-[3px] focus-visible:-outline-offset-2 focus-visible:outline-lime-bright sm:text-xl"
               >
                 {item.question}
@@ -50,6 +54,7 @@ export default function FaqAccordion({
                 </span>
               </button>
               <div
+                id={panelId}
                 className="grid transition-[grid-template-rows] duration-300 ease-in-out"
                 style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
               >
@@ -71,6 +76,7 @@ export default function FaqAccordion({
     <div className="flex flex-col gap-3">
       {items.map((item, i) => {
         const open = openIndex === i;
+        const panelId = `${baseId}-panel-${i}`;
         return (
           <Reveal
             key={item.question}
@@ -80,8 +86,10 @@ export default function FaqAccordion({
             }`}
           >
             <button
+              type="button"
               onClick={() => setOpenIndex(open ? -1 : i)}
               aria-expanded={open}
+              aria-controls={panelId}
               className="flex w-full items-center justify-between gap-4 px-6 py-4.5 text-left font-display text-lg font-bold leading-tight tracking-[-0.02em] text-ink transition-colors duration-150 hover:text-green focus-visible:rounded-xl focus-visible:outline focus-visible:outline-[3px] focus-visible:-outline-offset-[3px] focus-visible:outline-lime-bright sm:text-xl"
             >
               {item.question}
@@ -93,6 +101,7 @@ export default function FaqAccordion({
               </span>
             </button>
             <div
+              id={panelId}
               className="grid transition-[grid-template-rows] duration-300 ease-in-out"
               style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
             >

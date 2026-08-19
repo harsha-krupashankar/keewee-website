@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
     getNewsletterPage(PUBLISHED),
     getSiteSettings(PUBLISHED),
   ]);
-  return metadataFrom({ seo: page?.seo, settings });
+  return metadataFrom({ seo: page?.seo, settings, path: "/newsletter" });
 }
 
 export default function NewsletterRoute() {

@@ -10,6 +10,7 @@ import SiteShell from "@/components/SiteShell";
 import TitledCardGrid from "@/components/TitledCardGrid";
 import FreeAuditCover from "@/components/free-audit/FreeAuditCover";
 import FreeAuditFaq from "@/components/free-audit/FreeAuditFaq";
+import FreeAuditForm from "@/components/free-audit/FreeAuditForm";
 import FreeAuditForYou from "@/components/free-audit/FreeAuditForYou";
 import FreeAuditProof from "@/components/free-audit/FreeAuditProof";
 import { metadataFrom } from "@/lib/metadata";
@@ -21,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
     getFreeAuditPage(PUBLISHED),
     getSiteSettings(PUBLISHED),
   ]);
-  return metadataFrom({ seo: page?.seo, settings });
+  return metadataFrom({ seo: page?.seo, settings, path: "/free-audit" });
 }
 
 export default function FreeAuditRoute() {
@@ -40,6 +41,7 @@ async function Content({ opts }: { opts: FetchOptions }) {
       />
       <FreeAuditCover page={page} />
       <FreeAuditForYou page={page} />
+      <FreeAuditForm page={page} />
 
       <section className="bg-paper pb-3 pt-14 md:pt-16">
         <Container>

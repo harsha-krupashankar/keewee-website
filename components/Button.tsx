@@ -10,6 +10,7 @@ type ButtonProps = {
    */
   variant?: "primary" | "primary-on-dark" | "ghost";
   className?: string;
+  onClick?: () => void;
 };
 
 const SHADOW = {
@@ -23,11 +24,13 @@ export default function Button({
   children,
   variant = "primary",
   className = "",
+  onClick,
 }: ButtonProps) {
   if (variant === "ghost") {
     return (
       <Link
         href={href}
+        onClick={onClick}
         className={`inline-block rounded-xl border-2 border-white/40 font-display font-bold text-paper transition-colors duration-150 hover:bg-paper hover:text-ink ${className}`}
       >
         {children}
@@ -38,6 +41,7 @@ export default function Button({
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={`inline-block rounded-xl bg-green font-display font-bold text-white transition-all duration-150 hover:translate-x-[2px] hover:translate-y-[2px] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-[3px] ${SHADOW[variant]} ${className}`}
     >
       {children}

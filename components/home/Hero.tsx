@@ -61,7 +61,7 @@ export default function Hero({ page }: { page: HomePage }) {
             </Reveal>
           )}
 
-          <Reveal delay={80} y={18}>
+          <Reveal eager delay={80} y={18}>
             <h1 className="mb-6 font-display text-[52px] font-extrabold leading-[0.92] tracking-[-0.04em] text-ink sm:text-[72px] lg:text-[104px]">
               <Headline value={page.heroHeadline} />
             </h1>

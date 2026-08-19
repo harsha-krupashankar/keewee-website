@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
     getPromptLibraryPage(PUBLISHED),
     getSiteSettings(PUBLISHED),
   ]);
-  return metadataFrom({ seo: page?.seo, settings });
+  return metadataFrom({ seo: page?.seo, settings, path: "/prompt-library" });
 }
 
 export default function PromptLibraryRoute() {

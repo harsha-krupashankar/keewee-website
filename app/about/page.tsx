@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
     getAboutPage(PUBLISHED),
     getSiteSettings(PUBLISHED),
   ]);
-  return metadataFrom({ seo: page?.seo, settings });
+  return metadataFrom({ seo: page?.seo, settings, path: "/about" });
 }
 
 export default function AboutRoute() {

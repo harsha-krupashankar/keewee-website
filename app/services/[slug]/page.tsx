@@ -41,6 +41,7 @@ export async function generateMetadata({
     settings,
     title: `${doc.category} for B2B SaaS — ${settings?.title ?? "keewee.in"}`,
     description: doc.heroSub,
+    path: `/services/${slug}`,
   });
 }
 

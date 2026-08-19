@@ -35,9 +35,9 @@ export async function POST(request: NextRequest) {
     return Response.json({ message: "Bad request" }, { status: 400 });
   }
 
-  // Stale-while-revalidate: visitors keep getting the cached page while the
-  // fresh one builds in the background.
-  revalidateTag(body._type, "max");
+  // Expire immediately rather than stale-while-revalidate: the next visitor
+  // pays for a synchronous refetch, but never sees stale content post-publish.
+  revalidateTag(body._type, { expire: 0 });
 
   return Response.json({ revalidated: true, type: body._type });
 }

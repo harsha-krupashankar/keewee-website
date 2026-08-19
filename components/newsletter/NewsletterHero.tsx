@@ -79,7 +79,7 @@ export default function NewsletterHero({ page }: { page: NewsletterPage }) {
               </Reveal>
             )}
 
-            <Reveal delay={80} y={18}>
+            <Reveal eager delay={80} y={18}>
               <h1 className="mb-5.5 max-w-[640px] font-display text-[34px] font-extrabold leading-[1.05] tracking-[-0.03em] text-ink text-pretty sm:text-[46px] lg:text-[52px]">
                 <Headline value={page.hero?.headline} />
               </h1>
@@ -117,6 +117,7 @@ export default function NewsletterHero({ page }: { page: NewsletterPage }) {
                 </label>
                 <input
                   id="newsletter-email"
+                  name="email"
                   type="email"
                   required
                   value={email}

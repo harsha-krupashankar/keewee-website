@@ -22,7 +22,7 @@ export async function generateMetadata(): Promise<Metadata> {
     getHomePage(PUBLISHED),
     getSiteSettings(PUBLISHED),
   ]);
-  return metadataFrom({ seo: page?.seo, settings });
+  return metadataFrom({ seo: page?.seo, settings, path: "/" });
 }
 
 export default function HomeRoute() {

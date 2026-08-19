@@ -241,6 +241,11 @@ export type FreeAuditPage = {
   forYouPointers?: string[] | null;
   deliverablesHeader?: SectionHeader | null;
   deliverables?: TitledCard[] | null;
+  formEyebrow?: string | null;
+  formHeadline?: string | null;
+  formIntro?: string | null;
+  formSuccessSticker?: string | null;
+  formSuccessText?: string | null;
   faqHeader?: SectionHeader | null;
   faqItems?: FaqItem[] | null;
   proofHeader?: SectionHeader | null;

@@ -56,7 +56,7 @@ export default function PromptLibraryHero({ page }: { page: PromptLibraryPage })
             </Reveal>
           )}
 
-          <Reveal delay={80} y={18}>
+          <Reveal eager delay={80} y={18}>
             <h1 className="mb-6 text-pretty font-display text-[clamp(42px,6vw,72px)] font-extrabold leading-[0.96] tracking-[-0.04em] text-ink">
               <Headline value={page.heroHeadline} />
             </h1>
