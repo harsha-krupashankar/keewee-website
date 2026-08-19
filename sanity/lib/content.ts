@@ -127,7 +127,7 @@ export async function getPost(slug: string, opts: FetchOptions) {
   // to invalidate the post page too — the webhook only knows document types.
   return run<T.Post>(opts, {
     query: Q.POST_QUERY,
-    params: { slug },
+    params: { slug: slug.trim() },
     tags: [TAG.post, TAG.person, TAG.category],
   });
 }
@@ -147,7 +147,7 @@ export async function getServicePage(slug: string, opts: FetchOptions) {
   "use cache";
   return run<T.ServicePage>(opts, {
     query: Q.SERVICE_PAGE_QUERY,
-    params: { slug },
+    params: { slug: slug.trim() },
     tags: [TAG.servicePage],
   });
 }
@@ -167,7 +167,7 @@ export async function getLegalDoc(slug: string, opts: FetchOptions) {
   "use cache";
   return run<T.LegalDoc>(opts, {
     query: Q.LEGAL_DOC_QUERY,
-    params: { slug },
+    params: { slug: slug.trim() },
     tags: [TAG.legalDoc],
   });
 }

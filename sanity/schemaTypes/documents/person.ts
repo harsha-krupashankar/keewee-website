@@ -1,5 +1,7 @@
 import { defineField, defineType } from "sanity";
 
+import { slugField } from "../shared/slug";
+
 /**
  * One record per human. The About page team grid and blog post bylines both read
  * from here, so a role change is edited once rather than in two places.
@@ -14,12 +16,7 @@ export const person = defineType({
       type: "string",
       validation: (rule) => rule.required(),
     }),
-    defineField({
-      name: "slug",
-      type: "slug",
-      options: { source: "name", maxLength: 96 },
-      validation: (rule) => rule.required(),
-    }),
+    slugField({ source: "name" }),
     defineField({
       name: "role",
       type: "string",

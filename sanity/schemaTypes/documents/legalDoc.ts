@@ -1,5 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
+import { slugField } from "../shared/slug";
+
 export const legalDoc = defineType({
   name: "legalDoc",
   title: "Legal document",
@@ -11,13 +13,7 @@ export const legalDoc = defineType({
       description: "e.g. Terms of Service",
       validation: (rule) => rule.required(),
     }),
-    defineField({
-      name: "slug",
-      type: "slug",
-      options: { source: "title", maxLength: 96 },
-      description: "Served at /legal/<slug>",
-      validation: (rule) => rule.required(),
-    }),
+    slugField({ source: "title", description: "Served at /legal/<slug>" }),
     defineField({
       name: "label",
       title: "Short label",

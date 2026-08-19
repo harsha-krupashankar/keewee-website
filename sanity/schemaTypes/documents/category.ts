@@ -1,5 +1,7 @@
 import { defineField, defineType } from "sanity";
 
+import { slugField } from "../shared/slug";
+
 /** Blog taxonomy. Drives the filter pills on the blog index. */
 export const category = defineType({
   name: "category",
@@ -11,12 +13,7 @@ export const category = defineType({
       type: "string",
       validation: (rule) => rule.required(),
     }),
-    defineField({
-      name: "slug",
-      type: "slug",
-      options: { source: "title", maxLength: 96 },
-      validation: (rule) => rule.required(),
-    }),
+    slugField({ source: "title" }),
     defineField({
       name: "description",
       type: "text",

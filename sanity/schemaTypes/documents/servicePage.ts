@@ -1,5 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
+import { slugField } from "../shared/slug";
+
 /**
  * The five funnel-stage landing pages, served from the root `/[slug]` route.
  *
@@ -25,13 +27,10 @@ export const servicePage = defineType({
       description: "e.g. Awareness & Brand. Used in the footer and nav.",
       validation: (rule) => rule.required(),
     }),
-    defineField({
-      name: "slug",
-      type: "slug",
+    slugField({
+      source: "category",
       group: "hero",
-      options: { source: "category", maxLength: 96 },
       description: "Served at the root, e.g. /b2b-saas-demand-generation-agency",
-      validation: (rule) => rule.required(),
     }),
     defineField({
       name: "order",

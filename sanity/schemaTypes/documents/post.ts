@@ -1,5 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
+import { slugField } from "../shared/slug";
+
 export const post = defineType({
   name: "post",
   title: "Blog post",
@@ -16,13 +18,7 @@ export const post = defineType({
       group: "content",
       validation: (rule) => rule.required(),
     }),
-    defineField({
-      name: "slug",
-      type: "slug",
-      group: "content",
-      options: { source: "title", maxLength: 96 },
-      validation: (rule) => rule.required(),
-    }),
+    slugField({ source: "title", group: "content" }),
     defineField({
       name: "dek",
       title: "Dek",

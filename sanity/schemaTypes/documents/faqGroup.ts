@@ -1,5 +1,7 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 
+import { slugField } from "../shared/slug";
+
 /**
  * A themed set of questions on the FAQ page (Pricing, How We Work, …).
  *
@@ -18,13 +20,7 @@ export const faqGroup = defineType({
       description: "Section heading, e.g. Pricing & Contracts",
       validation: (rule) => rule.required(),
     }),
-    defineField({
-      name: "slug",
-      type: "slug",
-      options: { source: "title", maxLength: 96 },
-      description: "Used as the anchor link target.",
-      validation: (rule) => rule.required(),
-    }),
+    slugField({ source: "title", description: "Used as the anchor link target." }),
     defineField({
       name: "navLabel",
       title: "Nav label",
