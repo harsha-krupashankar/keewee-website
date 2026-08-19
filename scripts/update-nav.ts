@@ -90,6 +90,7 @@ const headerNav = [
   link("Services", "/services"),
   navGroup("Resources", [
     link("Blogs", "/blog"),
+    link("Prompt Library", "/prompt-library"),
     link("Free Audit", "/free-audit"),
     link("FAQs", "/faq"),
     link("Subscribe to Our Newsletter", "/newsletter"),
@@ -107,6 +108,7 @@ const footerGroups = [
   ], { label: "Book a call", href: "https://calendly.com/keewee/intro-call" }),
   footerGroup("Resources", [
     link("Blog", "/blog"),
+    link("Prompt Library", "/prompt-library"),
     link("Free Audit", "/free-audit"),
     link("Subscribe to Our Newsletter", "/newsletter"),
   ]),
@@ -114,6 +116,7 @@ const footerGroups = [
     link("About", "/about"),
     link("Frequently Asked Questions", "/faq"),
     link("Privacy Policy", "/legal/privacy-policy"),
+    link("Terms of Service", "/legal/terms-of-service"),
     link("Legal", "/legal"),
   ]),
 ];
@@ -123,10 +126,14 @@ const footerGroups = [
 // ---------------------------------------------------------------------------
 
 async function main() {
+  // Explicitly excludes `drafts.*`: an unqualified `*[_type == "siteSettings"][0]`
+  // lets GROQ hand back whichever of the draft/published pair sorts first, which
+  // previously sent this script's patch into a draft that never got published —
+  // the live site kept the old nav while the fix sat invisible in the Studio.
   const doc = await client.fetch<{ _id: string } | null>(
-    '*[_type == "siteSettings"][0]{ _id }',
+    '*[_type == "siteSettings" && !(_id in path("drafts.**"))][0]{ _id }',
   );
-  if (!doc) throw new Error("No siteSettings document found. Run `npm run seed` first.");
+  if (!doc) throw new Error("No published siteSettings document found. Run `npm run seed` first.");
 
   if (dryRun) {
     console.log(`Would patch ${doc._id} in ${projectId}/${dataset}:\n`);
@@ -144,6 +151,16 @@ async function main() {
   console.log(
     `Patched ${doc._id}: headerNav (${headerNav.length} items), footerGroups (${footerGroups.length} columns), socialLinks (${socialLinks.length}).`,
   );
+
+  // The stale `drafts.siteSettings` sitting in the Studio is a superset of what
+  // this script already writes (it's how the earlier, never-published run was
+  // discovered) — remove it so an editor doesn't see a misleading "unpublished
+  // changes" banner for a draft that's now fully subsumed by the published doc.
+  const stale = await client.getDocument(`drafts.${doc._id}`).catch(() => null);
+  if (stale) {
+    await client.delete(`drafts.${doc._id}`);
+    console.log(`Discarded stale drafts.${doc._id} (superseded by this patch).`);
+  }
 }
 
 main().catch((error) => {
