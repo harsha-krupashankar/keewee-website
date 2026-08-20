@@ -10,9 +10,9 @@
     "typecheck": "tsc --noEmit",
     "seed": "tsx --env-file=.env.local scripts/seed.ts",
     "seed:dry": "tsx --env-file=.env.local scripts/seed.ts --dry",
-    "update-nav": "tsx --env-file=.env.local scripts/update-nav.ts",
-    "update-socials": "tsx --env-file=.env.local scripts/update-socials.ts",
-    "update-socials:dry": "tsx --env-file=.env.local scripts/update-socials.ts --dry",
+    "update-nav": "tsx --env-file=.env.local scripts/local/update-nav.ts",
+    "update-socials": "tsx --env-file=.env.local scripts/local/update-socials.ts",
+    "update-socials:dry": "tsx --env-file=.env.local scripts/local/update-socials.ts --dry",
     "fix-ids": "tsx --env-file=.env.local scripts/fix-dotted-ids.ts",
     "fix-ids:dry": "tsx --env-file=.env.local scripts/fix-dotted-ids.ts --dry",
     "typegen": "sanity schema extract --path=./sanity/extract.json --enforce-required-fields && sanity typegen generate"

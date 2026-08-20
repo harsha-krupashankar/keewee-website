@@ -40,6 +40,10 @@ yarn-error.log*
 # sanity
 /sanity/extract.json
 
+# one-off local scripts that write directly to Sanity (not part of the app,
+# never committed)
+/scripts/local/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
