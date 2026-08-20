@@ -464,3 +464,12 @@ export type LegalDoc = {
   sections: LegalSection[];
   seo?: Seo | null;
 };
+
+export type LegalDocSummary = {
+  _id: string;
+  title: string;
+  slug: string;
+  label?: string | null;
+  intro: string;
+  updatedAt: string;
+};

@@ -65,7 +65,7 @@ export default function FreeAuditBanner({ page }: { page: HomePage }) {
                   className="flex gap-2.5 border-b border-dark-border py-2.5 font-body text-sm font-medium leading-snug text-dark-text-softer transition-colors duration-150 hover:text-white"
                   style={{ transitionDelay: `${i * 30}ms` }}
                 >
-                  <span className="font-extrabold text-green">✓</span>
+                  <span className="font-extrabold text-green-dark">✓</span>
                   {item}
                 </div>
               ))}

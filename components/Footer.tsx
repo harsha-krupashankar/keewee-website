@@ -112,7 +112,7 @@ export default function Footer({ settings }: { settings: SiteSettings | null }) 
         </div>
 
         {/* Socials sit with the logo above; this bar is just the copyright. */}
-        <div className="mt-6 flex flex-wrap justify-between gap-3 border-t border-border pt-4 font-mono text-[11px] font-bold uppercase tracking-wide text-faint">
+        <div className="mt-6 flex flex-wrap justify-between gap-3 border-t border-border pt-4 font-mono text-[11px] font-bold uppercase tracking-wide text-muted">
           {settings.footerNote && <span>{settings.footerNote}</span>}
         </div>
       </Container>

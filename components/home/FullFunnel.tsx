@@ -161,7 +161,7 @@ export default function FullFunnel({ page }: { page: HomePage }) {
                         key={bullet}
                         className="inline-flex items-center gap-1.5 rounded-full border border-border-soft bg-surface px-3.5 py-1.5 font-body text-[13px] font-semibold text-[#40392E]"
                       >
-                        <span className="font-extrabold text-green">✓</span>
+                        <span className="font-extrabold text-green-dark">✓</span>
                         {bullet}
                       </span>
                     ))}

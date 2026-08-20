@@ -25,19 +25,26 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // The sitemap and robots.txt both advertise keewee.in as canonical, but
-  // every Vercel preview — including the one this site currently answers
-  // requests on — serves the identical 30 routes. Without this, a preview
-  // discovered by a crawler competes with the real domain for the same URLs.
-  // `VERCEL_ENV` is fixed per build, so this is safe to resolve at build time.
+  // A conservative baseline, not a full Content-Security-Policy: CSP needs an
+  // explicit allow-list across the Sanity image CDN, Google Fonts, Vercel
+  // Analytics, and the Studio's own script/style/connect needs at `/studio`
+  // (including its live-preview websocket), and getting that wrong silently
+  // breaks the Studio rather than failing loudly. These three carry no such
+  // compatibility risk. The `X-Robots-Tag` noindex for non-canonical hosts
+  // lives in `middleware.ts` instead — it has to read the request's `Host`
+  // header, which isn't available in this static config.
   async headers() {
-    if (process.env.VERCEL_ENV === "production") return [];
-    return [
+    const securityHeaders = [
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+      { key: "X-Frame-Options", value: "SAMEORIGIN" },
       {
-        source: "/:path*",
-        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+        key: "Permissions-Policy",
+        value: "camera=(), microphone=(), geolocation=()",
       },
     ];
+
+    return [{ source: "/:path*", headers: securityHeaders }];
   },
 };
 

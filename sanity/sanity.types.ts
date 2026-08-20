@@ -1724,9 +1724,10 @@ export type BLOG_INDEX_QUERY_RESULT = {
 
 // Source: sanity/lib/queries.ts
 // Variable: POST_SLUGS_QUERY
-// Query: *[_type == "post" && defined(slug.current)]{ "slug": slug.current }
+// Query: *[_type == "post" && defined(slug.current)]{ "slug": slug.current, "updatedAt": _updatedAt }
 export type POST_SLUGS_QUERY_RESULT = Array<{
   slug: string;
+  updatedAt: string;
 }>;
 
 // Source: sanity/lib/queries.ts
@@ -1865,9 +1866,10 @@ export type POST_QUERY_RESULT = {
 
 // Source: sanity/lib/queries.ts
 // Variable: SERVICE_SLUGS_QUERY
-// Query: *[_type == "servicePage" && defined(slug.current)]{ "slug": slug.current }
+// Query: *[_type == "servicePage" && defined(slug.current)]{ "slug": slug.current, "updatedAt": _updatedAt }
 export type SERVICE_SLUGS_QUERY_RESULT = Array<{
   slug: string;
+  updatedAt: string;
 }>;
 
 // Source: sanity/lib/queries.ts
@@ -1917,9 +1919,22 @@ export type SERVICE_PAGE_QUERY_RESULT = {
 
 // Source: sanity/lib/queries.ts
 // Variable: LEGAL_SLUGS_QUERY
-// Query: *[_type == "legalDoc" && defined(slug.current)] | order(order asc){ "slug": slug.current }
+// Query: *[_type == "legalDoc" && defined(slug.current)] | order(order asc){ "slug": slug.current, "updatedAt": _updatedAt }
 export type LEGAL_SLUGS_QUERY_RESULT = Array<{
   slug: string;
+  updatedAt: string;
+}>;
+
+// Source: sanity/lib/queries.ts
+// Variable: LEGAL_DOCS_QUERY
+// Query: *[_type == "legalDoc" && defined(slug.current)] | order(order asc){    _id,    title,    "slug": slug.current,    label,    intro,    updatedAt  }
+export type LEGAL_DOCS_QUERY_RESULT = Array<{
+  _id: string;
+  title: string;
+  slug: string;
+  label: string | null;
+  intro: string;
+  updatedAt: string;
 }>;
 
 // Source: sanity/lib/queries.ts
@@ -2012,11 +2027,12 @@ declare module "@sanity/client" {
     '\n  *[_type == "servicesPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    heroSecondaryCta { label, href, openInNewTab },\n    categories[] {\n      name,\n      headline,\n      intro,\n      layout,\n      featureSticker,\n      items[] { title, description, tag }\n    },\n    auditHeadline,\n    auditBody,\n    auditButton { label, href, openInNewTab },\n    quoteEyebrow,\n    quoteHeadline,\n    quoteIntro,\n    quoteGoalsLabel,\n    quoteGoals,\n    quoteServicesLabel,\n    quoteServiceGroups[] { title, options },\n    quoteMessagePlaceholder,\n    quoteButtonLabel,\n    quoteNote,\n    quoteSuccessSticker,\n    quoteSuccessText,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': SERVICES_PAGE_QUERY_RESULT;
     '\n  *[_type == "promptLibraryPage"][0]{\n    heroBadge,\n    heroStickerA,\n    heroStickerB,\n    heroHeadline,\n    heroIntro,\n    heroCta { label, href, openInNewTab },\n    heroBadges,\n\n    whyLabel,\n    whyHeadline,\n    whyBody,\n\n    aiLabel,\n    aiHeadline,\n    aiIntro,\n    aiPlatforms[] { title, description, tag },\n\n    warningHeadline,\n    warningBody,\n\n    categories[] {\n      name,\n      tagline,\n      prompts[] {\n        title,\n        bestTool,\n        useCase,\n        promptText,\n        tip\n      }\n    },\n\n    ctaLabel,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': PROMPT_LIBRARY_PAGE_QUERY_RESULT;
     '\n  *[_type == "blogIndexPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    topReadsHeader { eyebrow, headline, sticker, intro },\n    archiveHeader { eyebrow, headline, sticker, intro },\n    newsletterHeadline,\n    newsletterBody,\n    newsletterCta { label, href, openInNewTab },\n    ctaHeadline,\n    ctaBody,\n    ctaButtons { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} },\n    "topReads": *[_type == "post" && featured == true && defined(slug.current)]\n      | order(publishedAt desc)[0...3] {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n},\n    "posts": *[_type == "post" && defined(slug.current)]\n      | order(publishedAt desc) {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n},\n    "categories": *[_type == "category"] | order(order asc, title asc) { _id, title, "slug": slug.current }\n  }\n': BLOG_INDEX_QUERY_RESULT;
-    '\n  *[_type == "post" && defined(slug.current)]{ "slug": slug.current }\n': POST_SLUGS_QUERY_RESULT;
+    '\n  *[_type == "post" && defined(slug.current)]{ "slug": slug.current, "updatedAt": _updatedAt }\n': POST_SLUGS_QUERY_RESULT;
     '\n  *[_type == "post" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    dek,\n    publishedAt,\n    "readTime": coalesce(\n      readTime,\n      math::max([1, round(length(pt::text(body)) / 5 / 220)])\n    ),\n    heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    category-> { _id, title, "slug": slug.current },\n    author-> {\n  _id,\n  name,\n  role,\n  initials,\n  photo {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  bio,\n  funFact\n},\n    body[]{\n      ...,\n      _type == "figure" => { ..., "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions }\n    },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} },\n    "related": select(\n      count(related) > 0 => related[]-> {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n},\n      *[_type == "post" && slug.current != $slug && category._ref == ^.category._ref]\n        | order(publishedAt desc)[0...3] {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n}\n    )\n  }\n': POST_QUERY_RESULT;
-    '\n  *[_type == "servicePage" && defined(slug.current)]{ "slug": slug.current }\n': SERVICE_SLUGS_QUERY_RESULT;
+    '\n  *[_type == "servicePage" && defined(slug.current)]{ "slug": slug.current, "updatedAt": _updatedAt }\n': SERVICE_SLUGS_QUERY_RESULT;
     '\n  *[_type == "servicePage" && slug.current == $slug][0]{\n    _id,\n    category,\n    "slug": slug.current,\n    heroHeadline,\n    heroSub,\n    problemHeadline,\n    problemBody,\n    offerings[] { title, description, tag },\n    differently,\n    testimonial,\n    faq[] { question, answer },\n    quoteHeadline,\n    serviceScope,\n    serviceCheckboxes,\n    talkHeadline,\n    talkBody,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': SERVICE_PAGE_QUERY_RESULT;
-    '\n  *[_type == "legalDoc" && defined(slug.current)] | order(order asc){ "slug": slug.current }\n': LEGAL_SLUGS_QUERY_RESULT;
+    '\n  *[_type == "legalDoc" && defined(slug.current)] | order(order asc){ "slug": slug.current, "updatedAt": _updatedAt }\n': LEGAL_SLUGS_QUERY_RESULT;
+    '\n  *[_type == "legalDoc" && defined(slug.current)] | order(order asc){\n    _id,\n    title,\n    "slug": slug.current,\n    label,\n    intro,\n    updatedAt\n  }\n': LEGAL_DOCS_QUERY_RESULT;
     '\n  *[_type == "legalDoc" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    label,\n    eyebrow,\n    entity,\n    updatedAt,\n    intro,\n    sections[]{\n      _key,\n      title,\n      blocks[]{ ... }\n    },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': LEGAL_DOC_QUERY_RESULT;
   }
 }

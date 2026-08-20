@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 import Reveal from "@/components/Reveal";
 import type { PromptEntry } from "@/sanity/lib/types";
@@ -15,17 +15,46 @@ export default function PromptCard({
   delay?: number;
 }) {
   const [open, setOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "failed">("idle");
   const copyTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const panelId = useId();
 
   useEffect(() => () => clearTimeout(copyTimer.current), []);
 
-  function copy(e: React.MouseEvent) {
+  /**
+   * In-app browsers (LinkedIn's, Instagram's — exactly where this page gets
+   * shared) and restrictive permissions policies can reject
+   * `navigator.clipboard.writeText`. The old version set "✓ Copied!" without
+   * waiting on that promise, so a rejection still read as success and the
+   * user pasted nothing. This awaits it, and falls back to the legacy
+   * `execCommand` path — still supported in some contexts where the async
+   * Clipboard API is blocked — before admitting failure.
+   */
+  async function copy(e: React.MouseEvent) {
     e.stopPropagation();
-    navigator.clipboard?.writeText(prompt.promptText).catch(() => {});
-    setCopied(true);
     clearTimeout(copyTimer.current);
-    copyTimer.current = setTimeout(() => setCopied(false), 2000);
+
+    let ok = false;
+    try {
+      await navigator.clipboard?.writeText(prompt.promptText);
+      ok = true;
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = prompt.promptText;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        ok = document.execCommand("copy");
+      } catch {
+        ok = false;
+      }
+      document.body.removeChild(textarea);
+    }
+
+    setCopyState(ok ? "copied" : "failed");
+    copyTimer.current = setTimeout(() => setCopyState("idle"), 2000);
   }
 
   return (
@@ -36,8 +65,10 @@ export default function PromptCard({
       }`}
     >
       <button
+        type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
+        aria-controls={panelId}
         className="flex w-full items-start gap-4 px-6.5 py-6 text-left focus-visible:rounded-[18px] focus-visible:outline focus-visible:outline-[3px] focus-visible:-outline-offset-[3px] focus-visible:outline-lime-bright"
       >
         <span className="flex h-[38px] w-[38px] flex-shrink-0 items-center justify-center rounded-[10px] border-2 border-ink bg-green font-display text-sm font-extrabold text-white shadow-[2px_2px_0_#1C1B19]">
@@ -65,6 +96,7 @@ export default function PromptCard({
       </button>
 
       <div
+        id={panelId}
         className="grid transition-[grid-template-rows] duration-300 ease-in-out"
         style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
       >
@@ -75,10 +107,17 @@ export default function PromptCard({
                 The prompt:
               </span>
               <button
+                type="button"
                 onClick={copy}
-                className="rounded-[10px] bg-green px-4.5 py-2 font-display text-[13px] font-bold text-white shadow-[2px_2px_0_#1C1B19] transition-all duration-150 hover:translate-x-px hover:translate-y-px hover:shadow-[1px_1px_0_#1C1B19]"
+                className={`rounded-[10px] px-4.5 py-2 font-display text-[13px] font-bold text-white shadow-[2px_2px_0_#1C1B19] transition-all duration-150 hover:translate-x-px hover:translate-y-px hover:shadow-[1px_1px_0_#1C1B19] ${
+                  copyState === "failed" ? "bg-rust" : "bg-green"
+                }`}
               >
-                {copied ? "✓ Copied!" : "Copy prompt"}
+                {copyState === "copied"
+                  ? "✓ Copied!"
+                  : copyState === "failed"
+                    ? "Couldn't copy — select manually"
+                    : "Copy prompt"}
               </button>
             </div>
             <div className="whitespace-pre-line rounded-[14px] border border-border-soft bg-surface px-6 py-5.5 font-body text-sm font-medium leading-[1.72] text-ink">

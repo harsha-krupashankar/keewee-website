@@ -1,17 +1,26 @@
 import type { MetadataRoute } from "next";
+import { headers } from "next/headers";
 
 import { SITE_URL } from "@/lib/site";
+
+const CANONICAL_HOST = new URL(SITE_URL).host;
 
 /**
  * Allow crawling of the public site. The Studio and API routes carry no
  * indexable content, so keep them out of search results.
  *
- * On anything but the production deployment, disallow everything — the
- * sitemap and canonical tags both advertise keewee.in, so a preview left
- * crawlable would only ever compete with the real domain for the same URLs.
+ * On any host other than the canonical domain, disallow everything. A
+ * `VERCEL_ENV === "production"` check isn't enough here: Vercel's own
+ * `<project>.vercel.app` domain — the exact URL this site was being audited
+ * on before `keewee.in`'s DNS was live — *is* the production deployment, just
+ * on the wrong host, so that check alone let it stay fully crawlable. Reading
+ * the request `Host` header instead (a Request-time API, so this route
+ * becomes per-request rather than cached at build time) catches that case
+ * along with every actual preview deployment.
  */
-export default function robots(): MetadataRoute.Robots {
-  if (process.env.VERCEL_ENV !== "production") {
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  const host = (await headers()).get("host");
+  if (host !== CANONICAL_HOST) {
     return { rules: { userAgent: "*", disallow: "/" } };
   }
 

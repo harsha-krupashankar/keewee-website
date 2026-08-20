@@ -351,7 +351,7 @@ export const BLOG_INDEX_QUERY = defineQuery(/* groq */ `
 `);
 
 export const POST_SLUGS_QUERY = defineQuery(/* groq */ `
-  *[_type == "post" && defined(slug.current)]{ "slug": slug.current }
+  *[_type == "post" && defined(slug.current)]{ "slug": slug.current, "updatedAt": _updatedAt }
 `);
 
 /**
@@ -388,7 +388,7 @@ export const POST_QUERY = defineQuery(/* groq */ `
 // --- Service pages --------------------------------------------------------
 
 export const SERVICE_SLUGS_QUERY = defineQuery(/* groq */ `
-  *[_type == "servicePage" && defined(slug.current)]{ "slug": slug.current }
+  *[_type == "servicePage" && defined(slug.current)]{ "slug": slug.current, "updatedAt": _updatedAt }
 `);
 
 export const SERVICE_PAGE_QUERY = defineQuery(/* groq */ `
@@ -416,7 +416,18 @@ export const SERVICE_PAGE_QUERY = defineQuery(/* groq */ `
 // --- Legal ----------------------------------------------------------------
 
 export const LEGAL_SLUGS_QUERY = defineQuery(/* groq */ `
-  *[_type == "legalDoc" && defined(slug.current)] | order(order asc){ "slug": slug.current }
+  *[_type == "legalDoc" && defined(slug.current)] | order(order asc){ "slug": slug.current, "updatedAt": _updatedAt }
+`);
+
+export const LEGAL_DOCS_QUERY = defineQuery(/* groq */ `
+  *[_type == "legalDoc" && defined(slug.current)] | order(order asc){
+    _id,
+    title,
+    "slug": slug.current,
+    label,
+    intro,
+    updatedAt
+  }
 `);
 
 export const LEGAL_DOC_QUERY = defineQuery(/* groq */ `

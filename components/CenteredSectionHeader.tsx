@@ -20,7 +20,7 @@ export default function CenteredSectionHeader({
       {header.eyebrow && (
         <span
           className={`mb-3.5 block font-mono text-xs font-bold uppercase tracking-[1.4px] ${
-            tone === "dark" ? "text-lime" : "text-green"
+            tone === "dark" ? "text-lime" : "text-green-dark"
           }`}
         >
           {header.eyebrow}

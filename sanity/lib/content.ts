@@ -134,7 +134,7 @@ export async function getPost(slug: string, opts: FetchOptions) {
 
 export async function getPostSlugs() {
   "use cache";
-  const slugs = await run<{ slug: string }[]>(
+  const slugs = await run<{ slug: string; updatedAt: string }[]>(
     { perspective: "published", stega: false },
     { query: Q.POST_SLUGS_QUERY, tags: [TAG.post] }
   );
@@ -154,7 +154,7 @@ export async function getServicePage(slug: string, opts: FetchOptions) {
 
 export async function getServiceSlugs() {
   "use cache";
-  const slugs = await run<{ slug: string }[]>(
+  const slugs = await run<{ slug: string; updatedAt: string }[]>(
     { perspective: "published", stega: false },
     { query: Q.SERVICE_SLUGS_QUERY, tags: [TAG.servicePage] }
   );
@@ -172,9 +172,18 @@ export async function getLegalDoc(slug: string, opts: FetchOptions) {
   });
 }
 
+export async function getLegalDocs(opts: FetchOptions) {
+  "use cache";
+  const docs = await run<T.LegalDocSummary[]>(opts, {
+    query: Q.LEGAL_DOCS_QUERY,
+    tags: [TAG.legalDoc],
+  });
+  return docs ?? [];
+}
+
 export async function getLegalSlugs() {
   "use cache";
-  const slugs = await run<{ slug: string }[]>(
+  const slugs = await run<{ slug: string; updatedAt: string }[]>(
     { perspective: "published", stega: false },
     { query: Q.LEGAL_SLUGS_QUERY, tags: [TAG.legalDoc] }
   );

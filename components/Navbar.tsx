@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Button from "./Button";
 import Container from "./Container";
 import LogoMark from "./LogoMark";
@@ -268,6 +268,7 @@ function NavDropdown({
   // The trigger is not a destination, so the current page is signalled by one of
   // its children matching instead.
   const isActive = links.some((link) => link.href === pathname);
+  const menuId = useId();
 
   return (
     <div className="relative" onMouseEnter={onOpen} onMouseLeave={onClose}>
@@ -275,6 +276,7 @@ function NavDropdown({
         type="button"
         aria-expanded={open}
         aria-haspopup="true"
+        aria-controls={menuId}
         onClick={onToggle}
         className={`group relative flex items-center gap-1.5 py-1 font-semibold hover:text-green ${
           isActive || open ? "text-green" : ""
@@ -307,7 +309,7 @@ function NavDropdown({
       {open && (
         // Pulled up under the trigger with a padded lip so the pointer can cross
         // the gap without the menu closing under it.
-        <div className="absolute left-1/2 top-full z-10 -translate-x-1/2 pt-3">
+        <div id={menuId} className="absolute left-1/2 top-full z-10 -translate-x-1/2 pt-3">
           <div className="min-w-[228px] rounded-xl border border-border bg-white p-2 shadow-[0_14px_36px_rgba(28,27,25,0.12)]">
             {links.map((link) => (
               <a

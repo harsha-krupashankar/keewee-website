@@ -37,9 +37,17 @@ export default function BlogArchive({
     setVisibleCount(PAGE_SIZE);
   }
 
+  // A category with zero posts is a dead click — advertising a topic chip
+  // that clears the grid with nothing in it. Filtering to categories that
+  // actually have a post keeps the chip row honest as posts get added.
+  const categoriesWithPosts = useMemo(() => {
+    const idsInUse = new Set(posts.map((post) => post.category?._id));
+    return categories.filter((category) => idsInUse.has(category._id));
+  }, [categories, posts]);
+
   // "All" is not a document — it's a UI affordance, so it is prepended here
   // rather than living as a real category an editor could delete.
-  const pills = [{ _id: ALL, title: "All", slug: ALL }, ...categories];
+  const pills = [{ _id: ALL, title: "All", slug: ALL }, ...categoriesWithPosts];
 
   return (
     <section className="pb-14 sm:pb-16">
@@ -77,11 +85,17 @@ export default function BlogArchive({
           })}
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {visiblePosts.map((post) => (
-            <BlogPostCard key={post._id} post={post} />
-          ))}
-        </div>
+        {visiblePosts.length > 0 ? (
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {visiblePosts.map((post) => (
+              <BlogPostCard key={post._id} post={post} />
+            ))}
+          </div>
+        ) : (
+          <p className="rounded-2xl border border-dashed border-border-soft bg-surface px-6 py-8 text-center font-body text-[15px] font-medium text-body">
+            No posts in this topic yet — check back soon.
+          </p>
+        )}
 
         {showLoadMore && (
           <div className="mt-8 flex justify-center">

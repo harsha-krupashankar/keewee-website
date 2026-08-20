@@ -1,4 +1,4 @@
-import type { NextRequest } from "next/server";
+import { after, type NextRequest } from "next/server";
 
 /**
  * Form-submission sink.
@@ -96,29 +96,38 @@ export async function POST(request: NextRequest) {
     return Response.json({ message: "Bad request" }, { status: 400 });
   }
 
-  try {
-    const res = await fetch(webhookUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-      // A deployed Apps Script Web App answers a POST with a 302 to a *single-use*
-      // script.googleusercontent.com URL, emitted only after doPost has run to
-      // completion. Following that hop is both unnecessary and flaky (the key is
-      // consumed on first read), so we stop at the redirect and treat it — or a
-      // direct 2xx — as confirmation the script executed. Following it here is
-      // what previously caused intermittent false 502s and duplicate rows.
-      redirect: "manual",
-    });
+  // The Apps Script Web App this forwards to is a synchronous, sometimes
+  // cold-starting spreadsheet write — 5s warm, 30s+ cold, observed directly
+  // against the deployed endpoint. Awaiting it here left the submit button on
+  // "Sending…" long enough that a real visitor would assume the site was
+  // broken and bail (or double-submit). The payload is already validated
+  // above, so nothing past this point can change the response; only whether
+  // the write itself lands, which `after` can't communicate back to the
+  // client anyway once we've already replied. Failures are still visible
+  // server-side via the console.error below.
+  after(async () => {
+    try {
+      const res = await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        // A deployed Apps Script Web App answers a POST with a 302 to a
+        // *single-use* script.googleusercontent.com URL, emitted only after
+        // doPost has run to completion. Following that hop is both
+        // unnecessary and flaky (the key is consumed on first read), so we
+        // stop at the redirect and treat it — or a direct 2xx — as
+        // confirmation the script executed. Following it here is what
+        // previously caused intermittent false 502s and duplicate rows.
+        redirect: "manual",
+      });
 
-    if (res.status !== 302 && !res.ok) {
-      return Response.json(
-        { message: "Upstream write failed", status: res.status },
-        { status: 502 }
-      );
+      if (res.status !== 302 && !res.ok) {
+        console.error(`Form webhook write failed: upstream status ${res.status}`);
+      }
+    } catch (error) {
+      console.error("Form webhook unreachable:", error);
     }
-  } catch {
-    return Response.json({ message: "Upstream unreachable" }, { status: 502 });
-  }
+  });
 
   return Response.json({ ok: true });
 }
