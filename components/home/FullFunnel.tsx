@@ -171,12 +171,13 @@ export default function FullFunnel({ page }: { page: HomePage }) {
             );
           })}
 
-          {(page.funnelOutcomeSticker || page.funnelOutcomeText) && (
-            <div className="flex items-center gap-4 sm:gap-5">
-              <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border-2 border-ink bg-ink text-xl text-lime shadow-[3px_3px_0_#4E7D2E]">
-                ✦
-              </div>
-              <div className="flex flex-1 flex-wrap items-center gap-3.5 rounded-[18px] bg-ink px-6.5 py-5 text-paper shadow-[0_12px_30px_rgba(28,27,25,0.16)]">
+          {(page.funnelOutcomeSticker || page.funnelOutcomeText) && (() => {
+            const cta = page.funnelOutcomeCta;
+            const panelClassName =
+              "flex flex-1 flex-wrap items-center gap-3.5 rounded-[18px] bg-ink px-6.5 py-5 text-paper shadow-[0_12px_30px_rgba(28,27,25,0.16)] transition-transform duration-150" +
+              (cta?.href ? " hover:-translate-y-0.5" : "");
+            const content = (
+              <>
                 {page.funnelOutcomeSticker && (
                   <span className="font-sticker text-2xl tracking-wide text-lime">
                     {page.funnelOutcomeSticker}
@@ -187,9 +188,29 @@ export default function FullFunnel({ page }: { page: HomePage }) {
                     {page.funnelOutcomeText}
                   </span>
                 )}
+              </>
+            );
+
+            return (
+              <div className="flex items-center gap-4 sm:gap-5">
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border-2 border-ink bg-ink text-xl text-lime shadow-[3px_3px_0_#4E7D2E]">
+                  ✦
+                </div>
+                {cta?.href ? (
+                  <Link
+                    href={cta.href}
+                    target={cta.openInNewTab ? "_blank" : undefined}
+                    rel={cta.openInNewTab ? "noopener noreferrer" : undefined}
+                    className={panelClassName}
+                  >
+                    {content}
+                  </Link>
+                ) : (
+                  <div className={panelClassName}>{content}</div>
+                )}
               </div>
-            </div>
-          )}
+            );
+          })()}
         </div>
       </Container>
     </section>

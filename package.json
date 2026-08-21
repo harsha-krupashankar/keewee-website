@@ -13,6 +13,10 @@
     "update-nav": "tsx --env-file=.env.local scripts/local/update-nav.ts",
     "update-socials": "tsx --env-file=.env.local scripts/local/update-socials.ts",
     "update-socials:dry": "tsx --env-file=.env.local scripts/local/update-socials.ts --dry",
+    "remove-final-cta-secondary": "tsx --env-file=.env.local scripts/local/remove-final-cta-secondary.ts",
+    "remove-final-cta-secondary:dry": "tsx --env-file=.env.local scripts/local/remove-final-cta-secondary.ts --dry",
+    "update-mailto-ctas": "tsx --env-file=.env.local scripts/local/update-mailto-ctas.ts",
+    "update-mailto-ctas:dry": "tsx --env-file=.env.local scripts/local/update-mailto-ctas.ts --dry",
     "fix-ids": "tsx --env-file=.env.local scripts/fix-dotted-ids.ts",
     "fix-ids:dry": "tsx --env-file=.env.local scripts/fix-dotted-ids.ts --dry",
     "typegen": "sanity schema extract --path=./sanity/extract.json --enforce-required-fields && sanity typegen generate"

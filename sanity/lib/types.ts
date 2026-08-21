@@ -155,6 +155,7 @@ export type HomePage = {
   funnelStages?: FunnelStage[] | null;
   funnelOutcomeSticker?: string | null;
   funnelOutcomeText?: string | null;
+  funnelOutcomeCta?: Link | null;
 
   whyHeader?: SectionHeader | null;
   whyReasons?: TitledCard[] | null;

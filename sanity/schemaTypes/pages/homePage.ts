@@ -126,6 +126,13 @@ export const homePage = defineType({
       rows: 2,
       group: "funnel",
     }),
+    defineField({
+      name: "funnelOutcomeCta",
+      title: "Outcome button",
+      type: "link",
+      group: "funnel",
+      description: "Makes the outcome panel a clickable button, e.g. linking to /services.",
+    }),
 
     // --- Why Keewee -------------------------------------------------------
     defineField({

@@ -122,6 +122,7 @@ export const HOME_PAGE_QUERY = defineQuery(/* groq */ `
     },
     funnelOutcomeSticker,
     funnelOutcomeText,
+    funnelOutcomeCta ${LINK},
 
     whyHeader ${SECTION_HEADER},
     whyReasons[] ${CARD},

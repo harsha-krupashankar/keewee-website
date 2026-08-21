@@ -347,6 +347,7 @@ docs.push({
   funnelOutcomeSticker: "Real pipeline.",
   funnelOutcomeText:
     "Every stage feeds the same goal — qualified pipeline that actually moves.",
+  funnelOutcomeCta: link("Explore all services →", "/services"),
 
   whyHeader: sectionHeader({
     eyebrow: "The difference",
