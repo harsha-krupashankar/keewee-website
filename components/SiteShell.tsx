@@ -29,12 +29,6 @@ export default async function SiteShell({
 
   return (
     <>
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2.5 focus:font-display focus:text-sm focus:font-bold focus:text-paper"
-      >
-        Skip to content
-      </a>
       <Navbar
         siteName={settings?.title ?? "keewee.in"}
         links={settings?.headerNav}

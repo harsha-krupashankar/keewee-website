@@ -17,6 +17,8 @@
     "remove-final-cta-secondary:dry": "tsx --env-file=.env.local scripts/local/remove-final-cta-secondary.ts --dry",
     "update-mailto-ctas": "tsx --env-file=.env.local scripts/local/update-mailto-ctas.ts",
     "update-mailto-ctas:dry": "tsx --env-file=.env.local scripts/local/update-mailto-ctas.ts --dry",
+    "open-calendly-new-tab": "tsx --env-file=.env.local scripts/local/open-calendly-new-tab.ts",
+    "open-calendly-new-tab:dry": "tsx --env-file=.env.local scripts/local/open-calendly-new-tab.ts --dry",
     "fix-ids": "tsx --env-file=.env.local scripts/fix-dotted-ids.ts",
     "fix-ids:dry": "tsx --env-file=.env.local scripts/fix-dotted-ids.ts --dry",
     "typegen": "sanity schema extract --path=./sanity/extract.json --enforce-required-fields && sanity typegen generate"
