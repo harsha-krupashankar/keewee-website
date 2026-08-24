@@ -27,10 +27,10 @@ const nextConfig: NextConfig = {
   },
   // A conservative baseline, not a full Content-Security-Policy: CSP needs an
   // explicit allow-list across the Sanity image CDN, Google Fonts, Vercel
-  // Analytics, and the Studio's own script/style/connect needs at `/studio`
-  // (including its live-preview websocket), and getting that wrong silently
-  // breaks the Studio rather than failing loudly. These three carry no such
-  // compatibility risk. The `X-Robots-Tag` noindex for non-canonical hosts
+  // Analytics, Google Tag Manager, and the Studio's own script/style/connect
+  // needs at `/studio` (including its live-preview websocket), and getting
+  // that wrong silently breaks the Studio rather than failing loudly. These
+  // carry no such compatibility risk. The `X-Robots-Tag` noindex for non-canonical hosts
   // lives in `middleware.ts` instead — it has to read the request's `Host`
   // header, which isn't available in this static config.
   async headers() {
@@ -54,11 +54,11 @@ const nextConfig: NextConfig = {
         key: "Content-Security-Policy-Report-Only",
         value: [
           "default-src 'self'",
-          "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
+          "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://www.googletagmanager.com",
           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
           "font-src 'self' https://fonts.gstatic.com",
           "img-src 'self' data: blob: https://cdn.sanity.io",
-          "connect-src 'self' https://*.api.sanity.io wss://*.api.sanity.io https://va.vercel-scripts.com",
+          "connect-src 'self' https://*.api.sanity.io wss://*.api.sanity.io https://va.vercel-scripts.com https://www.googletagmanager.com",
           "frame-ancestors 'self'",
           "base-uri 'self'",
           "form-action 'self'",

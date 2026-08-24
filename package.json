@@ -24,6 +24,7 @@
     "typegen": "sanity schema extract --path=./sanity/extract.json --enforce-required-fields && sanity typegen generate"
   },
   "dependencies": {
+    "@next/third-parties": "^16.3.2",
     "@portabletext/react": "^7.0.1",
     "@sanity/client": "^7.25.0",
     "@sanity/image-url": "^2.1.1",
