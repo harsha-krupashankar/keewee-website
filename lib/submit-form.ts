@@ -32,6 +32,27 @@ export type QuoteSubmission = {
 
 export type FormSubmission = SubscribeSubmission | QuoteSubmission;
 
+declare global {
+  interface Window {
+    dataLayer?: Object[];
+  }
+}
+
+/**
+ * Pushes a conversion event to GTM's dataLayer. Safe to call before consent is
+ * granted / before GTM has loaded — `window.dataLayer` is a plain array that
+ * queues events; GTM (components/analytics/GoogleTagManager.tsx) reads through
+ * it from the start once it mounts, so nothing is lost, just delayed until the
+ * visitor accepts the cookie banner. No PII goes in here — GTM already fires
+ * two Custom Event triggers, "Trigger - Free Audit Submit" (free_audit_submit)
+ * and "Trigger - Newsletter Signup" (newsletter_signup) — see GTM-P4G38MZB.
+ */
+function pushDataLayerEvent(event: string, params: Record<string, unknown> = {}) {
+  if (typeof window === "undefined") return;
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ event, ...params });
+}
+
 export async function submitForm(payload: FormSubmission): Promise<void> {
   const controller = new AbortController();
   // `/api/forms` now replies as soon as the payload validates — the slow
@@ -60,5 +81,11 @@ export async function submitForm(payload: FormSubmission): Promise<void> {
 
   if (!res.ok) {
     throw new Error(`Submission failed (${res.status})`);
+  }
+
+  if (payload.formType === "subscribe") {
+    pushDataLayerEvent("newsletter_signup", { source: payload.source });
+  } else if (payload.formType === "quote" && payload.source === "free-audit-page") {
+    pushDataLayerEvent("free_audit_submit", { source: payload.source });
   }
 }
