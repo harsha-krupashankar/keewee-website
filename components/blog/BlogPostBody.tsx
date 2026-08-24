@@ -3,6 +3,7 @@ import { PortableText, type PortableTextComponents } from "@portabletext/react";
 
 import Container from "@/components/Container";
 import SanityImage from "@/components/sanity/SanityImage";
+import { safeHref } from "@/lib/safe-href";
 import type { Post } from "@/sanity/lib/types";
 
 /**
@@ -62,7 +63,7 @@ const components: PortableTextComponents = {
       </strong>
     ),
     link: ({ children, value }) => {
-      const href = (value?.href as string) ?? "#";
+      const href = safeHref(value?.href as string | undefined);
       const external = /^(https?:)?\/\//.test(href) || href.startsWith("mailto:");
       const className =
         "border-b-2 border-lime font-semibold text-ink transition-colors duration-150 hover:text-green";

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Container from "@/components/Container";
+import HoneypotField from "@/components/HoneypotField";
 import Reveal from "@/components/Reveal";
 import { arrOptions, budgetOptions } from "@/lib/quote-options";
 import { submitForm } from "@/lib/submit-form";
@@ -43,6 +44,7 @@ export default function ServiceQuoteForm({ doc }: { doc: ServicePage }) {
         budget: String(form.get("budget") ?? ""),
         services: Array.from(selected),
         message: String(form.get("message") ?? ""),
+        hp: String(form.get("hp") ?? ""),
       });
       setSubmitted(true);
     } catch {
@@ -88,6 +90,7 @@ export default function ServiceQuoteForm({ doc }: { doc: ServicePage }) {
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
+                <HoneypotField />
                 <div className="mb-5.5 grid gap-4.5 sm:grid-cols-2">
                   <label className="flex flex-col gap-1.5">
                     <span className="font-display text-[13px] font-bold text-ink">Full Name</span>

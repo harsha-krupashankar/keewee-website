@@ -35,18 +35,38 @@ type QuotePayload = {
 
 type Payload = SubscribePayload | QuotePayload;
 
+const FIELD_MAX = 500;
+const MESSAGE_MAX = 2000;
+const ARRAY_MAX = 20;
+
 const isEmail = (v: unknown): v is string =>
-  typeof v === "string" && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v);
+  typeof v === "string" && v.length <= FIELD_MAX && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v);
+
+/**
+ * Google Sheets treats a cell starting with `=`, `+`, `-` or `@` as a
+ * formula. A prefixed apostrophe forces it to render as literal text instead
+ * — same trick `Code.gs` applies again on write, so this survives someone
+ * redeploying the script from an older copy that lacks it.
+ */
+const sanitize = (v: string, max: number) => {
+  const trimmed = v.slice(0, max);
+  return /^[=+\-@\t\r]/.test(trimmed) ? `'${trimmed}` : trimmed;
+};
 
 function validate(body: unknown): Payload | null {
   if (!body || typeof body !== "object") return null;
   const b = body as Record<string, unknown>;
 
+  // Honeypot: a hidden field real visitors never fill in. A non-empty value
+  // means a bot filled every field it could find — pretend to accept so it
+  // doesn't learn to skip this field, but never forward the write.
+  if (typeof b.hp === "string" && b.hp.length > 0) return null;
+
   if (b.formType === "subscribe") {
     if (!isEmail(b.email)) return null;
     return {
       formType: "subscribe",
-      source: typeof b.source === "string" ? b.source : "unknown",
+      source: sanitize(typeof b.source === "string" ? b.source : "unknown", FIELD_MAX),
       email: b.email,
     };
   }
@@ -54,13 +74,19 @@ function validate(body: unknown): Payload | null {
   if (b.formType === "quote") {
     if (!isEmail(b.email)) return null;
     if (typeof b.name !== "string" || !b.name.trim()) return null;
-    const str = (v: unknown) => (typeof v === "string" ? v : "");
+    const str = (v: unknown, max = FIELD_MAX) =>
+      sanitize(typeof v === "string" ? v : "", max);
     const arr = (v: unknown) =>
-      Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
+      Array.isArray(v)
+        ? v
+            .filter((x): x is string => typeof x === "string")
+            .slice(0, ARRAY_MAX)
+            .map((x) => sanitize(x, FIELD_MAX))
+        : [];
     return {
       formType: "quote",
       source: str(b.source) || "unknown",
-      name: b.name,
+      name: sanitize(b.name.slice(0, FIELD_MAX), FIELD_MAX),
       email: b.email,
       company: str(b.company),
       website: str(b.website),
@@ -68,20 +94,41 @@ function validate(body: unknown): Payload | null {
       budget: str(b.budget),
       services: arr(b.services),
       goals: arr(b.goals),
-      message: str(b.message),
+      message: str(b.message, MESSAGE_MAX),
     };
   }
 
   return null;
 }
 
+/**
+ * Rejects cross-origin writes. A same-origin `fetch` always sends `Origin`
+ * on a POST, so a missing header only happens for non-browser clients (curl,
+ * server-to-server) — those aren't the threat model here, so they pass.
+ */
+function isAllowedOrigin(request: NextRequest): boolean {
+  const origin = request.headers.get("origin");
+  if (!origin) return true;
+
+  const allowed = new Set([
+    `https://${request.headers.get("host")}`,
+    "https://keewee.in",
+    "https://www.keewee.in",
+  ]);
+  if (process.env.NODE_ENV !== "production") allowed.add("http://localhost:3000");
+
+  return allowed.has(origin);
+}
+
 export async function POST(request: NextRequest) {
+  if (!isAllowedOrigin(request)) {
+    return Response.json({ message: "Forbidden" }, { status: 403 });
+  }
+
   const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
   if (!webhookUrl) {
-    return Response.json(
-      { message: "Missing GOOGLE_SHEETS_WEBHOOK_URL" },
-      { status: 500 }
-    );
+    console.error("Missing GOOGLE_SHEETS_WEBHOOK_URL");
+    return Response.json({ message: "Internal error" }, { status: 500 });
   }
 
   let json: unknown;

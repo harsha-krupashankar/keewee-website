@@ -1,9 +1,7 @@
 import type { MetadataRoute } from "next";
 import { headers } from "next/headers";
 
-import { SITE_URL } from "@/lib/site";
-
-const CANONICAL_HOST = new URL(SITE_URL).host;
+import { CANONICAL_HOSTS, SITE_URL } from "@/lib/site";
 
 /**
  * Allow crawling of the public site. The Studio and API routes carry no
@@ -20,7 +18,7 @@ const CANONICAL_HOST = new URL(SITE_URL).host;
  */
 export default async function robots(): Promise<MetadataRoute.Robots> {
   const host = (await headers()).get("host");
-  if (host !== CANONICAL_HOST) {
+  if (!CANONICAL_HOSTS.has(host ?? "")) {
     return { rules: { userAgent: "*", disallow: "/" } };
   }
 

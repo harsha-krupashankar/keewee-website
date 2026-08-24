@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ReactNode } from "react";
 
+import { safeHref } from "@/lib/safe-href";
+
 type ButtonProps = {
   href: string;
   children: ReactNode;
@@ -29,7 +31,7 @@ export default function Button({
   if (variant === "ghost") {
     return (
       <Link
-        href={href}
+        href={safeHref(href)}
         onClick={onClick}
         className={`inline-block rounded-xl border-2 border-white/40 font-display font-bold text-paper transition-colors duration-150 hover:bg-paper hover:text-ink ${className}`}
       >
@@ -40,7 +42,7 @@ export default function Button({
 
   return (
     <Link
-      href={href}
+      href={safeHref(href)}
       onClick={onClick}
       className={`inline-block rounded-xl bg-green font-display font-bold text-white transition-all duration-150 hover:translate-x-[2px] hover:translate-y-[2px] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-[3px] ${SHADOW[variant]} ${className}`}
     >

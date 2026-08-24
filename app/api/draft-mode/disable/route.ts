@@ -12,7 +12,12 @@ export async function GET(request: Request) {
   const slug = searchParams.get("slug");
 
   // Only ever redirect to a same-origin path, never to a caller-supplied host.
-  const destination = slug && slug.startsWith("/") ? slug : "/";
+  // `//` and `/\` are protocol-relative — browsers resolve them as absolute
+  // URLs even though `startsWith("/")` alone would let them through.
+  const destination =
+    slug && slug.startsWith("/") && !slug.startsWith("//") && !slug.startsWith("/\\")
+      ? slug
+      : "/";
 
   return new Response(null, {
     status: 307,

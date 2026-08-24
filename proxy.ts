@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-import { SITE_URL } from "@/lib/site";
-
-const CANONICAL_HOST = new URL(SITE_URL).host;
+import { CANONICAL_HOSTS } from "@/lib/site";
 
 /**
  * Sets `X-Robots-Tag: noindex` on every response served from a host other
@@ -19,7 +17,7 @@ const CANONICAL_HOST = new URL(SITE_URL).host;
  * leave it fully indexable.
  */
 export default function proxy(request: NextRequest) {
-  if (request.headers.get("host") === CANONICAL_HOST) return NextResponse.next();
+  if (CANONICAL_HOSTS.has(request.headers.get("host") ?? "")) return NextResponse.next();
 
   const response = NextResponse.next();
   response.headers.set("X-Robots-Tag", "noindex, nofollow");

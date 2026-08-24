@@ -38,9 +38,32 @@ const nextConfig: NextConfig = {
       { key: "X-Content-Type-Options", value: "nosniff" },
       { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
       { key: "X-Frame-Options", value: "SAMEORIGIN" },
+      { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
       {
         key: "Permissions-Policy",
         value: "camera=(), microphone=(), geolocation=()",
+      },
+      {
+        key: "Strict-Transport-Security",
+        value: "max-age=63072000; includeSubDomains; preload",
+      },
+      // Report-only so nothing breaks silently: watch the console on the
+      // Studio (`/studio`) and the main site for a week, widen any directive
+      // that trips, then rename this to `Content-Security-Policy` to enforce.
+      {
+        key: "Content-Security-Policy-Report-Only",
+        value: [
+          "default-src 'self'",
+          "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
+          "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+          "font-src 'self' https://fonts.gstatic.com",
+          "img-src 'self' data: blob: https://cdn.sanity.io",
+          "connect-src 'self' https://*.api.sanity.io wss://*.api.sanity.io https://va.vercel-scripts.com",
+          "frame-ancestors 'self'",
+          "base-uri 'self'",
+          "form-action 'self'",
+          "object-src 'none'",
+        ].join("; "),
       },
     ];
 

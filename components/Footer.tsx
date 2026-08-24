@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Container from "./Container";
 import LogoMark from "./LogoMark";
+import { safeHref } from "@/lib/safe-href";
 import type { SiteSettings, SocialLink } from "@/sanity/lib/types";
 
 /**
@@ -27,7 +28,7 @@ function SocialIcon({ link }: { link: SocialLink }) {
 
   return (
     <a
-      href={link.href}
+      href={safeHref(link.href)}
       target="_blank"
       rel="noopener noreferrer"
       aria-label={link.platform}
@@ -89,7 +90,7 @@ export default function Footer({ settings }: { settings: SiteSettings | null }) 
                   {group.links?.map((item) => (
                     <Link
                       key={`${item.href}-${item.label}`}
-                      href={item.href}
+                      href={safeHref(item.href)}
                       className="hover:text-green"
                     >
                       {item.label}
@@ -97,7 +98,7 @@ export default function Footer({ settings }: { settings: SiteSettings | null }) 
                   ))}
                   {group.cta && (
                     <a
-                      href={group.cta.href}
+                      href={safeHref(group.cta.href)}
                       target={group.cta.openInNewTab ? "_blank" : undefined}
                       rel={group.cta.openInNewTab ? "noopener noreferrer" : undefined}
                       className="mt-3 font-display font-bold text-green hover:text-green-dark"

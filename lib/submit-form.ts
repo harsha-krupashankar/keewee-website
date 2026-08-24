@@ -10,6 +10,8 @@ export type SubscribeSubmission = {
   formType: "subscribe";
   source: string;
   email: string;
+  /** Honeypot — always empty for a real visitor. See the hidden `hp` field on each form. */
+  hp?: string;
 };
 
 export type QuoteSubmission = {
@@ -24,6 +26,8 @@ export type QuoteSubmission = {
   services?: string[];
   goals?: string[];
   message?: string;
+  /** Honeypot — always empty for a real visitor. See the hidden `hp` field on each form. */
+  hp?: string;
 };
 
 export type FormSubmission = SubscribeSubmission | QuoteSubmission;

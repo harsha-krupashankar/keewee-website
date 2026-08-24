@@ -6,6 +6,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import Button from "./Button";
 import Container from "./Container";
 import LogoMark from "./LogoMark";
+import { safeHref } from "@/lib/safe-href";
 import type { Link as LinkValue, NavItem } from "@/sanity/lib/types";
 
 type NavbarProps = {
@@ -216,7 +217,7 @@ function MobileNavLink({
 }) {
   return (
     <a
-      href={link.href}
+      href={safeHref(link.href)}
       target={link.openInNewTab ? "_blank" : undefined}
       rel={link.openInNewTab ? "noopener noreferrer" : undefined}
       onClick={onNavigate}
@@ -231,7 +232,7 @@ function MobileNavLink({
 function NavLink({ link, isActive }: { link: LinkValue; isActive: boolean }) {
   return (
     <a
-      href={link.href}
+      href={safeHref(link.href)}
       target={link.openInNewTab ? "_blank" : undefined}
       rel={link.openInNewTab ? "noopener noreferrer" : undefined}
       className={`group relative py-1 hover:text-green ${
@@ -314,7 +315,7 @@ function NavDropdown({
             {links.map((link) => (
               <a
                 key={`${link.href}-${link.label}`}
-                href={link.href}
+                href={safeHref(link.href)}
                 target={link.openInNewTab ? "_blank" : undefined}
                 rel={link.openInNewTab ? "noopener noreferrer" : undefined}
                 onClick={onClose}
