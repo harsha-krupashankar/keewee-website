@@ -15,6 +15,11 @@
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
 // Source: sanity/extract.json
+export type Attribution = {
+  initials?: string;
+  name?: string;
+};
+
 export type LegalDoc = {
   _id: string;
   _type: "legalDoc";
@@ -198,6 +203,88 @@ export type PostBody = Array<
     }
 >;
 
+export type LinksPage = {
+  _id: string;
+  _type: "linksPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  logoMark?: string;
+  wordmark: string;
+  bio: string;
+  stickyCta?: Link;
+  featuredLabel?: string;
+  featured?: FeaturedCard;
+  bannersLabel?: string;
+  bannersSwipeHint?: string;
+  banners?: Array<
+    {
+      _key: string;
+    } & BannerCard
+  >;
+  buttonsLabel?: string;
+  buttons?: Array<
+    {
+      _key: string;
+    } & LinkButton
+  >;
+  feedLabel?: string;
+  feedHandle?: string;
+  feedTiles?: Array<
+    {
+      _key: string;
+    } & FeedTile
+  >;
+  feedInitialCount?: number;
+  feedMoreLabel?: string;
+  sheetHint?: string;
+  railEyebrow?: string;
+  railHeadline?: Headline;
+  railBody?: string;
+  railNote?: string;
+  sticker?: string;
+  footerLinks?: Array<
+    {
+      _key: string;
+    } & Link
+  >;
+  footerNote?: string;
+  seo?: Seo;
+};
+
+export type Headline = Array<{
+  children?: Array<{
+    marks?: Array<string>;
+    text?: string;
+    _type: "span";
+    _key: string;
+  }>;
+  style?: "normal";
+  listItem?: never;
+  markDefs?: null;
+  level?: number;
+  _type: "block";
+  _key: string;
+}>;
+
+export type FeaturedCard = {
+  _type: "featuredCard";
+  badge?: string;
+  title: string;
+  source?: string;
+  image?: Figure;
+  showPlayIcon?: boolean;
+  href: string;
+  openInNewTab?: boolean;
+};
+
+export type Link = {
+  _type: "link";
+  label: string;
+  href: string;
+  openInNewTab?: boolean;
+};
+
 export type PromptLibraryPage = {
   _id: string;
   _type: "promptLibraryPage";
@@ -236,13 +323,6 @@ export type PromptLibraryPage = {
   seo?: Seo;
 };
 
-export type Link = {
-  _type: "link";
-  label: string;
-  href: string;
-  openInNewTab?: boolean;
-};
-
 export type RichText = Array<{
   children?: Array<{
     marks?: Array<string>;
@@ -258,21 +338,6 @@ export type RichText = Array<{
     _type: "link";
     _key: string;
   }>;
-  level?: number;
-  _type: "block";
-  _key: string;
-}>;
-
-export type Headline = Array<{
-  children?: Array<{
-    marks?: Array<string>;
-    text?: string;
-    _type: "span";
-    _key: string;
-  }>;
-  style?: "normal";
-  listItem?: never;
-  markDefs?: null;
   level?: number;
   _type: "block";
   _key: string;
@@ -580,6 +645,62 @@ export type CookieConsent = {
   policyLink?: Link;
 };
 
+export type LinkButton = {
+  _type: "linkButton";
+  label: string;
+  sublabel?: string;
+  meta?: string;
+  href: string;
+  openInNewTab?: boolean;
+};
+
+export type BannerCard = {
+  _type: "bannerCard";
+  tone: "dark" | "paper";
+  badge?: string;
+  meta?: string;
+  title: string;
+  subtitle?: string;
+  linkLabel?: string;
+  footnote?: string;
+  href: string;
+  openInNewTab?: boolean;
+};
+
+export type FeedTile = {
+  _type: "feedTile";
+  style: "dark" | "green" | "mint" | "surface" | "paper" | "image";
+  title: string;
+  eyebrow?: string;
+  eyebrowTone?: boolean;
+  footnote?: string;
+  stat?: string;
+  sticker?: string;
+  quote?: boolean;
+  accentBar?: boolean;
+  attribution?: Attribution;
+  image?: Figure;
+  hideCaption?: boolean;
+  meta?: string;
+  destinationsLabel?: string;
+  postHref?: string;
+  postLabel?: string;
+  destinations: Array<
+    {
+      _key: string;
+    } & LinkDestination
+  >;
+};
+
+export type LinkDestination = {
+  _type: "linkDestination";
+  label: string;
+  source?: string;
+  href: string;
+  openInNewTab?: boolean;
+  urgent?: boolean;
+};
+
 export type PromptCategory = {
   _type: "promptCategory";
   name: string;
@@ -882,6 +1003,7 @@ export type Geopoint = {
 };
 
 export type AllSanitySchemaTypes =
+  | Attribution
   | LegalDoc
   | Seo
   | Slug
@@ -895,10 +1017,12 @@ export type AllSanitySchemaTypes =
   | Figure
   | Category
   | PostBody
-  | PromptLibraryPage
-  | Link
-  | RichText
+  | LinksPage
   | Headline
+  | FeaturedCard
+  | Link
+  | PromptLibraryPage
+  | RichText
   | ServicesPage
   | PageHero
   | NewsletterPage
@@ -911,6 +1035,10 @@ export type AllSanitySchemaTypes =
   | HomePage
   | SiteSettings
   | CookieConsent
+  | LinkButton
+  | BannerCard
+  | FeedTile
+  | LinkDestination
   | PromptCategory
   | PromptEntry
   | LegalSection
@@ -1454,6 +1582,132 @@ export type NEWSLETTER_PAGE_QUERY_RESULT = {
     openInNewTab: boolean | null;
   } | null;
   ctaSecondaryLabel: string | null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    noIndex: boolean | null;
+    image: {
+      _type: "figure";
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string;
+      caption?: string;
+      lqip: string | null;
+      dimensions: SanityImageDimensions | null;
+    } | null;
+  } | null;
+} | null;
+
+// Source: sanity/lib/queries.ts
+// Variable: LINKS_PAGE_QUERY
+// Query: *[_type == "linksPage"][0]{    logoMark,    wordmark,    bio,    stickyCta { label, href, openInNewTab },    featuredLabel,    featured {      badge,      title,      source,      image {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},      showPlayIcon,      href,      openInNewTab    },    bannersLabel,    bannersSwipeHint,    banners[] {      tone,      badge,      meta,      title,      subtitle,      linkLabel,      footnote,      href,      openInNewTab    },    buttonsLabel,    buttons[] { label, sublabel, meta, href, openInNewTab },    feedLabel,    feedHandle,    feedInitialCount,    feedMoreLabel,    sheetHint,    feedTiles[] {      _key,      style,      title,      eyebrow,      eyebrowTone,      footnote,      stat,      sticker,      quote,      accentBar,      attribution { initials, name },      image {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},      hideCaption,      meta,      destinationsLabel,      postHref,      postLabel,      destinations[] { label, source, href, openInNewTab, urgent }    },    railEyebrow,    railHeadline,    railBody,    railNote,    sticker,    footerLinks[] { label, href, openInNewTab },    footerNote,    seo { title, description, noIndex, image {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions} }  }
+export type LINKS_PAGE_QUERY_RESULT = {
+  logoMark: string | null;
+  wordmark: string;
+  bio: string;
+  stickyCta: {
+    label: string;
+    href: string;
+    openInNewTab: boolean | null;
+  } | null;
+  featuredLabel: string | null;
+  featured: {
+    badge: string | null;
+    title: string;
+    source: string | null;
+    image: {
+      _type: "figure";
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string;
+      caption?: string;
+      lqip: string | null;
+      dimensions: SanityImageDimensions | null;
+    } | null;
+    showPlayIcon: boolean | null;
+    href: string;
+    openInNewTab: boolean | null;
+  } | null;
+  bannersLabel: string | null;
+  bannersSwipeHint: string | null;
+  banners: Array<{
+    tone: "dark" | "paper";
+    badge: string | null;
+    meta: string | null;
+    title: string;
+    subtitle: string | null;
+    linkLabel: string | null;
+    footnote: string | null;
+    href: string;
+    openInNewTab: boolean | null;
+  }> | null;
+  buttonsLabel: string | null;
+  buttons: Array<{
+    label: string;
+    sublabel: string | null;
+    meta: string | null;
+    href: string;
+    openInNewTab: boolean | null;
+  }> | null;
+  feedLabel: string | null;
+  feedHandle: string | null;
+  feedInitialCount: number | null;
+  feedMoreLabel: string | null;
+  sheetHint: string | null;
+  feedTiles: Array<{
+    _key: string;
+    style: "dark" | "green" | "image" | "mint" | "paper" | "surface";
+    title: string;
+    eyebrow: string | null;
+    eyebrowTone: boolean | null;
+    footnote: string | null;
+    stat: string | null;
+    sticker: string | null;
+    quote: boolean | null;
+    accentBar: boolean | null;
+    attribution: {
+      initials: string | null;
+      name: string | null;
+    } | null;
+    image: {
+      _type: "figure";
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string;
+      caption?: string;
+      lqip: string | null;
+      dimensions: SanityImageDimensions | null;
+    } | null;
+    hideCaption: boolean | null;
+    meta: string | null;
+    destinationsLabel: string | null;
+    postHref: string | null;
+    postLabel: string | null;
+    destinations: Array<{
+      label: string;
+      source: string | null;
+      href: string;
+      openInNewTab: boolean | null;
+      urgent: boolean | null;
+    }>;
+  }> | null;
+  railEyebrow: string | null;
+  railHeadline: Headline | null;
+  railBody: string | null;
+  railNote: string | null;
+  sticker: string | null;
+  footerLinks: Array<{
+    label: string;
+    href: string;
+    openInNewTab: boolean | null;
+  }> | null;
+  footerNote: string | null;
   seo: {
     title: string | null;
     description: string | null;
@@ -2030,6 +2284,7 @@ declare module "@sanity/client" {
     '\n  *[_type == "faqPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    ctaHeadline,\n    ctaBody,\n    ctaButtons { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} },\n    "groups": *[_type == "faqGroup"] | order(order asc, title asc) {\n      _id,\n      title,\n      navLabel,\n      "slug": slug.current,\n      items[] { question, answer }\n    }\n  }\n': FAQ_PAGE_QUERY_RESULT;
     '\n  *[_type == "freeAuditPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    navCtaLabel,\n    coverHeader { eyebrow, headline, sticker, intro },\n    coverCards[] { title, description, tag },\n    forYouHeader { eyebrow, headline, sticker, intro },\n    forYouPointers,\n    deliverablesHeader { eyebrow, headline, sticker, intro },\n    deliverables[] { title, description, tag },\n    formEyebrow,\n    formHeadline,\n    formIntro,\n    formSuccessSticker,\n    formSuccessText,\n    faqHeader { eyebrow, headline, sticker, intro },\n    faqItems[] { question, answer },\n    proofHeader { eyebrow, headline, sticker, intro },\n    proofSticker,\n    proofBody,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': FREE_AUDIT_PAGE_QUERY_RESULT;
     '\n  *[_type == "newsletterPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    formTitle,\n    formButtonLabel,\n    formDisclaimer,\n    formSuccessSticker,\n    formSuccessText,\n    whyHeader { eyebrow, headline, sticker, intro },\n    whyReasons[] { title, description, tag },\n    insideHeader { eyebrow, headline, sticker, intro },\n    insideItems[] { title, description, tag },\n    afterHoursHeader { eyebrow, headline, sticker, intro },\n    afterHoursBody,\n    ctaEyebrow,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n    ctaSecondaryLabel,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': NEWSLETTER_PAGE_QUERY_RESULT;
+    '\n  *[_type == "linksPage"][0]{\n    logoMark,\n    wordmark,\n    bio,\n    stickyCta { label, href, openInNewTab },\n\n    featuredLabel,\n    featured {\n      badge,\n      title,\n      source,\n      image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n      showPlayIcon,\n      href,\n      openInNewTab\n    },\n\n    bannersLabel,\n    bannersSwipeHint,\n    banners[] {\n      tone,\n      badge,\n      meta,\n      title,\n      subtitle,\n      linkLabel,\n      footnote,\n      href,\n      openInNewTab\n    },\n\n    buttonsLabel,\n    buttons[] { label, sublabel, meta, href, openInNewTab },\n\n    feedLabel,\n    feedHandle,\n    feedInitialCount,\n    feedMoreLabel,\n    sheetHint,\n    feedTiles[] {\n      _key,\n      style,\n      title,\n      eyebrow,\n      eyebrowTone,\n      footnote,\n      stat,\n      sticker,\n      quote,\n      accentBar,\n      attribution { initials, name },\n      image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n      hideCaption,\n      meta,\n      destinationsLabel,\n      postHref,\n      postLabel,\n      destinations[] { label, source, href, openInNewTab, urgent }\n    },\n\n    railEyebrow,\n    railHeadline,\n    railBody,\n    railNote,\n    sticker,\n\n    footerLinks[] { label, href, openInNewTab },\n    footerNote,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': LINKS_PAGE_QUERY_RESULT;
     '\n  *[_type == "servicesPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    heroSecondaryCta { label, href, openInNewTab },\n    categories[] {\n      name,\n      headline,\n      intro,\n      layout,\n      featureSticker,\n      items[] { title, description, tag }\n    },\n    auditHeadline,\n    auditBody,\n    auditButton { label, href, openInNewTab },\n    quoteEyebrow,\n    quoteHeadline,\n    quoteIntro,\n    quoteGoalsLabel,\n    quoteGoals,\n    quoteServicesLabel,\n    quoteServiceGroups[] { title, options },\n    quoteMessagePlaceholder,\n    quoteButtonLabel,\n    quoteNote,\n    quoteSuccessSticker,\n    quoteSuccessText,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': SERVICES_PAGE_QUERY_RESULT;
     '\n  *[_type == "promptLibraryPage"][0]{\n    heroBadge,\n    heroStickerA,\n    heroStickerB,\n    heroHeadline,\n    heroIntro,\n    heroCta { label, href, openInNewTab },\n    heroBadges,\n\n    whyLabel,\n    whyHeadline,\n    whyBody,\n\n    aiLabel,\n    aiHeadline,\n    aiIntro,\n    aiPlatforms[] { title, description, tag },\n\n    warningHeadline,\n    warningBody,\n\n    categories[] {\n      name,\n      tagline,\n      prompts[] {\n        title,\n        bestTool,\n        useCase,\n        promptText,\n        tip\n      }\n    },\n\n    ctaLabel,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': PROMPT_LIBRARY_PAGE_QUERY_RESULT;
     '\n  *[_type == "blogIndexPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    topReadsHeader { eyebrow, headline, sticker, intro },\n    archiveHeader { eyebrow, headline, sticker, intro },\n    newsletterHeadline,\n    newsletterBody,\n    newsletterCta { label, href, openInNewTab },\n    ctaHeadline,\n    ctaBody,\n    ctaButtons { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} },\n    "topReads": *[_type == "post" && featured == true && defined(slug.current)]\n      | order(publishedAt desc)[0...3] {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n},\n    "posts": *[_type == "post" && defined(slug.current)]\n      | order(publishedAt desc) {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n},\n    "categories": *[_type == "category"] | order(order asc, title asc) { _id, title, "slug": slug.current }\n  }\n': BLOG_INDEX_QUERY_RESULT;

@@ -368,6 +368,115 @@ export type PromptLibraryPage = {
   seo?: Seo | null;
 };
 
+// --- Links page -----------------------------------------------------------
+
+/** One row in a tile's sheet. Position 0 renders as the primary row. */
+export type LinkDestination = {
+  label: string;
+  source?: string | null;
+  href: string;
+  openInNewTab?: boolean | null;
+  /** Prints the source line in clay, for time pressure. */
+  urgent?: boolean | null;
+};
+
+/** The ground a feed tile is drawn on. */
+export type FeedTileStyle =
+  | "dark"
+  | "green"
+  | "mint"
+  | "surface"
+  | "paper"
+  | "image";
+
+export type FeedTile = {
+  _key: string;
+  style: FeedTileStyle;
+  title: string;
+  eyebrow?: string | null;
+  eyebrowTone?: boolean | null;
+  footnote?: string | null;
+  stat?: string | null;
+  sticker?: string | null;
+  quote?: boolean | null;
+  accentBar?: boolean | null;
+  attribution?: { initials?: string | null; name?: string | null } | null;
+  image?: SanityImage | null;
+  hideCaption?: boolean | null;
+  meta?: string | null;
+  destinationsLabel?: string | null;
+  postHref?: string | null;
+  postLabel?: string | null;
+  /** One navigates straight through; more than one opens the sheet. */
+  destinations: LinkDestination[];
+};
+
+export type BannerCard = {
+  tone: "dark" | "paper";
+  badge?: string | null;
+  meta?: string | null;
+  title: string;
+  subtitle?: string | null;
+  linkLabel?: string | null;
+  footnote?: string | null;
+  href: string;
+  openInNewTab?: boolean | null;
+};
+
+export type FeaturedCard = {
+  badge?: string | null;
+  title: string;
+  source?: string | null;
+  image?: SanityImage | null;
+  showPlayIcon?: boolean | null;
+  href: string;
+  openInNewTab?: boolean | null;
+};
+
+/** Position 0 renders as the primary — green fill, ink offset. */
+export type LinkButton = {
+  label: string;
+  sublabel?: string | null;
+  meta?: string | null;
+  href: string;
+  openInNewTab?: boolean | null;
+};
+
+export type LinksPage = {
+  logoMark?: string | null;
+  wordmark: string;
+  bio: string;
+  stickyCta?: Link | null;
+
+  featuredLabel?: string | null;
+  featured?: FeaturedCard | null;
+
+  bannersLabel?: string | null;
+  bannersSwipeHint?: string | null;
+  banners?: BannerCard[] | null;
+
+  buttonsLabel?: string | null;
+  buttons?: LinkButton[] | null;
+
+  feedLabel?: string | null;
+  feedHandle?: string | null;
+  feedTiles?: FeedTile[] | null;
+  feedInitialCount?: number | null;
+  feedMoreLabel?: string | null;
+  sheetHint?: string | null;
+
+  railEyebrow?: string | null;
+  railHeadline?: Headline | null;
+  railBody?: string | null;
+  railNote?: string | null;
+  sticker?: string | null;
+
+  footerLinks?: Link[] | null;
+  footerNote?: string | null;
+
+  seo?: Seo | null;
+};
+
 // --- Collections ----------------------------------------------------------
 
 export type Category = {

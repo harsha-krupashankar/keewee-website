@@ -18,6 +18,13 @@ import {
   titledCard,
 } from "./objects/primitives";
 import { promptCategory, promptEntry } from "./objects/promptLibrary";
+import {
+  bannerCard,
+  featuredCard,
+  feedTile,
+  linkButton,
+  linkDestination,
+} from "./objects/links";
 import { cookieConsent } from "./objects/cookieConsent";
 import {
   legalClause,
@@ -43,6 +50,7 @@ import { blogIndexPage } from "./pages/blogIndexPage";
 import { faqPage } from "./pages/faqPage";
 import { freeAuditPage } from "./pages/freeAuditPage";
 import { homePage } from "./pages/homePage";
+import { linksPage } from "./pages/linksPage";
 import { newsletterPage } from "./pages/newsletterPage";
 import { promptLibraryPage } from "./pages/promptLibraryPage";
 import { servicesPage } from "./pages/servicesPage";
@@ -62,6 +70,7 @@ export const SINGLETON_TYPES = [
   "newsletterPage",
   "servicesPage",
   "promptLibraryPage",
+  "linksPage",
 ] as const;
 
 export type SingletonType = (typeof SINGLETON_TYPES)[number];
@@ -95,6 +104,11 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   promptEntry,
   promptCategory,
   cookieConsent,
+  linkDestination,
+  feedTile,
+  bannerCard,
+  featuredCard,
+  linkButton,
 
   // Singletons — one document each.
   siteSettings,
@@ -106,6 +120,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   newsletterPage,
   servicesPage,
   promptLibraryPage,
+  linksPage,
 
   // Collections.
   post,

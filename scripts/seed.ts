@@ -39,6 +39,7 @@ import {
 import { legalDocs } from "./legacy/legal-data";
 import { whatYouGet, whySubscribe } from "./legacy/newsletter-data";
 import { serviceDocs } from "./legacy/service-data";
+import { linksButtons } from "./links-page-data";
 import { promptCategories } from "./prompt-library-data";
 import {
   quoteGoals,
@@ -950,6 +951,45 @@ legalDocs.forEach((doc, i) => {
       }))
     ),
   });
+});
+
+// --- Links page ------------------------------------------------------------
+
+docs.push({
+  _id: "linksPage",
+  _type: "linksPage",
+  logoMark: "\u2731",
+  wordmark: "keewee.in",
+  bio: "B2B marketing with a spine. We fix the part everyone skips: what to actually say.",
+  stickyCta: link("Free audit", "/free-audit"),
+
+  // The featured card, the banners and the feed ship empty on purpose — see
+  // the note in `links-page-data.ts`. Each section renders nothing until it
+  // has real content, so the page is coherent while they are unset.
+  featuredLabel: "This week",
+
+  bannersLabel: "Closing soon",
+  bannersSwipeHint: "Swipe",
+
+  buttonsLabel: "Start here",
+  buttons: keyed(linksButtons.map((b) => ({ _type: "linkButton", ...b }))),
+
+  feedLabel: "From the feed",
+  feedHandle: "@keewee.in",
+  feedInitialCount: 12,
+  feedMoreLabel: "See all {count} posts",
+  sheetHint: "Esc or click outside to close",
+
+  railEyebrow: "Everything we make",
+  railHeadline: headline("One link, the whole ", ["feed", "highlight"], "."),
+  railBody: "Built for the tap that comes from a bio. Same page on desktop, just calmer.",
+  sticker: "NO MUSH!",
+
+  footerLinks: keyed([
+    link("keewee.in", "/"),
+    link("Privacy", "/legal/privacy-policy"),
+  ]),
+  footerNote: "\u00a9 2026 Keewee Marketing Pvt Ltd.",
 });
 
 // ---------------------------------------------------------------------------

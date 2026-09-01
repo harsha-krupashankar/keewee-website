@@ -111,6 +111,18 @@ export async function getPromptLibraryPage(opts: FetchOptions) {
   });
 }
 
+/**
+ * `/links` renders without the site chrome, so this read is the whole page —
+ * there is no `getSiteSettings` alongside it.
+ */
+export async function getLinksPage(opts: FetchOptions) {
+  "use cache";
+  return run<T.LinksPage>(opts, {
+    query: Q.LINKS_PAGE_QUERY,
+    tags: [TAG.linksPage],
+  });
+}
+
 // --- Blog -----------------------------------------------------------------
 
 export async function getBlogIndex(opts: FetchOptions) {

@@ -19,6 +19,7 @@ export const resolve: PresentationPluginOptions["resolve"] = {
     { route: "/services", filter: `_type == "servicesPage"` },
     { route: "/newsletter", filter: `_type == "newsletterPage"` },
     { route: "/prompt-library", filter: `_type == "promptLibraryPage"` },
+    { route: "/links", filter: `_type == "linksPage"` },
     {
       route: "/blog/:slug",
       filter: `_type == "post" && slug.current == $slug`,
@@ -67,6 +68,10 @@ export const resolve: PresentationPluginOptions["resolve"] = {
       resolve: () => ({
         locations: [{ title: "Prompt library", href: "/prompt-library" }],
       }),
+    }),
+    linksPage: defineLocations({
+      select: {},
+      resolve: () => ({ locations: [{ title: "Links", href: "/links" }] }),
     }),
 
     post: defineLocations({

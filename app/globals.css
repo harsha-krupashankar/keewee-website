@@ -71,6 +71,142 @@
   }
 }
 
+@keyframes kw-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes kw-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes kw-sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes kw-sheet-out {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes kw-dialog-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes kw-dialog-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+/**
+ * The feed tile sheet on `/links`: a bottom sheet on phones, a centred dialog
+ * from `md` up. Written as plain CSS rather than utilities because `::backdrop`
+ * has no Tailwind equivalent, and because the open/close keyframes have to swap
+ * wholesale at the breakpoint.
+ *
+ * Every `display` rule is scoped to `[open]`. Author styles beat the UA
+ * stylesheet regardless of specificity, so an unscoped `display` here would
+ * override `dialog:not([open]) { display: none }` and leave a closed dialog on
+ * screen.
+ */
+.kw-sheet {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  width: 100%;
+  max-width: none;
+  max-height: none;
+  background: transparent;
+  overflow: visible;
+}
+
+.kw-sheet[open] {
+  display: block;
+  position: fixed;
+  inset: auto 0 0 0;
+}
+
+.kw-sheet::backdrop {
+  background: rgba(28, 27, 25, 0.52);
+  animation: kw-fade-in 180ms ease both;
+}
+
+.kw-sheet[data-closing="true"]::backdrop {
+  animation: kw-fade-out 160ms ease both;
+}
+
+.kw-sheet > * {
+  animation: kw-sheet-in 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.kw-sheet[data-closing="true"] > * {
+  animation: kw-sheet-out 190ms ease-in both;
+}
+
+@media (min-width: 48rem) {
+  .kw-sheet[open] {
+    display: grid;
+    place-items: center;
+    inset: 0;
+    padding: 24px;
+  }
+
+  .kw-sheet::backdrop {
+    background: rgba(28, 27, 25, 0.46);
+    backdrop-filter: blur(1px);
+  }
+
+  .kw-sheet > * {
+    animation-name: kw-dialog-in;
+    animation-duration: 180ms;
+  }
+
+  .kw-sheet[data-closing="true"] > * {
+    animation-name: kw-dialog-out;
+    animation-duration: 140ms;
+  }
+}
+
+/** Horizontal strips that scroll by swipe, without the scrollbar showing. */
+.kw-noscroll {
+  scrollbar-width: none;
+}
+
+.kw-noscroll::-webkit-scrollbar {
+  display: none;
+}
+
 @layer base {
   * {
     box-sizing: border-box;
