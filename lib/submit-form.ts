@@ -32,6 +32,25 @@ export type QuoteSubmission = {
 
 export type FormSubmission = SubscribeSubmission | QuoteSubmission;
 
+/**
+ * Thrown when the submission was *throttled* rather than broken — the payload
+ * was fine and retrying shortly will work.
+ *
+ * This exists because the throttle is enforced at the Vercel edge (the
+ * `form-rate-limit` firewall rule on `/api/forms`), which denies the request
+ * before it reaches the route. Nothing lands in the runtime logs, so from the
+ * client the block is indistinguishable from a genuine 5xx unless we look at
+ * the status. Telling a throttled visitor "something went wrong, try again"
+ * is both wrong and actively harmful — every immediate retry spends more of
+ * the same budget. See `docs/google-sheets-forms.md`.
+ */
+export class SubmissionThrottledError extends Error {
+  constructor() {
+    super("Submission throttled");
+    this.name = "SubmissionThrottledError";
+  }
+}
+
 declare global {
   interface Window {
     dataLayer?: Object[];
@@ -77,6 +96,15 @@ export async function submitForm(payload: FormSubmission): Promise<void> {
     throw error;
   } finally {
     clearTimeout(timeout);
+  }
+
+  // 429 is the conventional throttle status; 403 is what the Vercel firewall
+  // rule actually returns on a `deny`. The route's own 403 (`isAllowedOrigin`)
+  // can't happen for a real visitor on a real page — a same-origin POST always
+  // sends a matching `Origin` — so treating 403 as "throttled" here is
+  // accurate for every case a visitor can reach.
+  if (res.status === 429 || res.status === 403) {
+    throw new SubmissionThrottledError();
   }
 
   if (!res.ok) {

@@ -140,3 +140,22 @@ Sent by `lib/submit-form.ts`, validated in `app/api/forms/route.ts`:
 
 `source` values: `newsletter-page`, `blog-newsletter-banner` (subscribes);
 `services-index`, `service-page:<scope>` (quotes).
+
+## Rate limiting
+
+`/api/forms` sits behind a Vercel Firewall rule (`form-rate-limit`, Project →
+Firewall) that denies an IP after **30 POSTs per 600s**. It is enforced at the
+edge, so a blocked request never reaches the route and leaves **no runtime
+log** — `vercel logs` stays silent while the browser gets a `403` whose body is
+Vercel's `{"error":{...}}` envelope rather than the route's `{"message":...}`.
+
+Two things to know when this looks like "the form is broken":
+
+- **All five public forms share the one path**, so they share one counter per IP.
+- The limit was originally `5 / 600s`, which a single visitor could exhaust by
+  retrying — and which unrelated visitors behind one mobile CGNAT or office NAT
+  address share. That is what made legitimate submissions fail.
+
+`lib/submit-form.ts` maps `403`/`429` to `SubmissionThrottledError` so the forms
+say "wait a few minutes" instead of "something went wrong", which otherwise
+invites the immediate retry that spends more of the same budget.

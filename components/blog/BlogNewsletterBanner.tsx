@@ -6,20 +6,20 @@ import HoneypotField from "@/components/HoneypotField";
 import Reveal from "@/components/Reveal";
 import Copy from "@/components/sanity/Copy";
 import Headline from "@/components/sanity/Headline";
-import { submitForm } from "@/lib/submit-form";
+import { SubmissionThrottledError, submitForm } from "@/lib/submit-form";
 import type { BlogIndexPage } from "@/sanity/lib/types";
 
 export default function BlogNewsletterBanner({ page }: { page: BlogIndexPage }) {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<null | "generic" | "throttled">(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email || submitting) return;
     setSubmitting(true);
-    setError(false);
+    setError(null);
     try {
       const hp = new FormData(e.currentTarget as HTMLFormElement).get("hp");
       await submitForm({
@@ -29,8 +29,8 @@ export default function BlogNewsletterBanner({ page }: { page: BlogIndexPage }) 
         hp: String(hp ?? ""),
       });
       setSubscribed(true);
-    } catch {
-      setError(true);
+    } catch (err) {
+      setError(err instanceof SubmissionThrottledError ? "throttled" : "generic");
     } finally {
       setSubmitting(false);
     }
@@ -100,7 +100,9 @@ export default function BlogNewsletterBanner({ page }: { page: BlogIndexPage }) 
                   </div>
                   {error && (
                     <p className="font-body text-[13px] font-semibold text-lime">
-                      Something went wrong. Please try again.
+                      {error === "throttled"
+                        ? "Too many submissions from your network. Please wait a few minutes and try again."
+                        : "Something went wrong. Please try again."}
                     </p>
                   )}
                 </form>

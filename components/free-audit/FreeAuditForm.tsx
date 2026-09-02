@@ -4,7 +4,7 @@ import { useState } from "react";
 import Container from "@/components/Container";
 import HoneypotField from "@/components/HoneypotField";
 import Reveal from "@/components/Reveal";
-import { submitForm } from "@/lib/submit-form";
+import { SubmissionThrottledError, submitForm } from "@/lib/submit-form";
 import type { FreeAuditPage } from "@/sanity/lib/types";
 
 const inputClass =
@@ -19,14 +19,14 @@ const inputClass =
 export default function FreeAuditForm({ page }: { page: FreeAuditPage }) {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<null | "generic" | "throttled">(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (submitting) return;
     const form = new FormData(e.currentTarget);
     setSubmitting(true);
-    setError(false);
+    setError(null);
     try {
       await submitForm({
         formType: "quote",
@@ -39,8 +39,8 @@ export default function FreeAuditForm({ page }: { page: FreeAuditPage }) {
         hp: String(form.get("hp") ?? ""),
       });
       setSubmitted(true);
-    } catch {
-      setError(true);
+    } catch (err) {
+      setError(err instanceof SubmissionThrottledError ? "throttled" : "generic");
     } finally {
       setSubmitting(false);
     }
@@ -142,7 +142,9 @@ export default function FreeAuditForm({ page }: { page: FreeAuditPage }) {
                 </div>
                 {error && (
                   <p className="mt-4 font-body text-sm font-semibold text-rust">
-                    Something went wrong sending your details. Please try again.
+                    {error === "throttled"
+                      ? "Too many submissions from your network. Please wait a few minutes and try again — your details were not sent."
+                      : "Something went wrong sending your details. Please try again."}
                   </p>
                 )}
               </form>

@@ -8,7 +8,7 @@ import Reveal from "@/components/Reveal";
 import Copy from "@/components/sanity/Copy";
 import Headline from "@/components/sanity/Headline";
 import { arrOptions, budgetOptions } from "@/lib/quote-options";
-import { submitForm } from "@/lib/submit-form";
+import { SubmissionThrottledError, submitForm } from "@/lib/submit-form";
 import type { ServicesPage } from "@/sanity/lib/types";
 
 /**
@@ -29,7 +29,7 @@ export default function ServicesQuoteForm({ page }: { page: ServicesPage }) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<null | "generic" | "throttled">(null);
 
   function toggle(key: string) {
     setSelected((prev) => {
@@ -55,7 +55,7 @@ export default function ServicesQuoteForm({ page }: { page: ServicesPage }) {
         return i === -1 ? rest : `${rest.slice(0, i)} — ${rest.slice(i + 1)}`;
       });
     setSubmitting(true);
-    setError(false);
+    setError(null);
     try {
       await submitForm({
         formType: "quote",
@@ -72,8 +72,8 @@ export default function ServicesQuoteForm({ page }: { page: ServicesPage }) {
         hp: String(form.get("hp") ?? ""),
       });
       setSubmitted(true);
-    } catch {
-      setError(true);
+    } catch (err) {
+      setError(err instanceof SubmissionThrottledError ? "throttled" : "generic");
     } finally {
       setSubmitting(false);
     }
@@ -272,7 +272,9 @@ export default function ServicesQuoteForm({ page }: { page: ServicesPage }) {
                 </div>
                 {error && (
                   <p className="mt-4 font-body text-sm font-semibold text-rust">
-                    Something went wrong sending your details. Please try again.
+                    {error === "throttled"
+                      ? "Too many submissions from your network. Please wait a few minutes and try again — your details were not sent."
+                      : "Something went wrong sending your details. Please try again."}
                   </p>
                 )}
               </form>
