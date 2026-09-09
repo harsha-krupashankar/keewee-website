@@ -1,14 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import BannerStrip from "@/components/links/BannerStrip";
-import FeaturedCard from "@/components/links/FeaturedCard";
-import LinkButtons from "@/components/links/LinkButtons";
+import FeedGrid from "@/components/links/FeedGrid";
 import LinksFooter from "@/components/links/LinksFooter";
-import LinksGround from "@/components/links/LinksGround";
 import LinksProfile from "@/components/links/LinksProfile";
 
-import { banner, button, featured, social } from "../fixtures";
+import { cta, social, tile } from "../fixtures";
 
 /**
  * The contract: an absent field renders nothing at all — no empty shell, no
@@ -17,15 +14,25 @@ import { banner, button, featured, social } from "../fixtures";
  */
 describe("empty content renders nothing", () => {
   it("omits the social row when there are no profiles", () => {
-    render(<LinksProfile wordmark="keewee.in" bio="A bio." socials={null} />);
+    render(<LinksProfile wordmark="keewee.in" socials={null} />);
     expect(screen.queryByRole("navigation")).not.toBeInTheDocument();
   });
 
   it("omits the logo mark when unset", () => {
-    const { container } = render(
-      <LinksProfile wordmark="keewee.in" bio="A bio." socials={[]} />
-    );
+    const { container } = render(<LinksProfile wordmark="keewee.in" socials={[]} />);
     expect(container.querySelector("h1")).toHaveTextContent(/^keewee\.in$/);
+  });
+
+  it("omits the call to action when unset", () => {
+    render(<LinksProfile wordmark="keewee.in" socials={[]} />);
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+  });
+
+  it("renders the call to action with the arrow the design draws", () => {
+    render(<LinksProfile wordmark="keewee.in" socials={[]} cta={cta()} />);
+    const link = screen.getByRole("link", { name: /Book a free audit/ });
+    expect(link).toHaveTextContent("→");
+    expect(link.textContent).not.toMatch(/undefined|null/);
   });
 
   it("renders no footer at all when it has neither links nor a note", () => {
@@ -38,51 +45,11 @@ describe("empty content renders nothing", () => {
     expect(screen.getByText("© 2026 Keewee")).toBeInTheDocument();
   });
 
-  it("omits the desktop rail when it has no headline, eyebrow or body", () => {
-    const { container } = render(<LinksGround />);
-    // Only the decorative ground layer survives, and it is hidden from AT.
-    expect(container.querySelectorAll("[aria-hidden='true']").length).toBe(1);
-    expect(screen.queryByRole("heading")).not.toBeInTheDocument();
-  });
-
-  it("omits the sticker and margin note when unset", () => {
-    render(<LinksGround eyebrow="Everything we make" />);
-    expect(screen.queryByText("NO MUSH!")).not.toBeInTheDocument();
-  });
-
-  it("omits a button's meta when unset, keeping the arrow", () => {
-    render(<LinkButtons buttons={[button({ meta: undefined })]} />);
-    const link = screen.getByRole("link", { name: /Book a free audit/ });
-    expect(link).toHaveTextContent("→");
-    expect(link.textContent).not.toMatch(/undefined|null/);
-  });
-
-  it("omits a button's sublabel when unset", () => {
-    render(<LinkButtons buttons={[button()]} />);
-    expect(screen.getByRole("link").textContent).not.toMatch(/undefined/);
-  });
-
-  it("omits a banner's badge, meta and footnote when unset", () => {
-    render(<BannerStrip banners={[banner()]} />);
-    const link = screen.getByRole("link");
-    expect(link).toHaveTextContent("A banner");
-    expect(link.textContent).not.toMatch(/undefined|null/);
-  });
-
-  it("omits the featured badge, source and play icon when unset", () => {
-    render(<FeaturedCard card={featured()} />);
-    const link = screen.getByRole("link");
-    expect(link).toHaveTextContent("A video");
-    expect(link.textContent).not.toMatch(/undefined|null|→/);
-  });
-
   it("never prints a hardcoded English label anywhere", () => {
     const { container } = render(
       <>
-        <LinksProfile wordmark="w" bio="b" socials={[social()]} />
-        <LinkButtons buttons={[button()]} />
-        <BannerStrip banners={[banner()]} />
-        <FeaturedCard card={featured()} />
+        <LinksProfile wordmark="w" socials={[social()]} cta={cta()} />
+        <FeedGrid tiles={[tile()]} />
         <LinksFooter links={null} note="n" />
       </>
     );
@@ -96,6 +63,8 @@ describe("empty content renders nothing", () => {
       "links in this post",
       "Esc or click outside",
       "See the original post",
+      "Instagram",
+      "View post",
     ]) {
       expect(text).not.toContain(phrase);
     }

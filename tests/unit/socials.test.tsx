@@ -30,14 +30,14 @@ describe("social marks", () => {
 
   it("renders an svg mark, not two letters", () => {
     const { container } = render(
-      <LinksProfile wordmark="w" bio="b" socials={[social({ platform: "instagram" })]} />
+      <LinksProfile wordmark="w" socials={[social({ platform: "instagram" })]} />
     );
     expect(container.querySelector("svg")).toBeInTheDocument();
     expect(container.textContent).not.toMatch(/\bIG\b/);
   });
 
   it("degrades to two letters for a network with no artwork yet", () => {
-    render(<LinksProfile wordmark="w" bio="b" socials={[social({ platform: "mastodon" })]} />);
+    render(<LinksProfile wordmark="w" socials={[social({ platform: "mastodon" })]} />);
     expect(screen.getAllByText("ma")[0]).toBeInTheDocument();
   });
 
@@ -45,7 +45,6 @@ describe("social marks", () => {
     render(
       <LinksProfile
         wordmark="w"
-        bio="b"
         socials={[social({ platform: "linkedin", href: "https://linkedin.com/company/x" })]}
       />
     );

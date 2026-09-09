@@ -1,106 +1,46 @@
-"use client";
-
-import { useState } from "react";
-
+import SanityImage from "@/components/sanity/SanityImage";
 import { safeHref } from "@/lib/safe-href";
 import type { FeedTile } from "@/sanity/lib/types";
 
-import FeedTileFace, { tileClass } from "./FeedTileFace";
-import TileSheet from "./TileSheet";
 import { outbound } from "./shared";
 
 /**
  * The post grid.
  *
- * A tile with a single destination is an anchor and navigates on tap — no sheet
- * for a link that has nowhere to branch. A tile with several is a button that
- * opens `TileSheet`, and wears the count badge. Which one a tile gets is read
- * off the destinations array, never stored.
+ * One post, one link — no sheet, no count badge, no branching. A tile is an
+ * anchor around the post's picture and navigates on tap; a tile with no link of
+ * its own falls back to the post itself, so an editor can put a post in the
+ * grid before it has a destination.
  *
  * The grid runs edge-to-edge with 4px gutters on phones, which puts the tiles
- * well over the 44px target at any phone width.
+ * well over the 44px target at any phone width. Not a client component: there
+ * is no state left to hold.
  */
-export default function FeedGrid({
-  tiles,
-  initialCount,
-  moreLabel,
-  sheetHint,
-}: {
-  tiles: FeedTile[];
-  initialCount?: number | null;
-  moreLabel?: string | null;
-  sheetHint?: string | null;
-}) {
-  // Pagination is opt-in: without a reveal label there is nothing to write on
-  // the button, so the grid simply shows everything rather than stranding
-  // tiles behind a control captioned in hardcoded English.
-  const batch = initialCount && initialCount > 0 ? initialCount : tiles.length;
-  const paginated = Boolean(moreLabel) && batch < tiles.length;
-  const [shown, setShown] = useState(paginated ? batch : tiles.length);
-  const [openKey, setOpenKey] = useState<string | null>(null);
-
-  const visible = tiles.slice(0, shown);
-  const openTile = tiles.find((tile) => tile._key === openKey) ?? null;
-
+export default function FeedGrid({ tiles }: { tiles: FeedTile[] }) {
   return (
-    <>
-      <div className="grid grid-cols-3 gap-1 md:gap-1.5">
-        {visible.map((tile) => {
-          const single = tile.destinations.length === 1;
+    <div className="grid grid-cols-3 gap-1 md:gap-1.5">
+      {tiles.map((tile) => {
+        // Without a link of its own the tile points at the post, which is
+        // always off-site — hence the new tab there but not for `href`, which
+        // is usually an internal path.
+        const href = tile.href || tile.postUrl;
 
-          if (single) {
-            const [destination] = tile.destinations;
-            return (
-              <a
-                key={tile._key}
-                href={safeHref(destination.href)}
-                {...outbound(destination.openInNewTab)}
-                className={tileClass(tile.style)}
-              >
-                <FeedTileFace tile={tile} />
-              </a>
-            );
-          }
-
-          return (
-            <button
-              key={tile._key}
-              type="button"
-              onClick={() => setOpenKey(tile._key)}
-              aria-haspopup="dialog"
-              className={tileClass(tile.style)}
-            >
-              <FeedTileFace tile={tile} />
-              <span className="sr-only">
-                {tile.title} — {tile.destinations.length} links
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      {paginated && shown < tiles.length && (
-        <div className="px-5 pt-5">
-          <button
-            type="button"
-            onClick={() => setShown((current) => current + batch)}
-            className="flex h-13 w-full items-center justify-center gap-2 rounded-xl border border-border-line bg-paper font-display text-[15px] font-bold text-ink transition-colors hover:border-green hover:bg-surface focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-2"
+        return (
+          <a
+            key={tile._key}
+            href={safeHref(href)}
+            {...outbound(!tile.href)}
+            className="group relative block aspect-square overflow-hidden bg-border-soft transition-transform duration-100 active:scale-[0.965] focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-lime-bright focus-visible:-outline-offset-2 md:rounded-[4px]"
           >
-            {moreLabel?.replace("{count}", String(tiles.length))}
-            <span aria-hidden className="font-body text-xs text-muted">
-              ↓
-            </span>
-          </button>
-        </div>
-      )}
-
-      {openTile && (
-        <TileSheet
-          tile={openTile}
-          hint={sheetHint}
-          onClose={() => setOpenKey(null)}
-        />
-      )}
-    </>
+            <SanityImage
+              image={tile.image}
+              width={520}
+              sizes="(min-width: 768px) 174px, 33vw"
+              className="absolute inset-0 size-full object-cover"
+            />
+          </a>
+        );
+      })}
+    </div>
   );
 }

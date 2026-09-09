@@ -18,13 +18,7 @@ import {
   titledCard,
 } from "./objects/primitives";
 import { promptCategory, promptEntry } from "./objects/promptLibrary";
-import {
-  bannerCard,
-  featuredCard,
-  feedTile,
-  linkButton,
-  linkDestination,
-} from "./objects/links";
+import { feedTile } from "./objects/links";
 import { cookieConsent } from "./objects/cookieConsent";
 import {
   legalClause,
@@ -104,11 +98,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   promptEntry,
   promptCategory,
   cookieConsent,
-  linkDestination,
   feedTile,
-  bannerCard,
-  featuredCard,
-  linkButton,
 
   // Singletons — one document each.
   siteSettings,

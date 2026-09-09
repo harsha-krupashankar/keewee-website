@@ -39,7 +39,6 @@ import {
 import { legalDocs } from "./legacy/legal-data";
 import { whatYouGet, whySubscribe } from "./legacy/newsletter-data";
 import { serviceDocs } from "./legacy/service-data";
-import { linksButtons } from "./links-page-data";
 import { promptCategories } from "./prompt-library-data";
 import {
   quoteGoals,
@@ -97,8 +96,8 @@ function keyed<T extends object>(items: T[]): (T & { _key: string })[] {
   return items.map((item) => ({ ...item, _key: key() }));
 }
 
-function link(label: string, href: string) {
-  return { _type: "link", label, href };
+function link(label: string, href: string, openInNewTab = false) {
+  return { _type: "link", label, href, ...(openInNewTab ? { openInNewTab } : {}) };
 }
 
 function card(title: string, description: string, tag?: string) {
@@ -955,35 +954,33 @@ legalDocs.forEach((doc, i) => {
 
 // --- Links page ------------------------------------------------------------
 
+/** The booking link. Also on `siteSettings.headerCta` in production. */
+const CALENDLY_URL = "https://calendly.com/kanan-keewee/30min";
+
+/**
+ * DELIBERATELY MINIMAL. An earlier version of this seed carried the copy from
+ * the design artboards, which is mockup filler: a testimonial attributed to a
+ * named person, client metrics, a webinar with a registration count, a job
+ * opening, subscriber and prompt counts. None of it was true, and seeding it
+ * put fabricated claims on the live site.
+ *
+ * So the seed lays down only what is structurally real: who the page is and
+ * where it links. Social profiles are not here either — the page reads
+ * `siteSettings.socialLinks`, the same list as the footer. The post grid ships
+ * empty and renders nothing until an editor adds a post: each one needs an
+ * uploaded picture, and there is no picture to invent.
+ */
 docs.push({
   _id: "linksPage",
   _type: "linksPage",
   logoMark: "\u2731",
   wordmark: "keewee.in",
-  bio: "B2B marketing with a spine. We fix the part everyone skips: what to actually say.",
-  stickyCta: link("Free audit", "/free-audit"),
-
-  // The featured card, the banners and the feed ship empty on purpose — see
-  // the note in `links-page-data.ts`. Each section renders nothing until it
-  // has real content, so the page is coherent while they are unset.
-  featuredLabel: "This week",
-
-  bannersLabel: "Closing soon",
-  bannersSwipeHint: "Swipe",
-
-  buttonsLabel: "Start here",
-  buttons: keyed(linksButtons.map((b) => ({ _type: "linkButton", ...b }))),
-
-  feedLabel: "From the feed",
-  feedHandle: "@keewee.in",
-  feedInitialCount: 12,
-  feedMoreLabel: "See all {count} posts",
-  sheetHint: "Esc or click outside to close",
-
-  railEyebrow: "Everything we make",
-  railHeadline: headline("One link, the whole ", ["feed", "highlight"], "."),
-  railBody: "Built for the tap that comes from a bio. Same page on desktop, just calmer.",
-  sticker: "NO MUSH!",
+  // Straight to Calendly rather than via /free-audit: the visitor arrived from
+  // a bio tap and the whole page exists to save them a hop. New tab because
+  // Calendly is off-site, and because Instagram's in-app browser is where this
+  // is opened from. Production's canonical copy of this URL is
+  // `siteSettings.headerCta` — change it in both or neither.
+  cta: link("Book a free audit", CALENDLY_URL, true),
 
   footerLinks: keyed([
     link("keewee.in", "/"),

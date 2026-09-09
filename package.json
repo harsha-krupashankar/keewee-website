@@ -9,8 +9,6 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:unit": "vitest run --project unit",
-    "test:browser": "vitest run --project browser",
     "typecheck": "tsc --noEmit",
     "seed": "tsx --env-file=.env.local scripts/seed.ts",
     "seed:dry": "tsx --env-file=.env.local scripts/seed.ts --dry",
@@ -27,8 +25,8 @@
     "fix-ids:dry": "tsx --env-file=.env.local scripts/fix-dotted-ids.ts --dry",
     "revert-seed": "tsx --env-file=.env.local scripts/local/revert-seed.ts",
     "revert-seed:dry": "tsx --env-file=.env.local scripts/local/revert-seed.ts --dry",
-    "clean-links": "tsx --env-file=.env.local scripts/local/clean-links-placeholders.ts",
-    "clean-links:dry": "tsx --env-file=.env.local scripts/local/clean-links-placeholders.ts --dry",
+    "simplify-links": "tsx --env-file=.env.local scripts/local/simplify-links.ts",
+    "simplify-links:dry": "tsx --env-file=.env.local scripts/local/simplify-links.ts --dry",
     "typegen": "sanity schema extract --path=./sanity/extract.json --enforce-required-fields && sanity typegen generate"
   },
   "dependencies": {

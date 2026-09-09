@@ -1,38 +1,26 @@
-import type {
-  BannerCard,
-  FeaturedCard,
-  FeedTile,
-  LinkButton,
-  LinkDestination,
-  SocialLink,
-} from "@/sanity/lib/types";
+import type { FeedTile, Link, SanityImage, SocialLink } from "@/sanity/lib/types";
 
 /** Minimal valid shapes, overridable per test. */
 
-export function destination(over: Partial<LinkDestination> = {}): LinkDestination {
-  return { label: "Read the teardown", href: "/blog", ...over };
+export function image(over: Partial<SanityImage> = {}): SanityImage {
+  return {
+    asset: { _ref: "image-abc-800x800-jpg", _type: "reference" },
+    dimensions: { width: 800, height: 800, aspectRatio: 1 },
+    ...over,
+  };
 }
 
 export function tile(over: Partial<FeedTile> = {}): FeedTile {
   return {
     _key: over._key ?? "k1",
-    style: "surface",
-    title: "A post",
-    destinations: [destination()],
+    image: image(),
+    postUrl: "https://www.instagram.com/p/abc/",
     ...over,
   };
 }
 
-export function button(over: Partial<LinkButton> = {}): LinkButton {
+export function cta(over: Partial<Link> = {}): Link {
   return { label: "Book a free audit", href: "/free-audit", ...over };
-}
-
-export function banner(over: Partial<BannerCard> = {}): BannerCard {
-  return { tone: "dark", title: "A banner", href: "/x", ...over };
-}
-
-export function featured(over: Partial<FeaturedCard> = {}): FeaturedCard {
-  return { title: "A video", href: "https://example.com", ...over };
 }
 
 export function social(over: Partial<SocialLink> = {}): SocialLink {

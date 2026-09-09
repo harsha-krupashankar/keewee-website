@@ -253,74 +253,18 @@ export const NEWSLETTER_PAGE_QUERY = defineQuery(/* groq */ `
 
 // --- Links page -----------------------------------------------------------
 
-const DESTINATION = /* groq */ `{ label, source, href, openInNewTab, urgent }`;
-
 export const LINKS_PAGE_QUERY = defineQuery(/* groq */ `
   *[_type == "linksPage"][0]{
     logoMark,
     wordmark,
-    bio,
-    stickyCta ${LINK},
+    cta ${LINK},
 
-    featuredLabel,
-    featured {
-      badge,
-      title,
-      source,
-      image ${IMAGE},
-      showPlayIcon,
-      href,
-      openInNewTab
-    },
-
-    bannersLabel,
-    bannersSwipeHint,
-    banners[] {
-      tone,
-      badge,
-      meta,
-      title,
-      subtitle,
-      linkLabel,
-      footnote,
-      href,
-      openInNewTab
-    },
-
-    buttonsLabel,
-    buttons[] { label, sublabel, meta, href, openInNewTab },
-
-    feedLabel,
-    feedHandle,
-    feedInitialCount,
-    feedMoreLabel,
-    sheetHint,
     feedTiles[] {
       _key,
-      style,
-      title,
-      eyebrow,
-      eyebrowTone,
-      footnote,
-      stat,
-      sticker,
-      quote,
-      accentBar,
-      attribution { initials, name },
       image ${IMAGE},
-      hideCaption,
-      meta,
-      destinationsLabel,
-      postHref,
-      postLabel,
-      destinations[] ${DESTINATION}
+      postUrl,
+      href
     },
-
-    railEyebrow,
-    railHeadline,
-    railBody,
-    railNote,
-    sticker,
 
     footerLinks[] ${LINK},
     footerNote,

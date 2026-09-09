@@ -1,27 +1,31 @@
 import { SocialGlyph, socialLabel } from "@/components/SocialIcons";
-import type { SocialLink } from "@/sanity/lib/types";
+import type { Link as LinkValue, SocialLink } from "@/sanity/lib/types";
 
-import { SafeLink } from "./shared";
+import { Arrow, SafeLink } from "./shared";
 
 /**
- * Wordmark, bio and social row.
+ * The whole header: wordmark, social row, one call to action.
  *
- * The links come straight from Site settings — the same list the site footer
- * renders — so there is one place to add or change a profile, and the two can
- * never drift apart. The marks are shared too (`components/SocialIcons.tsx`);
- * only the chip around them differs, a 44px rounded square here against the
- * footer's circle.
+ * The social links come straight from Site settings — the same list the site
+ * footer renders — so there is one place to add or change a profile, and the
+ * two can never drift apart. The marks are shared too
+ * (`components/SocialIcons.tsx`); only the chip around them differs, a 44px
+ * rounded square here against the footer's circle.
+ *
+ * Nothing else lives up here. A visitor arriving from a bio tap is one tap from
+ * the thing they came for, and a bio line or a second button is a decision
+ * standing between them and it.
  */
 export default function LinksProfile({
   logoMark,
   wordmark,
-  bio,
   socials,
+  cta,
 }: {
   logoMark?: string | null;
   wordmark: string;
-  bio: string;
   socials?: SocialLink[] | null;
+  cta?: LinkValue | null;
 }) {
   const hasSocials = Boolean(socials?.length);
 
@@ -50,10 +54,6 @@ export default function LinksProfile({
         )}
       </div>
 
-      <p className="mt-3.5 max-w-[46ch] font-body text-base leading-[1.55] font-medium text-pretty text-body md:mt-4 md:text-[17px]">
-        {bio}
-      </p>
-
       {hasSocials && (
         <nav aria-label="Social profiles" className="mt-4 flex gap-2 md:hidden">
           {socials!.map((social) => (
@@ -64,6 +64,17 @@ export default function LinksProfile({
             />
           ))}
         </nav>
+      )}
+
+      {cta && (
+        <SafeLink
+          href={cta.href}
+          openInNewTab={cta.openInNewTab}
+          className="mt-5 flex min-h-[56px] items-center justify-center gap-2 rounded-xl bg-green px-[18px] py-3 font-display text-[17px] font-bold text-paper shadow-[3px_3px_0_#1C1B19] transition-all duration-150 hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-green-dark hover:shadow-[1px_1px_0_#1C1B19] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-lime-bright focus-visible:outline-offset-[3px]"
+        >
+          {cta.label}
+          <Arrow />
+        </SafeLink>
       )}
     </header>
   );

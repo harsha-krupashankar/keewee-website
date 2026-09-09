@@ -1,96 +1,55 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import FeedTileFace, { tileClass } from "@/components/links/FeedTileFace";
+import FeedGrid from "@/components/links/FeedGrid";
 
-import { destination, tile } from "../fixtures";
+import { image, tile } from "../fixtures";
 
-describe("feed tile face", () => {
-  it("gives each ground its own background", () => {
-    expect(tileClass("dark")).toContain("bg-dark-card");
-    expect(tileClass("green")).toContain("bg-green");
-    expect(tileClass("mint")).toContain("bg-green-bg");
-    expect(tileClass("surface")).toContain("bg-surface");
-    expect(tileClass("paper")).toContain("bg-paper");
-    expect(tileClass("image")).toContain("bg-border-soft");
+/**
+ * A tile is one post and one link. These pin the two rules that decision
+ * carries: where the tap goes, and what a screen reader is told it is.
+ */
+describe("post grid", () => {
+  it("sends the tap to the tile's own link, in the same tab", () => {
+    render(<FeedGrid tiles={[tile({ href: "/free-audit" })]} />);
+    const link = screen.getByRole("link");
+    expect(link).toHaveAttribute("href", "/free-audit");
+    expect(link).not.toHaveAttribute("target");
   });
 
-  it("carries the press and focus states the design specifies", () => {
-    const cls = tileClass("dark");
-    expect(cls).toContain("active:scale-[0.965]");
-    expect(cls).toContain("focus-visible:outline-lime-bright");
+  it("falls back to the post itself, in a new tab, when there is no link", () => {
+    render(<FeedGrid tiles={[tile({ postUrl: "https://www.instagram.com/p/xyz/" })]} />);
+    const link = screen.getByRole("link");
+    expect(link).toHaveAttribute("href", "https://www.instagram.com/p/xyz/");
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", expect.stringContaining("noopener"));
   });
 
-  it("shows a count badge only when a tile has several destinations", () => {
-    const { rerender, container } = render(<FeedTileFace tile={tile()} />);
-    expect(container.querySelector("svg")).not.toBeInTheDocument();
-
-    rerender(
-      <FeedTileFace
-        tile={tile({ destinations: [destination(), destination(), destination()] })}
-      />
-    );
-    expect(screen.getByText("3")).toBeInTheDocument();
+  it("refuses an unsafe href rather than rendering it", () => {
+    render(<FeedGrid tiles={[tile({ href: "javascript:alert(1)" })]} />);
+    expect(screen.getByRole("link")).not.toHaveAttribute("href", "javascript:alert(1)");
   });
 
-  it("renders a stat tile with the number and caption", () => {
-    render(<FeedTileFace tile={tile({ style: "mint", stat: "60%", title: "of inbound" })} />);
-    expect(screen.getByText("60%")).toBeInTheDocument();
-    expect(screen.getByText("of inbound")).toBeInTheDocument();
+  it("names the tile with the image's alt text", () => {
+    render(<FeedGrid tiles={[tile({ image: image({ alt: "Teardown night" }) })]} />);
+    expect(screen.getByRole("link", { name: "Teardown night" })).toBeInTheDocument();
   });
 
-  it("renders a sticker tile centred, with the sticker above the title", () => {
-    render(<FeedTileFace tile={tile({ sticker: "SYNERGY", title: "is not a strategy" })} />);
-    const sticker = screen.getByText("SYNERGY");
-    expect(sticker).toHaveClass("font-sticker");
-    expect(screen.getByText("is not a strategy")).toBeInTheDocument();
+  it("prints no text of its own — the picture is the whole tile", () => {
+    const { container } = render(<FeedGrid tiles={[tile()]} />);
+    expect(container.textContent).toBe("");
   });
 
-  it("renders an attribution row on a testimonial tile", () => {
+  it("keeps the tiles in the order the editor set", () => {
     render(
-      <FeedTileFace
-        tile={tile({ attribution: { initials: "R", name: "R. Menon · VP Growth" } })}
+      <FeedGrid
+        tiles={[
+          tile({ _key: "a", image: image({ alt: "First" }) }),
+          tile({ _key: "b", image: image({ alt: "Second" }) }),
+        ]}
       />
     );
-    expect(screen.getByText("R. Menon · VP Growth")).toBeInTheDocument();
-  });
-
-  it("hides the caption on a bare photo but keeps the title for screen readers", () => {
-    render(
-      <FeedTileFace
-        tile={tile({
-          style: "image",
-          title: "Team photo",
-          hideCaption: true,
-          image: {
-            asset: { _ref: "image-abc-800x800-jpg", _type: "reference" },
-            dimensions: { width: 800, height: 800, aspectRatio: 1 },
-          },
-        })}
-      />
-    );
-    const title = screen.getByText("Team photo");
-    expect(title).toHaveClass("sr-only");
-  });
-
-  it("shows the caption on an image tile by default", () => {
-    render(
-      <FeedTileFace
-        tile={tile({
-          style: "image",
-          title: "Teardown night",
-          image: {
-            asset: { _ref: "image-abc-800x800-jpg", _type: "reference" },
-            dimensions: { width: 800, height: 800, aspectRatio: 1 },
-          },
-        })}
-      />
-    );
-    expect(screen.getByText("Teardown night")).not.toHaveClass("sr-only");
-  });
-
-  it("omits eyebrow, footnote and accent bar when unset", () => {
-    const { container } = render(<FeedTileFace tile={tile()} />);
-    expect(container.textContent).toBe("A post");
+    const alts = screen.getAllByRole("img").map((img) => img.getAttribute("alt"));
+    expect(alts).toEqual(["First", "Second"]);
   });
 });
