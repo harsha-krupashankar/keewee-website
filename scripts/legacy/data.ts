@@ -166,7 +166,7 @@ export const footerOffer = [
 
 export const footerCompany = [
   { label: "About", href: "/about" },
-  { label: "Blog", href: "/blogs" },
+  { label: "Blogs", href: "/blogs" },
   { label: "FAQs", href: "/faq" },
   { label: "Free Audit", href: "/free-audit" },
   { label: "Privacy Policy", href: "/legal/privacy" },

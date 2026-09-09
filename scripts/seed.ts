@@ -232,7 +232,7 @@ docs.push({
     },
   },
   headerNav: keyed([
-    link("Blog", "/blogs"),
+    link("Blogs", "/blogs"),
     link("About", "/about"),
     link("FAQs", "/faq"),
     link("Newsletter", "/newsletter"),
@@ -249,7 +249,7 @@ docs.push({
       title: "Company",
       links: keyed([
         link("About", "/about"),
-        link("Blog", "/blogs"),
+        link("Blogs", "/blogs"),
         link("FAQs", "/faq"),
         link("Free Audit", "/free-audit"),
         link("Privacy Policy", "/legal/privacy-policy"),
@@ -865,8 +865,8 @@ docs.push({
   _type: "blogIndexPage",
   hero: {
     _type: "pageHero",
-    badge: "The Keewee blog",
-    headline: headline("Marketing blog ", ["goldmine!", "highlight"]),
+    badge: "The Keewee blogs",
+    headline: headline("Marketing blogs ", ["goldmine!", "highlight"]),
     intro: richText(
       "Literally the best content on B2B SaaS marketing. Positioning, SEO, demand gen, paid media, conversion, and everything in between. Written by the people doing the work, not summarizing someone else's newsletter."
     ),
@@ -899,7 +899,7 @@ docs.push({
   },
   seo: {
     _type: "seo",
-    title: "Blog — keewee.in",
+    title: "Blogs — keewee.in",
     description:
       "Literally the best content on B2B SaaS marketing. Positioning, SEO, demand gen, paid media, conversion, and everything in between.",
   },

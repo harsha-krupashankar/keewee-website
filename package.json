@@ -25,6 +25,8 @@
     "fix-ids:dry": "tsx --env-file=.env.local scripts/fix-dotted-ids.ts --dry",
     "revert-seed": "tsx --env-file=.env.local scripts/local/revert-seed.ts",
     "revert-seed:dry": "tsx --env-file=.env.local scripts/local/revert-seed.ts --dry",
+    "blog-label": "tsx --env-file=.env.local scripts/local/blog-label-to-blogs.ts",
+    "blog-label:dry": "tsx --env-file=.env.local scripts/local/blog-label-to-blogs.ts --dry",
     "blog-to-blogs": "tsx --env-file=.env.local scripts/local/blog-to-blogs.ts",
     "blog-to-blogs:dry": "tsx --env-file=.env.local scripts/local/blog-to-blogs.ts --dry",
     "simplify-links": "tsx --env-file=.env.local scripts/local/simplify-links.ts",

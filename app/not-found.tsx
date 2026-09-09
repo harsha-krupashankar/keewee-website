@@ -15,7 +15,7 @@ async function Content({ opts }: { opts: FetchOptions }) {
   const settings = await getSiteSettings(opts);
 
   const links = [
-    { href: "/blogs", label: "Blog" },
+    { href: "/blogs", label: "Blogs" },
     { href: "/services", label: "Services" },
     { href: "/free-audit", label: "Free audit" },
     { href: "/faq", label: "FAQs" },
