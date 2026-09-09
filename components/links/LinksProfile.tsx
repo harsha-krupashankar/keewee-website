@@ -1,10 +1,19 @@
+import LogoMark from "@/components/LogoMark";
 import { SocialGlyph, socialLabel } from "@/components/SocialIcons";
 import type { Link as LinkValue, SocialLink } from "@/sanity/lib/types";
 
 import { Arrow, SafeLink } from "./shared";
 
+/** The brand. Fixed, and set beside the same mark the site header draws. */
+const WORDMARK = "keewee.in";
+
 /**
  * The whole header: wordmark, social row, one call to action.
+ *
+ * The wordmark is hardcoded, and the mark comes from the shared `LogoMark`.
+ * Neither is content: they are the identity of the site, they have not changed,
+ * and putting a brand behind an editable field only buys the chance to get it
+ * wrong. This is the one exception on the page — everything else is Sanity.
  *
  * The social links come straight from Site settings — the same list the site
  * footer renders — so there is one place to add or change a profile, and the
@@ -17,13 +26,9 @@ import { Arrow, SafeLink } from "./shared";
  * standing between them and it.
  */
 export default function LinksProfile({
-  logoMark,
-  wordmark,
   socials,
   cta,
 }: {
-  logoMark?: string | null;
-  wordmark: string;
   socials?: SocialLink[] | null;
   cta?: LinkValue | null;
 }) {
@@ -33,12 +38,8 @@ export default function LinksProfile({
     <header className="px-5 pt-7 md:pt-14">
       <div className="flex items-center gap-4 md:justify-between">
         <h1 className="flex items-baseline gap-2.5 font-display text-[33px] leading-none font-extrabold tracking-[-0.03em] text-ink md:text-[37px]">
-          {logoMark && (
-            <span aria-hidden className="text-green">
-              {logoMark}
-            </span>
-          )}
-          {wordmark}
+          <LogoMark className="text-green" />
+          {WORDMARK}
         </h1>
 
         {hasSocials && (

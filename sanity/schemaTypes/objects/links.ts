@@ -12,11 +12,19 @@ import { defineField, defineType } from "sanity";
 /**
  * One post in the grid.
  *
- * Instagram serves no post metadata to an unauthenticated fetch — the post page
- * and the embed endpoint both return a login-walled shell with no `og:image` —
- * so the picture is uploaded rather than scraped. That also means it comes off
- * the Sanity CDN with `lqip` and real dimensions, which the scraped CDN URL
- * never would: those expire.
+ * Two fields, because a tile is a picture and a destination and nothing else.
+ *
+ * There is no separate "Instagram post" field. It only ever served as a
+ * fallback destination, which is the same job `href` already does — a tile that
+ * should send people to the post takes the post's URL as its link. One field
+ * covers both cases; two just asked an editor to fill in a value that usually
+ * went unused.
+ *
+ * The picture is uploaded rather than pulled: Instagram serves no post metadata
+ * to an unauthenticated fetch — the post page and the embed endpoint both
+ * return a login-walled shell with no `og:image`. Uploading is also what puts
+ * the image on the Sanity CDN with `lqip` and real dimensions; a scraped CDN
+ * URL has neither, and expires.
  */
 export const feedTile = defineType({
   name: "feedTile",
@@ -26,16 +34,21 @@ export const feedTile = defineType({
     defineField({
       name: "image",
       title: "Post image",
-      type: "figure",
-      description:
-        "The picture from the post. Square crops sit flush in the grid. The alt text is the tile's only accessible name, so write it.",
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: "postUrl",
-      title: "Instagram post",
-      type: "url",
-      description: "The post this tile shows, e.g. https://www.instagram.com/p/….",
+      type: "image",
+      options: { hotspot: true },
+      description: "The picture from the post. Square crops sit flush in the grid.",
+      // Not the shared `figure` type: that carries a caption, and this grid
+      // draws none — the picture fills the tile edge to edge.
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Alt text",
+          type: "string",
+          description:
+            "What the post shows, in a few words. The tile is a bare picture, so this is the only name a screen reader can announce for the link.",
+          validation: (rule) => rule.required(),
+        }),
+      ],
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -43,14 +56,15 @@ export const feedTile = defineType({
       title: "Link",
       type: "string",
       description:
-        "Where a tap goes — e.g. /free-audit, https://…, or mailto:team@keewee.in. Leave empty to send the tap to the post itself.",
+        "Where a tap goes: /free-audit, https://…, mailto:…, or the Instagram post's own URL to send people back to the post.",
+      validation: (rule) => rule.required(),
     }),
   ],
   preview: {
-    select: { media: "image", alt: "image.alt", href: "href", postUrl: "postUrl" },
-    prepare: ({ media, alt, href, postUrl }) => ({
+    select: { media: "image", alt: "image.alt", href: "href" },
+    prepare: ({ media, alt, href }) => ({
       title: (alt as string) || "Post",
-      subtitle: (href as string) || (postUrl as string),
+      subtitle: href as string,
       media,
     }),
   },

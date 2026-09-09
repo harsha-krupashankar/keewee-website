@@ -964,8 +964,9 @@ const CALENDLY_URL = "https://calendly.com/kanan-keewee/30min";
  * opening, subscriber and prompt counts. None of it was true, and seeding it
  * put fabricated claims on the live site.
  *
- * So the seed lays down only what is structurally real: who the page is and
- * where it links. Social profiles are not here either — the page reads
+ * So the seed lays down only what is structurally real: where the page links.
+ * The logo mark and wordmark are not here because they are not fields — they
+ * are hardcoded in `components/links/LinksProfile.tsx`. Social profiles are not here either — the page reads
  * `siteSettings.socialLinks`, the same list as the footer. The post grid ships
  * empty and renders nothing until an editor adds a post: each one needs an
  * uploaded picture, and there is no picture to invent.
@@ -973,8 +974,6 @@ const CALENDLY_URL = "https://calendly.com/kanan-keewee/30min";
 docs.push({
   _id: "linksPage",
   _type: "linksPage",
-  logoMark: "\u2731",
-  wordmark: "keewee.in",
   // Straight to Calendly rather than via /free-audit: the visitor arrived from
   // a bio tap and the whole page exists to save them a hop. New tab because
   // Calendly is off-site, and because Instagram's in-app browser is where this

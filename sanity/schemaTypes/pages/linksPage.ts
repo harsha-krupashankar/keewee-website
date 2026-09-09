@@ -4,10 +4,13 @@ import { defineArrayMember, defineField, defineType } from "sanity";
  * `/links` — the link-in-bio page.
  *
  * Standalone by design: it renders without the site header and footer, so its
- * own wordmark, call to action and footer all live here. The page is a header
- * and a grid of posts, nothing between them — social profiles are not repeated
- * here either, the row reads `siteSettings.socialLinks`, the same list the site
- * footer uses.
+ * own call to action and footer live here. The page is a header and a grid of
+ * posts, nothing between them.
+ *
+ * Two things deliberately are not fields. Social profiles come from
+ * `siteSettings.socialLinks`, the same list the site footer uses, so the two can
+ * never drift. The logo mark and wordmark are hardcoded in the component — they
+ * are the brand, not content about it.
  */
 export const linksPage = defineType({
   name: "linksPage",
@@ -21,28 +24,22 @@ export const linksPage = defineType({
   ],
   fields: [
     // --- Header ----------------------------------------------------------
-    defineField({
-      name: "logoMark",
-      title: "Logo mark",
-      type: "string",
-      group: "profile",
-      description: "The single glyph before the wordmark, e.g. “✱”.",
-      initialValue: "✱",
-    }),
-    defineField({
-      name: "wordmark",
-      title: "Wordmark",
-      type: "string",
-      group: "profile",
-      description: "Shown large at the top, e.g. “keewee.in”.",
-      validation: (rule) => rule.required(),
-    }),
+    // The logo mark and the wordmark are not fields. They are the identity of
+    // the site rather than copy about it, they have never changed, and an
+    // editable brand is an editable brand to get wrong. Both live in
+    // `components/links/LinksProfile.tsx`.
     defineField({
       name: "cta",
-      title: "Button",
+      title: "CTA button",
       type: "link",
       group: "profile",
-      description: "The one call to action on the page, e.g. “Book a free audit”.",
+      description:
+        "The one call to action on the page. Prefilled with the booking link — change the label or point it elsewhere, but leave it set: the header has nothing else to tap.",
+      initialValue: {
+        label: "Book a free audit",
+        href: "https://calendly.com/kanan-keewee/30min",
+        openInNewTab: true,
+      },
     }),
 
     // --- Posts -----------------------------------------------------------

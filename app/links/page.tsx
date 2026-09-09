@@ -59,12 +59,7 @@ async function Content({ opts }: { opts: FetchOptions }) {
   return (
     <main id="main-content" className="min-h-screen bg-cream pb-2">
       <div className="relative mx-auto w-full max-w-[520px]">
-        <LinksProfile
-          logoMark={page.logoMark}
-          wordmark={page.wordmark}
-          socials={settings?.socialLinks}
-          cta={page.cta}
-        />
+        <LinksProfile socials={settings?.socialLinks} cta={page.cta} />
 
         {page.feedTiles && page.feedTiles.length > 0 && (
           <section className="pt-7">

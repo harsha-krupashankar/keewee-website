@@ -6,8 +6,9 @@ import FeedGrid from "@/components/links/FeedGrid";
 import { image, tile } from "../fixtures";
 
 /**
- * A tile is one post and one link. These pin the two rules that decision
- * carries: where the tap goes, and what a screen reader is told it is.
+ * A tile is one post and one link. These pin the rules that decision carries:
+ * where the tap goes, whether it leaves the tab, and what a screen reader is
+ * told the picture is.
  */
 describe("post grid", () => {
   it("sends the tap to the tile's own link, in the same tab", () => {
@@ -17,8 +18,8 @@ describe("post grid", () => {
     expect(link).not.toHaveAttribute("target");
   });
 
-  it("falls back to the post itself, in a new tab, when there is no link", () => {
-    render(<FeedGrid tiles={[tile({ postUrl: "https://www.instagram.com/p/xyz/" })]} />);
+  it("opens an off-site link in a new tab, post URLs included", () => {
+    render(<FeedGrid tiles={[tile({ href: "https://www.instagram.com/p/xyz/" })]} />);
     const link = screen.getByRole("link");
     expect(link).toHaveAttribute("href", "https://www.instagram.com/p/xyz/");
     expect(link).toHaveAttribute("target", "_blank");

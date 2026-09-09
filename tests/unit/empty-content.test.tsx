@@ -14,22 +14,26 @@ import { cta, social, tile } from "../fixtures";
  */
 describe("empty content renders nothing", () => {
   it("omits the social row when there are no profiles", () => {
-    render(<LinksProfile wordmark="keewee.in" socials={null} />);
+    render(<LinksProfile socials={null} />);
     expect(screen.queryByRole("navigation")).not.toBeInTheDocument();
   });
 
-  it("omits the logo mark when unset", () => {
-    const { container } = render(<LinksProfile wordmark="keewee.in" socials={[]} />);
-    expect(container.querySelector("h1")).toHaveTextContent(/^keewee\.in$/);
+  it("draws the brand without asking Sanity for it", () => {
+    const { container } = render(<LinksProfile socials={[]} />);
+    // Both are hardcoded, so there is no unset case to handle — the assertion
+    // is that they are there at all. The mark is aria-hidden and so drops out
+    // of the accessible name, leaving the wordmark to title the page.
+    expect(screen.getByRole("heading", { name: "keewee.in" })).toBeInTheDocument();
+    expect(container.querySelector("h1")).toHaveTextContent("✱");
   });
 
   it("omits the call to action when unset", () => {
-    render(<LinksProfile wordmark="keewee.in" socials={[]} />);
+    render(<LinksProfile socials={[]} />);
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 
   it("renders the call to action with the arrow the design draws", () => {
-    render(<LinksProfile wordmark="keewee.in" socials={[]} cta={cta()} />);
+    render(<LinksProfile socials={[]} cta={cta()} />);
     const link = screen.getByRole("link", { name: /Book a free audit/ });
     expect(link).toHaveTextContent("→");
     expect(link.textContent).not.toMatch(/undefined|null/);
@@ -48,7 +52,7 @@ describe("empty content renders nothing", () => {
   it("never prints a hardcoded English label anywhere", () => {
     const { container } = render(
       <>
-        <LinksProfile wordmark="w" socials={[social()]} cta={cta()} />
+        <LinksProfile socials={[social()]} cta={cta()} />
         <FeedGrid tiles={[tile()]} />
         <LinksFooter links={null} note="n" />
       </>

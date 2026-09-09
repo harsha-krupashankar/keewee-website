@@ -371,22 +371,20 @@ export type PromptLibraryPage = {
 // --- Links page -----------------------------------------------------------
 
 /**
- * One post in the `/links` grid.
+ * One post in the `/links` grid: a picture and a destination.
  *
- * `image` is uploaded, not scraped: Instagram serves no post metadata to an
- * unauthenticated fetch. `href` is where a tap goes; without one the tile falls
- * back to `postUrl`, the post itself.
+ * `image` is uploaded, not scraped — Instagram serves no post metadata to an
+ * unauthenticated fetch. `href` is the single link; a tile meant to point at the
+ * post itself simply takes the post's URL.
  */
 export type FeedTile = {
   _key: string;
   image: SanityImage;
-  postUrl: string;
-  href?: string | null;
+  href: string;
 };
 
 export type LinksPage = {
-  logoMark?: string | null;
-  wordmark: string;
+  /** The logo mark and wordmark are hardcoded in `LinksProfile`, not fields. */
   cta?: Link | null;
 
   feedTiles?: FeedTile[] | null;

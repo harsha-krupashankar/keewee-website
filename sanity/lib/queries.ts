@@ -255,14 +255,11 @@ export const NEWSLETTER_PAGE_QUERY = defineQuery(/* groq */ `
 
 export const LINKS_PAGE_QUERY = defineQuery(/* groq */ `
   *[_type == "linksPage"][0]{
-    logoMark,
-    wordmark,
     cta ${LINK},
 
     feedTiles[] {
       _key,
       image ${IMAGE},
-      postUrl,
       href
     },
 

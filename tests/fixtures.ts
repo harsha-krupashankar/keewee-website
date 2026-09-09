@@ -14,7 +14,7 @@ export function tile(over: Partial<FeedTile> = {}): FeedTile {
   return {
     _key: over._key ?? "k1",
     image: image(),
-    postUrl: "https://www.instagram.com/p/abc/",
+    href: "/blog",
     ...over,
   };
 }
