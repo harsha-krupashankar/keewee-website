@@ -13,7 +13,7 @@ export default function BlogPostCard({
 }) {
   return (
     <Link
-      href={`/blog/${post.slug}`}
+      href={`/blogs/${post.slug}`}
       className="group flex h-full flex-col overflow-hidden rounded-[18px] border border-border bg-white text-ink shadow-[0_8px_24px_rgba(28,27,25,0.04)] transition-all duration-150 hover:-translate-y-1 hover:border-border-soft hover:shadow-[0_16px_34px_rgba(28,27,25,0.10)]"
     >
       <div className="aspect-[16/10] overflow-hidden border-b border-border bg-surface">

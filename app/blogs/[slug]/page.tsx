@@ -37,7 +37,7 @@ export async function generateMetadata({
     settings,
     title: `${post.title} — ${settings?.title ?? "keewee.in"} blog`,
     description: post.dek,
-    path: `/blog/${slug}`,
+    path: `/blogs/${slug}`,
   });
 
   // A post with no body is a stub, not an article — indexing it would put an

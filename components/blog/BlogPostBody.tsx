@@ -140,7 +140,7 @@ export default function BlogPostBody({ post }: { post: Post }) {
           <div className="mx-auto max-w-[720px] rounded-2xl border border-dashed border-border-soft bg-surface px-6 py-8 text-center">
             <p className="font-body text-[15px] font-medium leading-relaxed text-body">
               This one&apos;s still being written — check back soon, or{" "}
-              <Link href="/blog" className="border-b-2 border-lime font-semibold text-ink hover:text-green">
+              <Link href="/blogs" className="border-b-2 border-lime font-semibold text-ink hover:text-green">
                 browse the rest of the blog
               </Link>
               .

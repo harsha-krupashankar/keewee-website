@@ -13,7 +13,7 @@ export const resolve: PresentationPluginOptions["resolve"] = {
   mainDocuments: defineDocuments([
     { route: "/", filter: `_type == "homePage"` },
     { route: "/about", filter: `_type == "aboutPage"` },
-    { route: "/blog", filter: `_type == "blogIndexPage"` },
+    { route: "/blogs", filter: `_type == "blogIndexPage"` },
     { route: "/faq", filter: `_type == "faqPage"` },
     { route: "/free-audit", filter: `_type == "freeAuditPage"` },
     { route: "/services", filter: `_type == "servicesPage"` },
@@ -21,7 +21,7 @@ export const resolve: PresentationPluginOptions["resolve"] = {
     { route: "/prompt-library", filter: `_type == "promptLibraryPage"` },
     { route: "/links", filter: `_type == "linksPage"` },
     {
-      route: "/blog/:slug",
+      route: "/blogs/:slug",
       filter: `_type == "post" && slug.current == $slug`,
     },
     {
@@ -45,7 +45,7 @@ export const resolve: PresentationPluginOptions["resolve"] = {
     }),
     blogIndexPage: defineLocations({
       select: {},
-      resolve: () => ({ locations: [{ title: "Blog", href: "/blog" }] }),
+      resolve: () => ({ locations: [{ title: "Blog", href: "/blogs" }] }),
     }),
     faqPage: defineLocations({
       select: {},
@@ -78,8 +78,8 @@ export const resolve: PresentationPluginOptions["resolve"] = {
       select: { title: "title", slug: "slug.current" },
       resolve: (doc) => ({
         locations: [
-          { title: doc?.title || "Untitled post", href: `/blog/${doc?.slug}` },
-          { title: "Blog index", href: "/blog" },
+          { title: doc?.title || "Untitled post", href: `/blogs/${doc?.slug}` },
+          { title: "Blog index", href: "/blogs" },
         ],
       }),
     }),
@@ -108,7 +108,7 @@ export const resolve: PresentationPluginOptions["resolve"] = {
     }),
     category: defineLocations({
       select: { title: "title" },
-      resolve: () => ({ locations: [{ title: "Blog index", href: "/blog" }] }),
+      resolve: () => ({ locations: [{ title: "Blog index", href: "/blogs" }] }),
     }),
     person: defineLocations({
       select: { title: "name" },

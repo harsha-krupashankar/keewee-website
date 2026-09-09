@@ -6,7 +6,7 @@ import { getLegalSlugs, getPostSlugs, getServiceSlugs } from "@/sanity/lib/conte
 const STATIC_ROUTES = [
   "",
   "/about",
-  "/blog",
+  "/blogs",
   "/faq",
   "/free-audit",
   "/legal",
@@ -33,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const postEntries = posts.map(({ slug, updatedAt }) => ({
-    url: `${SITE_URL}/blog/${slug}`,
+    url: `${SITE_URL}/blogs/${slug}`,
     lastModified: new Date(updatedAt),
   }));
 

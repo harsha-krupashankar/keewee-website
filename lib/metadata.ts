@@ -21,7 +21,7 @@ export function metadataFrom({
   title?: string;
   description?: string;
   /**
-   * This route's own path (e.g. `/blog/my-post`), used to self-reference a
+   * This route's own path (e.g. `/blogs/my-post`), used to self-reference a
    * canonical URL. Without one, a non-production host serving the same 30
    * routes (a Vercel preview alias, say) competes with the real domain for
    * every URL instead of deferring to it.

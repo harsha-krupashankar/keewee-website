@@ -25,6 +25,8 @@
     "fix-ids:dry": "tsx --env-file=.env.local scripts/fix-dotted-ids.ts --dry",
     "revert-seed": "tsx --env-file=.env.local scripts/local/revert-seed.ts",
     "revert-seed:dry": "tsx --env-file=.env.local scripts/local/revert-seed.ts --dry",
+    "blog-to-blogs": "tsx --env-file=.env.local scripts/local/blog-to-blogs.ts",
+    "blog-to-blogs:dry": "tsx --env-file=.env.local scripts/local/blog-to-blogs.ts --dry",
     "simplify-links": "tsx --env-file=.env.local scripts/local/simplify-links.ts",
     "simplify-links:dry": "tsx --env-file=.env.local scripts/local/simplify-links.ts --dry",
     "typegen": "sanity schema extract --path=./sanity/extract.json --enforce-required-fields && sanity typegen generate"

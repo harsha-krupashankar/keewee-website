@@ -232,7 +232,7 @@ docs.push({
     },
   },
   headerNav: keyed([
-    link("Blog", "/blog"),
+    link("Blog", "/blogs"),
     link("About", "/about"),
     link("FAQs", "/faq"),
     link("Newsletter", "/newsletter"),
@@ -249,7 +249,7 @@ docs.push({
       title: "Company",
       links: keyed([
         link("About", "/about"),
-        link("Blog", "/blog"),
+        link("Blog", "/blogs"),
         link("FAQs", "/faq"),
         link("Free Audit", "/free-audit"),
         link("Privacy Policy", "/legal/privacy-policy"),

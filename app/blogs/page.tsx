@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
     getBlogIndex(PUBLISHED),
     getSiteSettings(PUBLISHED),
   ]);
-  return metadataFrom({ seo: page?.seo, settings, path: "/blog" });
+  return metadataFrom({ seo: page?.seo, settings, path: "/blogs" });
 }
 
 export default function BlogRoute() {

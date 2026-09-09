@@ -25,6 +25,28 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  /**
+   * TEMPORARY — remove after 2026-12-09.
+   *
+   * `/blog` became `/blogs` on 2026-09-09. These keep old inbound links and
+   * anything a crawler still has indexed working until the new paths have been
+   * picked up.
+   *
+   * Deliberately `permanent: false` (307, not 308): a 308 is cached by the
+   * browser indefinitely and is painful to walk back if the path changes again.
+   * The cost is that a 307 passes no ranking signal to the new URL, so these
+   * should not live here forever — three months is the window. When removing
+   * them, check Search Console first: if `/blog/*` still draws real traffic,
+   * switch to `permanent: true` for a while rather than dropping straight to a
+   * 404.
+   */
+  async redirects() {
+    return [
+      { source: "/blog", destination: "/blogs", permanent: false },
+      { source: "/blog/:slug", destination: "/blogs/:slug", permanent: false },
+    ];
+  },
+
   // A conservative baseline, not a full Content-Security-Policy: CSP needs an
   // explicit allow-list across the Sanity image CDN, Google Fonts, Vercel
   // Analytics, Google Tag Manager, and the Studio's own script/style/connect

@@ -11,7 +11,7 @@ export default function BlogPostHeader({ post }: { post: Post }) {
       <Container>
         <Reveal>
           <Link
-            href="/blog"
+            href="/blogs"
             className="mb-5.5 inline-flex items-center gap-1.5 font-display text-sm font-bold text-muted hover:text-green"
           >
             ← All blogs
