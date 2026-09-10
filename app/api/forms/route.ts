@@ -53,17 +53,29 @@ const sanitize = (v: string, max: number) => {
   return /^[=+\-@\t\r]/.test(trimmed) ? `'${trimmed}` : trimmed;
 };
 
-function validate(body: unknown): Payload | null {
-  if (!body || typeof body !== "object") return null;
+/**
+ * Why a payload was rejected. Surfaced in the runtime log on every 400 so a
+ * "Something went wrong" report can be traced to a cause — the client only
+ * ever sees the status.
+ */
+type Rejection =
+  | "not-an-object"
+  | "honeypot"
+  | "bad-email"
+  | "empty-name"
+  | "unknown-form-type";
+
+function validate(body: unknown): Payload | Rejection {
+  if (!body || typeof body !== "object") return "not-an-object";
   const b = body as Record<string, unknown>;
 
   // Honeypot: a hidden field real visitors never fill in. A non-empty value
   // means a bot filled every field it could find — pretend to accept so it
   // doesn't learn to skip this field, but never forward the write.
-  if (typeof b.hp === "string" && b.hp.length > 0) return null;
+  if (typeof b.hp === "string" && b.hp.length > 0) return "honeypot";
 
   if (b.formType === "subscribe") {
-    if (!isEmail(b.email)) return null;
+    if (!isEmail(b.email)) return "bad-email";
     return {
       formType: "subscribe",
       source: sanitize(typeof b.source === "string" ? b.source : "unknown", FIELD_MAX),
@@ -72,8 +84,8 @@ function validate(body: unknown): Payload | null {
   }
 
   if (b.formType === "quote") {
-    if (!isEmail(b.email)) return null;
-    if (typeof b.name !== "string" || !b.name.trim()) return null;
+    if (!isEmail(b.email)) return "bad-email";
+    if (typeof b.name !== "string" || !b.name.trim()) return "empty-name";
     const str = (v: unknown, max = FIELD_MAX) =>
       sanitize(typeof v === "string" ? v : "", max);
     const arr = (v: unknown) =>
@@ -98,7 +110,7 @@ function validate(body: unknown): Payload | null {
     };
   }
 
-  return null;
+  return "unknown-form-type";
 }
 
 /**
@@ -135,11 +147,22 @@ export async function POST(request: NextRequest) {
   try {
     json = await request.json();
   } catch {
+    console.warn(`Form rejected: reason=invalid-json ua=${request.headers.get("user-agent") ?? ""}`);
     return Response.json({ message: "Invalid JSON" }, { status: 400 });
   }
 
   const payload = validate(json);
-  if (!payload) {
+  if (typeof payload === "string") {
+    // Enough to diagnose without logging PII: which check failed, which form,
+    // what the honeypot held (its shape tells autofill apart from a bot), and
+    // the UA so a browser/password-manager pattern shows up across reports.
+    const b = json as Record<string, unknown>;
+    console.warn(
+      `Form rejected: reason=${payload} formType=${String(b?.formType)} source=${String(b?.source)}` +
+        ` hpLength=${typeof b?.hp === "string" ? b.hp.length : 0}` +
+        ` emailShape=${typeof b?.email === "string" ? b.email.replace(/[^@.\s]/g, "x") : typeof b?.email}` +
+        ` ua=${request.headers.get("user-agent") ?? ""}`,
+    );
     return Response.json({ message: "Bad request" }, { status: 400 });
   }
 
