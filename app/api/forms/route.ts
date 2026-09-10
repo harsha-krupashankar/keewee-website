@@ -3,10 +3,11 @@ import { after, type NextRequest } from "next/server";
 /**
  * Form-submission sink.
  *
- * The four public forms (two newsletter subscribes, two custom-quote requests)
- * POST here. This route forwards each submission to a Google Apps Script Web App
- * that appends a row to one of two spreadsheets — subscribes to one, quotes to
- * the other. See `docs/google-sheets-forms.md` for the Apps Script and setup.
+ * The five public forms (two newsletter subscribes, two custom-quote requests,
+ * the free-audit booking) POST here. This route forwards each submission to a
+ * Google Apps Script Web App that appends a row to one spreadsheet, on a
+ * separate tab per form type (Subscribes / Quotes / Audits). See
+ * `docs/google-sheets-forms.md` for the Apps Script and setup.
  *
  * The Apps Script URL lives server-side (`GOOGLE_SHEETS_WEBHOOK_URL`, no
  * `NEXT_PUBLIC_` prefix) so it is never shipped to the browser and there is no
@@ -33,7 +34,17 @@ type QuotePayload = {
   message?: string;
 };
 
-type Payload = SubscribePayload | QuotePayload;
+type AuditPayload = {
+  formType: "audit";
+  source: string;
+  name: string;
+  email: string;
+  company?: string;
+  website?: string;
+  message?: string;
+};
+
+type Payload = SubscribePayload | QuotePayload | AuditPayload;
 
 const FIELD_MAX = 500;
 const MESSAGE_MAX = 2000;
@@ -60,7 +71,6 @@ const sanitize = (v: string, max: number) => {
  */
 type Rejection =
   | "not-an-object"
-  | "honeypot"
   | "bad-email"
   | "empty-name"
   | "unknown-form-type";
@@ -68,11 +78,6 @@ type Rejection =
 function validate(body: unknown): Payload | Rejection {
   if (!body || typeof body !== "object") return "not-an-object";
   const b = body as Record<string, unknown>;
-
-  // Honeypot: a hidden field real visitors never fill in. A non-empty value
-  // means a bot filled every field it could find — pretend to accept so it
-  // doesn't learn to skip this field, but never forward the write.
-  if (typeof b.hp === "string" && b.hp.length > 0) return "honeypot";
 
   if (b.formType === "subscribe") {
     if (!isEmail(b.email)) return "bad-email";
@@ -83,11 +88,25 @@ function validate(body: unknown): Payload | Rejection {
     };
   }
 
+  const str = (v: unknown, max = FIELD_MAX) => sanitize(typeof v === "string" ? v : "", max);
+
+  if (b.formType === "audit") {
+    if (!isEmail(b.email)) return "bad-email";
+    if (typeof b.name !== "string" || !b.name.trim()) return "empty-name";
+    return {
+      formType: "audit",
+      source: str(b.source) || "unknown",
+      name: sanitize(b.name.slice(0, FIELD_MAX), FIELD_MAX),
+      email: b.email,
+      company: str(b.company),
+      website: str(b.website),
+      message: str(b.message, MESSAGE_MAX),
+    };
+  }
+
   if (b.formType === "quote") {
     if (!isEmail(b.email)) return "bad-email";
     if (typeof b.name !== "string" || !b.name.trim()) return "empty-name";
-    const str = (v: unknown, max = FIELD_MAX) =>
-      sanitize(typeof v === "string" ? v : "", max);
     const arr = (v: unknown) =>
       Array.isArray(v)
         ? v
@@ -154,12 +173,10 @@ export async function POST(request: NextRequest) {
   const payload = validate(json);
   if (typeof payload === "string") {
     // Enough to diagnose without logging PII: which check failed, which form,
-    // what the honeypot held (its shape tells autofill apart from a bot), and
-    // the UA so a browser/password-manager pattern shows up across reports.
+    // and the UA so a browser/password-manager pattern shows up across reports.
     const b = json as Record<string, unknown>;
     console.warn(
       `Form rejected: reason=${payload} formType=${String(b?.formType)} source=${String(b?.source)}` +
-        ` hpLength=${typeof b?.hp === "string" ? b.hp.length : 0}` +
         ` emailShape=${typeof b?.email === "string" ? b.email.replace(/[^@.\s]/g, "x") : typeof b?.email}` +
         ` ua=${request.headers.get("user-agent") ?? ""}`,
     );

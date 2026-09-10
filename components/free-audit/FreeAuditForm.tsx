@@ -29,7 +29,7 @@ export default function FreeAuditForm({ page }: { page: FreeAuditPage }) {
     setError(null);
     try {
       await submitForm({
-        formType: "quote",
+        formType: "audit",
         source: "free-audit-page",
         name: String(form.get("name") ?? ""),
         email: String(form.get("email") ?? ""),

@@ -10,8 +10,6 @@ export type SubscribeSubmission = {
   formType: "subscribe";
   source: string;
   email: string;
-  /** Honeypot — always empty for a real visitor. See the hidden `hp` field on each form. */
-  hp?: string;
 };
 
 export type QuoteSubmission = {
@@ -26,11 +24,20 @@ export type QuoteSubmission = {
   services?: string[];
   goals?: string[];
   message?: string;
-  /** Honeypot — always empty for a real visitor. See the hidden `hp` field on each form. */
-  hp?: string;
 };
 
-export type FormSubmission = SubscribeSubmission | QuoteSubmission;
+/** The `/free-audit` booking form. Lands in its own sheet, separate from quotes. */
+export type AuditSubmission = {
+  formType: "audit";
+  source: string;
+  name: string;
+  email: string;
+  company?: string;
+  website?: string;
+  message?: string;
+};
+
+export type FormSubmission = SubscribeSubmission | QuoteSubmission | AuditSubmission;
 
 /**
  * Thrown when the submission was *throttled* rather than broken — the payload
@@ -113,7 +120,7 @@ export async function submitForm(payload: FormSubmission): Promise<void> {
 
   if (payload.formType === "subscribe") {
     pushDataLayerEvent("newsletter_signup", { source: payload.source });
-  } else if (payload.formType === "quote" && payload.source === "free-audit-page") {
+  } else if (payload.formType === "audit") {
     pushDataLayerEvent("free_audit_submit", { source: payload.source });
   }
 }
