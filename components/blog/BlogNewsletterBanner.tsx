@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Container from "@/components/Container";
-import HoneypotField from "@/components/HoneypotField";
 import Reveal from "@/components/Reveal";
 import Copy from "@/components/sanity/Copy";
 import Headline from "@/components/sanity/Headline";
@@ -21,12 +20,10 @@ export default function BlogNewsletterBanner({ page }: { page: BlogIndexPage }) 
     setSubmitting(true);
     setError(null);
     try {
-      const hp = new FormData(e.currentTarget as HTMLFormElement).get("hp");
       await submitForm({
         formType: "subscribe",
         source: "blog-newsletter-banner",
         email,
-        hp: String(hp ?? ""),
       });
       setSubscribed(true);
     } catch (err) {
@@ -74,7 +71,6 @@ export default function BlogNewsletterBanner({ page }: { page: BlogIndexPage }) 
                 </div>
               ) : (
                 <form onSubmit={handleSubmit}>
-                  <HoneypotField />
                   <div className="mb-3 flex gap-2.5">
                     <label htmlFor="blog-newsletter-email" className="sr-only">
                       Work email

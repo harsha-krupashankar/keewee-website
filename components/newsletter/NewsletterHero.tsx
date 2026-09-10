@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Container from "@/components/Container";
-import HoneypotField from "@/components/HoneypotField";
 import Reveal from "@/components/Reveal";
 import Copy from "@/components/sanity/Copy";
 import Headline from "@/components/sanity/Headline";
@@ -21,12 +20,10 @@ export default function NewsletterHero({ page }: { page: NewsletterPage }) {
     setSubmitting(true);
     setError(null);
     try {
-      const hp = new FormData(e.currentTarget as HTMLFormElement).get("hp");
       await submitForm({
         formType: "subscribe",
         source: "newsletter-page",
         email,
-        hp: String(hp ?? ""),
       });
       setSubscribed(true);
     } catch (err) {
@@ -112,7 +109,6 @@ export default function NewsletterHero({ page }: { page: NewsletterPage }) {
               </div>
             ) : (
               <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
-                <HoneypotField />
                 <label
                   htmlFor="newsletter-email"
                   className="font-display text-[15px] font-extrabold tracking-[-0.01em] text-ink"

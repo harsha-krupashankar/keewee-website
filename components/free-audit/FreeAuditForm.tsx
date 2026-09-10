@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Container from "@/components/Container";
-import HoneypotField from "@/components/HoneypotField";
 import Reveal from "@/components/Reveal";
 import { SubmissionThrottledError, submitForm } from "@/lib/submit-form";
 import type { FreeAuditPage } from "@/sanity/lib/types";
@@ -36,7 +35,6 @@ export default function FreeAuditForm({ page }: { page: FreeAuditPage }) {
         company: String(form.get("company") ?? ""),
         website: String(form.get("website") ?? ""),
         message: String(form.get("message") ?? ""),
-        hp: String(form.get("hp") ?? ""),
       });
       setSubmitted(true);
     } catch (err) {
@@ -88,7 +86,6 @@ export default function FreeAuditForm({ page }: { page: FreeAuditPage }) {
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
-                <HoneypotField />
                 <div className="mb-5.5 grid gap-4.5 sm:grid-cols-2">
                   <label className="flex flex-col gap-1.5">
                     <span className="font-display text-[13px] font-bold text-ink">Full Name</span>

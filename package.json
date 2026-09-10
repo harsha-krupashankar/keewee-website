@@ -10,8 +10,6 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "seed": "tsx --env-file=.env.local scripts/seed.ts",
-    "seed:dry": "tsx --env-file=.env.local scripts/seed.ts --dry",
     "update-nav": "tsx --env-file=.env.local scripts/local/update-nav.ts",
     "update-socials": "tsx --env-file=.env.local scripts/local/update-socials.ts",
     "update-socials:dry": "tsx --env-file=.env.local scripts/local/update-socials.ts --dry",
