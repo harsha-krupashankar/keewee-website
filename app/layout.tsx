@@ -63,6 +63,12 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
+      // globals.css sets `scroll-behavior: smooth` for in-page anchors. Since
+      // Next 16 the router only suspends it during route transitions when this
+      // attribute is present; without it the reset-to-top on navigation is
+      // animated, gets cut off by the incoming render, and strands the new page
+      // partway down.
+      data-scroll-behavior="smooth"
       className={`${archivo.variable} ${bricolage.variable} ${bangers.variable}`}
     >
       <body>

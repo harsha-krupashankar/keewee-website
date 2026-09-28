@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import PerspectiveGate from "@/components/PerspectiveGate";
 import SiteShell from "@/components/SiteShell";
 import LegalDocument from "@/components/legal/LegalDocument";
+import ReadingProgress from "@/components/legal/ReadingProgress";
 import { metadataFrom } from "@/lib/metadata";
 import {
   getLegalDoc,
@@ -52,7 +53,7 @@ async function Content({ slug, opts }: { slug: string; opts: FetchOptions }) {
   if (!doc) notFound();
 
   return (
-    <SiteShell opts={opts}>
+    <SiteShell opts={opts} navAccessory={<ReadingProgress />}>
       <LegalDocument doc={doc} />
     </SiteShell>
   );

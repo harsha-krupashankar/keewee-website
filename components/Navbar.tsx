@@ -13,12 +13,15 @@ type NavbarProps = {
   siteName: string;
   links?: NavItem[] | null;
   cta?: LinkValue | null;
+  /** Pinned flush under the header's bottom edge, so it tracks the shrink. */
+  accessory?: React.ReactNode;
 };
 
 export default function Navbar({
   siteName,
   links = [],
   cta,
+  accessory,
 }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   /** Label of the open dropdown, or null. Only one can be open at a time. */
@@ -79,6 +82,22 @@ export default function Navbar({
       >
         <Link
           href="/"
+          onClick={(event) => {
+            // A same-URL navigation changes no route segment, so the router has
+            // nothing to scroll. Take the visitor back to the top ourselves.
+            if (
+              pathname !== "/" ||
+              event.button !== 0 ||
+              event.metaKey ||
+              event.ctrlKey ||
+              event.shiftKey ||
+              event.altKey
+            )
+              return;
+            event.preventDefault();
+            setMobileOpen(false);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
           className="flex items-center gap-2 font-display text-[22px] font-extrabold tracking-tight text-ink transition-transform duration-150 hover:-rotate-1"
         >
           <LogoMark className="text-green" />
@@ -200,6 +219,14 @@ export default function Navbar({
               )}
             </Container>
           </div>
+        </div>
+      )}
+
+      {/* `top-full` measures from inside the border, so `mt-px` clears the
+          header's 1px `border-b` rather than painting over it. */}
+      {accessory && (
+        <div className="pointer-events-none absolute inset-x-0 top-full mt-px">
+          {accessory}
         </div>
       )}
     </header>

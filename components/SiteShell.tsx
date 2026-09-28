@@ -13,17 +13,20 @@ import type { FetchOptions } from "@/sanity/lib/live";
  *
  * The chrome is deliberately not configurable: every route gets the same nav
  * links, the same header button, and the same footer, all straight from Site
- * settings. `mainClassName` is the only knob, and it only sets the page
- * background behind the sections.
+ * settings. `mainClassName` sets the page background behind the sections;
+ * `navAccessory` hangs a strip (e.g. a reading-progress bar) off the header's
+ * bottom edge.
  */
 export default async function SiteShell({
   opts,
   children,
   mainClassName = "bg-paper",
+  navAccessory,
 }: {
   opts: FetchOptions;
   children: React.ReactNode;
   mainClassName?: string;
+  navAccessory?: React.ReactNode;
 }) {
   const settings = await getSiteSettings(opts);
 
@@ -33,6 +36,7 @@ export default async function SiteShell({
         siteName={settings?.title ?? "keewee.in"}
         links={settings?.headerNav}
         cta={settings?.headerCta}
+        accessory={navAccessory}
       />
       <main id="main-content" className={mainClassName}>
         {children}

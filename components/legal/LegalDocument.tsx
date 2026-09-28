@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Container from "@/components/Container";
 import { formatFullDate } from "@/lib/format";
 import type { LegalDoc } from "@/sanity/lib/types";
@@ -16,7 +16,6 @@ export default function LegalDocument({ doc }: { doc: LegalDoc }) {
   }));
 
   const [active, setActive] = useState(sections[0]?.anchor ?? "");
-  const progressRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let raf = 0;
@@ -24,11 +23,6 @@ export default function LegalDocument({ doc }: { doc: LegalDoc }) {
       if (raf) return;
       raf = requestAnimationFrame(() => {
         raf = 0;
-        const de = document.documentElement;
-        const max = de.scrollHeight - de.clientHeight;
-        const p = max > 0 ? de.scrollTop / max : 0;
-        if (progressRef.current) progressRef.current.style.width = `${p * 100}%`;
-
         const secs = Array.from(
           document.querySelectorAll<HTMLElement>("[data-legal-section]")
         );
@@ -53,14 +47,6 @@ export default function LegalDocument({ doc }: { doc: LegalDoc }) {
 
   return (
     <>
-      {/* reading progress */}
-      <div className="sticky top-[73px] z-30 h-[3px] w-full bg-border">
-        <div
-          ref={progressRef}
-          className="h-full w-0 bg-green transition-[width] duration-100 ease-linear"
-        />
-      </div>
-
       <header className="relative overflow-hidden bg-ink py-14 sm:py-16">
         <div
           className="pointer-events-none absolute inset-0 opacity-5"
