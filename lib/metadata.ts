@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { RSS_PATH } from "@/lib/discovery";
 import { SITE_URL } from "@/lib/site";
 import { urlFor } from "@/sanity/lib/image";
 import type { Seo, SiteSettings } from "@/sanity/lib/types";
@@ -49,7 +50,13 @@ export function metadataFrom({
     metadataBase: new URL(SITE_URL),
     title: resolvedTitle,
     description: resolvedDescription,
-    alternates: path ? { canonical: path } : undefined,
+    // Next replaces `alternates` wholesale per route rather than merging it, so
+    // the feed link is set here — the one place every route's metadata passes
+    // through — instead of once on the root layout.
+    alternates: {
+      ...(path ? { canonical: path } : {}),
+      types: { "application/rss+xml": [{ url: RSS_PATH, title: siteName }] },
+    },
     openGraph: {
       title: resolvedTitle,
       description: resolvedDescription,

@@ -12,6 +12,7 @@ export const siteSettings = defineType({
     { name: "general", title: "General", default: true },
     { name: "navigation", title: "Navigation" },
     { name: "seo", title: "SEO defaults" },
+    { name: "ai", title: "AI discovery" },
   ],
   fields: [
     defineField({
@@ -136,6 +137,14 @@ export const siteSettings = defineType({
       type: "seo",
       group: "seo",
       description: "Used whenever a page has not set its own.",
+    }),
+    defineField({
+      name: "aiDiscovery",
+      title: "AI discovery",
+      type: "aiDiscovery",
+      group: "ai",
+      description:
+        "Feeds /llms.txt and the /ai/*.json files that AI search engines read to understand the site.",
     }),
   ],
   preview: {

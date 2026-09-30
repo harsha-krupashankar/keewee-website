@@ -4,10 +4,11 @@ import { Archivo, Bricolage_Grotesque, Bangers } from "next/font/google";
 import { VisualEditing } from "next-sanity/visual-editing";
 import { Analytics } from "@vercel/analytics/next";
 
+import JsonLd from "@/components/JsonLd";
 import GoogleTagManager from "@/components/analytics/GoogleTagManager";
 import DraftModeBanner from "@/components/sanity/DraftModeBanner";
+import { siteGraph } from "@/lib/jsonLd";
 import { metadataFrom } from "@/lib/metadata";
-import { SITE_URL } from "@/lib/site";
 import { getSiteSettings } from "@/sanity/lib/content";
 import { PUBLISHED, SanityLive } from "@/sanity/lib/live";
 import "./globals.css";
@@ -48,18 +49,6 @@ export default async function RootLayout({
   const { isEnabled: isDraftMode } = await draftMode();
   const settings = await getSiteSettings(PUBLISHED);
 
-  const organizationJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: settings?.title ?? "keewee",
-    url: SITE_URL,
-    ...(settings?.tagline ? { slogan: settings.tagline } : {}),
-    ...(settings?.contactEmail ? { email: settings.contactEmail } : {}),
-    ...(settings?.socialLinks?.length
-      ? { sameAs: settings.socialLinks.map((s) => s.href) }
-      : {}),
-  };
-
   return (
     <html
       lang="en"
@@ -70,16 +59,19 @@ export default async function RootLayout({
       // partway down.
       data-scroll-behavior="smooth"
       className={`${archivo.variable} ${bricolage.variable} ${bangers.variable}`}
+      // The script below adds `js` before hydration, so React's className
+      // won't match the DOM on this one element.
+      suppressHydrationWarning
     >
       <body>
+        {/* Runs before any content is parsed: scroll-reveal content starts
+            hidden only when JS is there to reveal it. See `globals.css`. */}
         <script
-          type="application/ld+json"
-          // `<` is escaped so a CMS string containing "</script>" can't break
-          // out of the tag — JSON.stringify alone doesn't escape it.
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationJsonLd).replace(/</g, "\\u003c"),
+            __html: "document.documentElement.classList.add('js')",
           }}
         />
+        <JsonLd data={siteGraph(settings)} />
         {children}
         {isDraftMode && (
           <>

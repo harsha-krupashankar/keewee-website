@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import JsonLd from "@/components/JsonLd";
 import PerspectiveGate from "@/components/PerspectiveGate";
 import SiteShell from "@/components/SiteShell";
 import Faq from "@/components/home/Faq";
@@ -13,6 +14,7 @@ import Problem from "@/components/home/Problem";
 import Proof from "@/components/home/Proof";
 import WhoWeWorkWith from "@/components/home/WhoWeWorkWith";
 import WhyKeewee from "@/components/home/WhyKeewee";
+import { faqPage, homeWebPage } from "@/lib/jsonLd";
 import { metadataFrom } from "@/lib/metadata";
 import { getHomePage, getSiteSettings } from "@/sanity/lib/content";
 import { PUBLISHED, type FetchOptions } from "@/sanity/lib/live";
@@ -38,6 +40,7 @@ async function Content({ opts }: { opts: FetchOptions }) {
 
   return (
     <SiteShell opts={opts}>
+      <JsonLd data={[homeWebPage(page), faqPage(page.faqItems)]} />
       <Hero page={page} />
       <Marquee text={settings?.marqueeText} />
       <Problem page={page} />

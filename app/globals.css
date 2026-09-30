@@ -198,6 +198,21 @@
   }
 }
 
+/**
+ * Scroll reveal (`components/Reveal.tsx`). The hidden starting state only
+ * applies once the inline script in the root layout has tagged `<html>` with
+ * `js`, so crawlers and no-JS readers get the text as plain visible content
+ * rather than `opacity: 0` inline styles — which AI audits flag as cloaking.
+ */
+.js .kw-reveal:not([data-visible]) {
+  opacity: 0;
+  transform: translateY(var(--reveal-y, 22px));
+}
+
+.js .kw-reveal[data-visible] {
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
 /** Horizontal strips that scroll by swipe, without the scrollbar showing. */
 .kw-noscroll {
   scrollbar-width: none;

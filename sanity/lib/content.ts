@@ -173,6 +173,39 @@ export async function getServiceSlugs() {
   return slugs ?? [];
 }
 
+// --- AI discovery ---------------------------------------------------------
+
+/**
+ * Backs the machine-readable routes (`/llms.txt`, `/ai/*.json`, the RSS feed).
+ * Always published: these are read by crawlers, never in the Presentation tool.
+ * Tagged with every type the query reads, dereferenced ones included.
+ */
+export async function getDiscovery() {
+  "use cache";
+  return run<T.Discovery>(
+    { perspective: "published", stega: false },
+    {
+      query: Q.DISCOVERY_QUERY,
+      tags: [
+        TAG.siteSettings,
+        TAG.homePage,
+        TAG.aboutPage,
+        TAG.servicesPage,
+        TAG.blogIndexPage,
+        TAG.faqPage,
+        TAG.freeAuditPage,
+        TAG.newsletterPage,
+        TAG.promptLibraryPage,
+        TAG.servicePage,
+        TAG.post,
+        TAG.person,
+        TAG.category,
+        TAG.faqGroup,
+      ],
+    }
+  );
+}
+
 // --- Legal ----------------------------------------------------------------
 
 export async function getLegalDoc(slug: string, opts: FetchOptions) {

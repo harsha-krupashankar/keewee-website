@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
 
 type RevealProps = {
   children: ReactNode;
@@ -11,8 +11,8 @@ type RevealProps = {
   /**
    * Renders visible immediately instead of waiting on the scroll observer.
    * Reserve for above-the-fold content — a hero `<h1>` in particular — so it
-   * never depends on JS hydration to appear: without this, the server HTML
-   * ships `opacity:0` and a slow or blocked bundle leaves the page blank.
+   * never depends on JS hydration to appear: without this, a slow or blocked
+   * bundle leaves it hidden (the `.js` flag is set before hydration).
    */
   eager?: boolean;
 };
@@ -50,12 +50,11 @@ export default function Reveal({
     <div
       ref={ref}
       id={id}
-      className={`transition duration-700 ease-out ${className}`}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : `translateY(${y}px)`,
-        transitionDelay: visible ? `${delay}ms` : "0ms",
-      }}
+      // The hidden state lives in `globals.css` under `.js`, not inline, so
+      // the server HTML never ships the content as `opacity: 0`.
+      className={`kw-reveal transition duration-700 ease-out ${className}`}
+      data-visible={visible || undefined}
+      style={{ "--reveal-y": `${y}px`, "--reveal-delay": `${delay}ms` } as CSSProperties}
     >
       {children}
     </div>

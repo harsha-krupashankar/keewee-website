@@ -4,6 +4,30 @@ import { headers } from "next/headers";
 import { CANONICAL_HOSTS, SITE_URL } from "@/lib/site";
 
 /**
+ * AI search and assistant crawlers. Both the citation bots (answer engines
+ * fetching a page to quote it) and the training bots are allowed: for an
+ * agency, being in the model's memory is as valuable as being cited live.
+ */
+const AI_CRAWLERS = [
+  "OAI-SearchBot",
+  "ChatGPT-User",
+  "GPTBot",
+  "ClaudeBot",
+  "Claude-SearchBot",
+  "Claude-User",
+  "anthropic-ai",
+  "PerplexityBot",
+  "Perplexity-User",
+  "Google-Extended",
+  "Applebot-Extended",
+  "Bingbot",
+  "DuckAssistBot",
+  "meta-externalagent",
+  "Amazonbot",
+  "cohere-ai",
+];
+
+/**
  * Allow crawling of the public site. The Studio and API routes carry no
  * indexable content, so keep them out of search results.
  *
@@ -22,12 +46,16 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
     return { rules: { userAgent: "*", disallow: "/" } };
   }
 
+  const disallow = ["/studio", "/api"];
+
   return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-      disallow: ["/studio", "/api"],
-    },
+    rules: [
+      // Named explicitly even though `*` already allows them: some AI
+      // crawlers and GEO audits treat an explicit group as the opt-in signal,
+      // and it documents intent if a blanket rule ever tightens.
+      { userAgent: AI_CRAWLERS, allow: "/", disallow },
+      { userAgent: "*", allow: "/", disallow },
+    ],
     sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

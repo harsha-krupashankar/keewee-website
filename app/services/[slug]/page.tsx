@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import JsonLd from "@/components/JsonLd";
 import PerspectiveGate from "@/components/PerspectiveGate";
 import SiteShell from "@/components/SiteShell";
 import ServiceDifferently from "@/components/services/ServiceDifferently";
@@ -11,6 +12,7 @@ import ServiceProblem from "@/components/services/ServiceProblem";
 import ServiceQuoteForm from "@/components/services/ServiceQuoteForm";
 import ServiceTalkToUs from "@/components/services/ServiceTalkToUs";
 import ServiceTestimonial from "@/components/services/ServiceTestimonial";
+import { faqPage, service } from "@/lib/jsonLd";
 import { metadataFrom } from "@/lib/metadata";
 import {
   getServicePage,
@@ -67,6 +69,7 @@ async function Content({ slug, opts }: { slug: string; opts: FetchOptions }) {
 
   return (
     <SiteShell opts={opts}>
+      <JsonLd data={[service(doc), faqPage(doc.faq)]} />
       <ServiceHero doc={doc} cta={cta} />
       <ServiceProblem doc={doc} />
       <ServiceOfferings doc={doc} />

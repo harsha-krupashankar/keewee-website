@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import JsonLd from "@/components/JsonLd";
 import PerspectiveGate from "@/components/PerspectiveGate";
 import SiteShell from "@/components/SiteShell";
 import BlogAuthorBio from "@/components/blog/BlogAuthorBio";
 import BlogPostBody from "@/components/blog/BlogPostBody";
 import BlogPostHeader from "@/components/blog/BlogPostHeader";
 import BlogRelatedPosts from "@/components/blog/BlogRelatedPosts";
+import { blogPosting } from "@/lib/jsonLd";
 import { metadataFrom } from "@/lib/metadata";
 import {
   getPost,
@@ -64,6 +66,7 @@ async function Content({ slug, opts }: { slug: string; opts: FetchOptions }) {
 
   return (
     <SiteShell opts={opts}>
+      <JsonLd data={blogPosting(post)} />
       <BlogPostHeader post={post} />
       <BlogPostBody post={post} />
       <BlogAuthorBio post={post} />

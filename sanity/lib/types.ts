@@ -137,6 +137,7 @@ export type SiteSettings = {
 // --- Pages ----------------------------------------------------------------
 
 export type HomePage = {
+  _updatedAt: string;
   heroBadge?: string | null;
   heroHeadline?: Headline | null;
   heroIntro?: RichText | null;
@@ -415,6 +416,7 @@ export type PostSummary = {
 };
 
 export type Post = PostSummary & {
+  _updatedAt: string;
   body?: RichText | null;
   author?: Person | null;
   seo?: Seo | null;
@@ -455,6 +457,55 @@ export type ServicePage = {
   talkHeadline?: string | null;
   talkBody?: string | null;
   seo?: Seo | null;
+};
+
+// --- AI discovery ---------------------------------------------------------
+
+export type DiscoveryPageType =
+  | "homePage"
+  | "aboutPage"
+  | "servicesPage"
+  | "blogIndexPage"
+  | "faqPage"
+  | "freeAuditPage"
+  | "newsletterPage"
+  | "promptLibraryPage";
+
+export type Discovery = {
+  settings?: {
+    title: string;
+    contactEmail: string;
+    socialLinks?: SocialLink[] | null;
+    defaultSeo?: { title?: string | null; description?: string | null } | null;
+    aiDiscovery?: {
+      summary?: string | null;
+      pagesHeading?: string | null;
+      servicesHeading?: string | null;
+      postsHeading?: string | null;
+    } | null;
+  } | null;
+  pages: {
+    _type: DiscoveryPageType;
+    title?: string | null;
+    description?: string | null;
+  }[];
+  services: {
+    category: string;
+    slug: string;
+    heroSub: string;
+    description?: string | null;
+    offerings?: { title: string }[] | null;
+  }[];
+  posts: {
+    title: string;
+    slug: string;
+    dek: string;
+    publishedAt: string;
+    _updatedAt: string;
+    author?: string | null;
+    category?: string | null;
+  }[];
+  faqs: FaqItem[];
 };
 
 // --- Legal ----------------------------------------------------------------

@@ -589,6 +589,15 @@ export type SiteSettings = {
   >;
   footerNote?: string;
   defaultSeo?: Seo;
+  aiDiscovery?: AiDiscovery;
+};
+
+export type AiDiscovery = {
+  _type: "aiDiscovery";
+  summary: string;
+  pagesHeading: string;
+  servicesHeading: string;
+  postsHeading: string;
 };
 
 export type CookieConsent = {
@@ -945,6 +954,7 @@ export type AllSanitySchemaTypes =
   | AboutPage
   | HomePage
   | SiteSettings
+  | AiDiscovery
   | CookieConsent
   | FeedTile
   | SanityImageCrop
@@ -1058,8 +1068,9 @@ export type SITE_SETTINGS_QUERY_RESULT = {
 
 // Source: sanity/lib/queries.ts
 // Variable: HOME_PAGE_QUERY
-// Query: *[_type == "homePage"][0]{    heroBadge,    heroHeadline,    heroIntro,    heroCta { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },    heroFootnote,    heroStickerA,    heroStickerB,    problemHeader { eyebrow, headline, sticker, intro },    problemBody,    lookalikes,    problemSticker,    problemCaption,    funnelHeader { eyebrow, headline, sticker, intro },    funnelStages[] {      title,      tag,      description,      bullets,      barWidth,      "href": servicePage->slug.current    },    funnelOutcomeSticker,    funnelOutcomeText,    funnelOutcomeCta { label, href, openInNewTab },    whyHeader { eyebrow, headline, sticker, intro },    whyReasons[] { title, description, tag },    whoHeader { eyebrow, headline, sticker, intro },    whoSegments[] { title, description, tag },    proofHeader { eyebrow, headline, sticker, intro },    proofBody,    proofCta { label, href, openInNewTab },    proofSticker,    auditHeader { eyebrow, headline, sticker, intro },    auditBody,    auditCta { label, href, openInNewTab },    auditSticker,    auditListTitle,    auditItems,    faqHeader { eyebrow, headline, sticker, intro },    faqItems[] { question, answer },    ctaHeadline,    ctaBody,    ctaButtons { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },    seo { title, description, noIndex, image {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions} }  }
+// Query: *[_type == "homePage"][0]{    _updatedAt,    heroBadge,    heroHeadline,    heroIntro,    heroCta { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },    heroFootnote,    heroStickerA,    heroStickerB,    problemHeader { eyebrow, headline, sticker, intro },    problemBody,    lookalikes,    problemSticker,    problemCaption,    funnelHeader { eyebrow, headline, sticker, intro },    funnelStages[] {      title,      tag,      description,      bullets,      barWidth,      "href": servicePage->slug.current    },    funnelOutcomeSticker,    funnelOutcomeText,    funnelOutcomeCta { label, href, openInNewTab },    whyHeader { eyebrow, headline, sticker, intro },    whyReasons[] { title, description, tag },    whoHeader { eyebrow, headline, sticker, intro },    whoSegments[] { title, description, tag },    proofHeader { eyebrow, headline, sticker, intro },    proofBody,    proofCta { label, href, openInNewTab },    proofSticker,    auditHeader { eyebrow, headline, sticker, intro },    auditBody,    auditCta { label, href, openInNewTab },    auditSticker,    auditListTitle,    auditItems,    faqHeader { eyebrow, headline, sticker, intro },    faqItems[] { question, answer },    ctaHeadline,    ctaBody,    ctaButtons { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },    seo { title, description, noIndex, image {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions} }  }
 export type HOME_PAGE_QUERY_RESULT = {
+  _updatedAt: string;
   heroBadge: string | null;
   heroHeadline: Headline;
   heroIntro: RichText | null;
@@ -1821,9 +1832,10 @@ export type POST_SLUGS_QUERY_RESULT = Array<{
 
 // Source: sanity/lib/queries.ts
 // Variable: POST_QUERY
-// Query: *[_type == "post" && slug.current == $slug][0]{    _id,    title,    "slug": slug.current,    dek,    publishedAt,    "readTime": coalesce(      readTime,      math::max([1, round(length(pt::text(body)) / 5 / 220)])    ),    heroImage {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    category-> { _id, title, "slug": slug.current },    author-> {  _id,  name,  role,  initials,  photo {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  bio,  funFact},    body[]{      ...,      _type == "figure" => { ..., "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions }    },    seo { title, description, noIndex, image {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions} },    "related": select(      count(related) > 0 => related[]-> {  _id,  title,  "slug": slug.current,  dek,  publishedAt,  "readTime": coalesce(    readTime,    math::max([1, round(length(pt::text(body)) / 5 / 220)])  ),  heroImage {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  category-> { _id, title, "slug": slug.current }},      *[_type == "post" && slug.current != $slug && category._ref == ^.category._ref]        | order(publishedAt desc)[0...3] {  _id,  title,  "slug": slug.current,  dek,  publishedAt,  "readTime": coalesce(    readTime,    math::max([1, round(length(pt::text(body)) / 5 / 220)])  ),  heroImage {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  category-> { _id, title, "slug": slug.current }}    )  }
+// Query: *[_type == "post" && slug.current == $slug][0]{    _id,    _updatedAt,    title,    "slug": slug.current,    dek,    publishedAt,    "readTime": coalesce(      readTime,      math::max([1, round(length(pt::text(body)) / 5 / 220)])    ),    heroImage {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},    category-> { _id, title, "slug": slug.current },    author-> {  _id,  name,  role,  initials,  photo {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  bio,  funFact},    body[]{      ...,      _type == "figure" => { ..., "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions }    },    seo { title, description, noIndex, image {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions} },    "related": select(      count(related) > 0 => related[]-> {  _id,  title,  "slug": slug.current,  dek,  publishedAt,  "readTime": coalesce(    readTime,    math::max([1, round(length(pt::text(body)) / 5 / 220)])  ),  heroImage {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  category-> { _id, title, "slug": slug.current }},      *[_type == "post" && slug.current != $slug && category._ref == ^.category._ref]        | order(publishedAt desc)[0...3] {  _id,  title,  "slug": slug.current,  dek,  publishedAt,  "readTime": coalesce(    readTime,    math::max([1, round(length(pt::text(body)) / 5 / 220)])  ),  heroImage {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},  category-> { _id, title, "slug": slug.current }}    )  }
 export type POST_QUERY_RESULT = {
   _id: string;
+  _updatedAt: string;
   title: string;
   slug: string;
   dek: string;
@@ -2007,6 +2019,94 @@ export type SERVICE_PAGE_QUERY_RESULT = {
 } | null;
 
 // Source: sanity/lib/queries.ts
+// Variable: DISCOVERY_QUERY
+// Query: {  "settings": *[_type == "siteSettings"][0]{    title,    contactEmail,    socialLinks[] { platform, href },    defaultSeo { title, description },    aiDiscovery { summary, pagesHeading, servicesHeading, postsHeading }  },  "pages": *[_type in [    "homePage", "aboutPage", "servicesPage", "blogIndexPage", "faqPage",    "freeAuditPage", "newsletterPage", "promptLibraryPage"  ] && seo.noIndex != true]{    _type,    "title": seo.title,    "description": seo.description  },  "services": *[_type == "servicePage" && defined(slug.current) && seo.noIndex != true]    | order(category asc){      category,      "slug": slug.current,      heroSub,      "description": seo.description,      offerings[] { title }    },  "posts": *[_type == "post" && defined(slug.current) && count(body) > 0 && seo.noIndex != true]    | order(publishedAt desc){      title,      "slug": slug.current,      dek,      publishedAt,      _updatedAt,      "author": author->name,      "category": category->title    },  "faqs": [    ...*[_type == "homePage"][0].faqItems[] { question, answer },    ...(*[_type == "faqGroup"] | order(order asc, title asc))[].items[] { question, answer }  ]}
+export type DISCOVERY_QUERY_RESULT = {
+  settings: {
+    title: string;
+    contactEmail: string;
+    socialLinks: Array<{
+      platform: "facebook" | "instagram" | "linkedin" | "x" | "youtube";
+      href: string;
+    }> | null;
+    defaultSeo: {
+      title: string | null;
+      description: string | null;
+    } | null;
+    aiDiscovery: {
+      summary: string;
+      pagesHeading: string;
+      servicesHeading: string;
+      postsHeading: string;
+    } | null;
+  } | null;
+  pages: Array<
+    | {
+        _type: "aboutPage";
+        title: string | null;
+        description: string | null;
+      }
+    | {
+        _type: "blogIndexPage";
+        title: string | null;
+        description: string | null;
+      }
+    | {
+        _type: "faqPage";
+        title: string | null;
+        description: string | null;
+      }
+    | {
+        _type: "freeAuditPage";
+        title: string | null;
+        description: string | null;
+      }
+    | {
+        _type: "homePage";
+        title: string | null;
+        description: string | null;
+      }
+    | {
+        _type: "newsletterPage";
+        title: string | null;
+        description: string | null;
+      }
+    | {
+        _type: "promptLibraryPage";
+        title: string | null;
+        description: string | null;
+      }
+    | {
+        _type: "servicesPage";
+        title: string | null;
+        description: string | null;
+      }
+  >;
+  services: Array<{
+    category: string;
+    slug: string;
+    heroSub: string;
+    description: string | null;
+    offerings: Array<{
+      title: string;
+    }>;
+  }>;
+  posts: Array<{
+    title: string;
+    slug: string;
+    dek: string;
+    publishedAt: string;
+    _updatedAt: string;
+    author: string;
+    category: string;
+  }>;
+  faqs: Array<{
+    question: string;
+    answer: RichText;
+  }>;
+};
+
+// Source: sanity/lib/queries.ts
 // Variable: LEGAL_SLUGS_QUERY
 // Query: *[_type == "legalDoc" && defined(slug.current)] | order(order asc){ "slug": slug.current, "updatedAt": _updatedAt }
 export type LEGAL_SLUGS_QUERY_RESULT = Array<{
@@ -2108,7 +2208,7 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '\n  *[_type == "siteSettings"][0]{\n    title,\n    logoMark,\n    tagline,\n    contactEmail,\n    marqueeText,\n    cookieConsent {\n      enabled,\n      title,\n      message,\n      acceptLabel,\n      declineLabel,\n      policyLink { label, href, openInNewTab }\n    },\n    headerNav[] {\n      _type,\n      _type == "link" => { label, href, openInNewTab },\n      _type == "navGroup" => { label, links[] { label, href, openInNewTab } }\n    },\n    headerCta { label, href, openInNewTab },\n    footerGroups[] {\n      title,\n      links[] { label, href, openInNewTab },\n      cta { label, href, openInNewTab }\n    },\n    footerNote,\n    socialLinks[] { platform, href },\n    defaultSeo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': SITE_SETTINGS_QUERY_RESULT;
-    '\n  *[_type == "homePage"][0]{\n    heroBadge,\n    heroHeadline,\n    heroIntro,\n    heroCta { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },\n    heroFootnote,\n    heroStickerA,\n    heroStickerB,\n\n    problemHeader { eyebrow, headline, sticker, intro },\n    problemBody,\n    lookalikes,\n    problemSticker,\n    problemCaption,\n\n    funnelHeader { eyebrow, headline, sticker, intro },\n    funnelStages[] {\n      title,\n      tag,\n      description,\n      bullets,\n      barWidth,\n      "href": servicePage->slug.current\n    },\n    funnelOutcomeSticker,\n    funnelOutcomeText,\n    funnelOutcomeCta { label, href, openInNewTab },\n\n    whyHeader { eyebrow, headline, sticker, intro },\n    whyReasons[] { title, description, tag },\n\n    whoHeader { eyebrow, headline, sticker, intro },\n    whoSegments[] { title, description, tag },\n\n    proofHeader { eyebrow, headline, sticker, intro },\n    proofBody,\n    proofCta { label, href, openInNewTab },\n    proofSticker,\n\n    auditHeader { eyebrow, headline, sticker, intro },\n    auditBody,\n    auditCta { label, href, openInNewTab },\n    auditSticker,\n    auditListTitle,\n    auditItems,\n\n    faqHeader { eyebrow, headline, sticker, intro },\n    faqItems[] { question, answer },\n\n    ctaHeadline,\n    ctaBody,\n    ctaButtons { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },\n\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': HOME_PAGE_QUERY_RESULT;
+    '\n  *[_type == "homePage"][0]{\n    _updatedAt,\n    heroBadge,\n    heroHeadline,\n    heroIntro,\n    heroCta { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },\n    heroFootnote,\n    heroStickerA,\n    heroStickerB,\n\n    problemHeader { eyebrow, headline, sticker, intro },\n    problemBody,\n    lookalikes,\n    problemSticker,\n    problemCaption,\n\n    funnelHeader { eyebrow, headline, sticker, intro },\n    funnelStages[] {\n      title,\n      tag,\n      description,\n      bullets,\n      barWidth,\n      "href": servicePage->slug.current\n    },\n    funnelOutcomeSticker,\n    funnelOutcomeText,\n    funnelOutcomeCta { label, href, openInNewTab },\n\n    whyHeader { eyebrow, headline, sticker, intro },\n    whyReasons[] { title, description, tag },\n\n    whoHeader { eyebrow, headline, sticker, intro },\n    whoSegments[] { title, description, tag },\n\n    proofHeader { eyebrow, headline, sticker, intro },\n    proofBody,\n    proofCta { label, href, openInNewTab },\n    proofSticker,\n\n    auditHeader { eyebrow, headline, sticker, intro },\n    auditBody,\n    auditCta { label, href, openInNewTab },\n    auditSticker,\n    auditListTitle,\n    auditItems,\n\n    faqHeader { eyebrow, headline, sticker, intro },\n    faqItems[] { question, answer },\n\n    ctaHeadline,\n    ctaBody,\n    ctaButtons { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },\n\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': HOME_PAGE_QUERY_RESULT;
     '\n  *[_type == "aboutPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    whatWeAreEyebrow,\n    whatWeAreBody,\n    missionEyebrow,\n    missionStatement,\n    storyEyebrow,\n    storyHeadline,\n    storyBeats,\n    teamEyebrow,\n    teamHeadline,\n    teamSticker,\n    teamIntro,\n    ctaEyebrow,\n    ctaHeadline,\n    ctaBody,\n    ctaButtons { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} },\n    "team": *[_type == "person" && onTeamPage == true] | order(order asc, name asc) {\n  _id,\n  name,\n  role,\n  initials,\n  photo {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  bio,\n  funFact\n}\n  }\n': ABOUT_PAGE_QUERY_RESULT;
     '\n  *[_type == "faqPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    ctaHeadline,\n    ctaBody,\n    ctaButtons { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} },\n    "groups": *[_type == "faqGroup"] | order(order asc, title asc) {\n      _id,\n      title,\n      navLabel,\n      "slug": slug.current,\n      items[] { question, answer }\n    }\n  }\n': FAQ_PAGE_QUERY_RESULT;
     '\n  *[_type == "freeAuditPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    navCtaLabel,\n    coverHeader { eyebrow, headline, sticker, intro },\n    coverCards[] { title, description, tag },\n    forYouHeader { eyebrow, headline, sticker, intro },\n    forYouPointers,\n    deliverablesHeader { eyebrow, headline, sticker, intro },\n    deliverables[] { title, description, tag },\n    formEyebrow,\n    formHeadline,\n    formIntro,\n    formSuccessSticker,\n    formSuccessText,\n    faqHeader { eyebrow, headline, sticker, intro },\n    faqItems[] { question, answer },\n    proofHeader { eyebrow, headline, sticker, intro },\n    proofSticker,\n    proofBody,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': FREE_AUDIT_PAGE_QUERY_RESULT;
@@ -2118,9 +2218,10 @@ declare module "@sanity/client" {
     '\n  *[_type == "promptLibraryPage"][0]{\n    heroBadge,\n    heroStickerA,\n    heroStickerB,\n    heroHeadline,\n    heroIntro,\n    heroCta { label, href, openInNewTab },\n    heroBadges,\n\n    whyLabel,\n    whyHeadline,\n    whyBody,\n\n    aiLabel,\n    aiHeadline,\n    aiIntro,\n    aiPlatforms[] { title, description, tag },\n\n    warningHeadline,\n    warningBody,\n\n    categories[] {\n      name,\n      tagline,\n      prompts[] {\n        title,\n        bestTool,\n        useCase,\n        promptText,\n        tip\n      }\n    },\n\n    ctaLabel,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': PROMPT_LIBRARY_PAGE_QUERY_RESULT;
     '\n  *[_type == "blogIndexPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    topReadsHeader { eyebrow, headline, sticker, intro },\n    archiveHeader { eyebrow, headline, sticker, intro },\n    newsletterHeadline,\n    newsletterBody,\n    newsletterCta { label, href, openInNewTab },\n    ctaHeadline,\n    ctaBody,\n    ctaButtons { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} },\n    "topReads": *[_type == "post" && featured == true && defined(slug.current)]\n      | order(publishedAt desc)[0...3] {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n},\n    "posts": *[_type == "post" && defined(slug.current)]\n      | order(publishedAt desc) {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n},\n    "categories": *[_type == "category"] | order(order asc, title asc) { _id, title, "slug": slug.current }\n  }\n': BLOG_INDEX_QUERY_RESULT;
     '\n  *[_type == "post" && defined(slug.current)]{ "slug": slug.current, "updatedAt": _updatedAt }\n': POST_SLUGS_QUERY_RESULT;
-    '\n  *[_type == "post" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    dek,\n    publishedAt,\n    "readTime": coalesce(\n      readTime,\n      math::max([1, round(length(pt::text(body)) / 5 / 220)])\n    ),\n    heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    category-> { _id, title, "slug": slug.current },\n    author-> {\n  _id,\n  name,\n  role,\n  initials,\n  photo {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  bio,\n  funFact\n},\n    body[]{\n      ...,\n      _type == "figure" => { ..., "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions }\n    },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} },\n    "related": select(\n      count(related) > 0 => related[]-> {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n},\n      *[_type == "post" && slug.current != $slug && category._ref == ^.category._ref]\n        | order(publishedAt desc)[0...3] {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n}\n    )\n  }\n': POST_QUERY_RESULT;
+    '\n  *[_type == "post" && slug.current == $slug][0]{\n    _id,\n    _updatedAt,\n    title,\n    "slug": slug.current,\n    dek,\n    publishedAt,\n    "readTime": coalesce(\n      readTime,\n      math::max([1, round(length(pt::text(body)) / 5 / 220)])\n    ),\n    heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    category-> { _id, title, "slug": slug.current },\n    author-> {\n  _id,\n  name,\n  role,\n  initials,\n  photo {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  bio,\n  funFact\n},\n    body[]{\n      ...,\n      _type == "figure" => { ..., "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions }\n    },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} },\n    "related": select(\n      count(related) > 0 => related[]-> {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n},\n      *[_type == "post" && slug.current != $slug && category._ref == ^.category._ref]\n        | order(publishedAt desc)[0...3] {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n}\n    )\n  }\n': POST_QUERY_RESULT;
     '\n  *[_type == "servicePage" && defined(slug.current)]{ "slug": slug.current, "updatedAt": _updatedAt }\n': SERVICE_SLUGS_QUERY_RESULT;
     '\n  *[_type == "servicePage" && slug.current == $slug][0]{\n    _id,\n    category,\n    "slug": slug.current,\n    heroHeadline,\n    heroSub,\n    problemHeadline,\n    problemBody,\n    offerings[] { title, description, tag },\n    differently,\n    testimonial,\n    faq[] { question, answer },\n    quoteHeadline,\n    serviceScope,\n    serviceCheckboxes,\n    talkHeadline,\n    talkBody,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': SERVICE_PAGE_QUERY_RESULT;
+    '{\n  "settings": *[_type == "siteSettings"][0]{\n    title,\n    contactEmail,\n    socialLinks[] { platform, href },\n    defaultSeo { title, description },\n    aiDiscovery { summary, pagesHeading, servicesHeading, postsHeading }\n  },\n  "pages": *[_type in [\n    "homePage", "aboutPage", "servicesPage", "blogIndexPage", "faqPage",\n    "freeAuditPage", "newsletterPage", "promptLibraryPage"\n  ] && seo.noIndex != true]{\n    _type,\n    "title": seo.title,\n    "description": seo.description\n  },\n  "services": *[_type == "servicePage" && defined(slug.current) && seo.noIndex != true]\n    | order(category asc){\n      category,\n      "slug": slug.current,\n      heroSub,\n      "description": seo.description,\n      offerings[] { title }\n    },\n  "posts": *[_type == "post" && defined(slug.current) && count(body) > 0 && seo.noIndex != true]\n    | order(publishedAt desc){\n      title,\n      "slug": slug.current,\n      dek,\n      publishedAt,\n      _updatedAt,\n      "author": author->name,\n      "category": category->title\n    },\n  "faqs": [\n    ...*[_type == "homePage"][0].faqItems[] { question, answer },\n    ...(*[_type == "faqGroup"] | order(order asc, title asc))[].items[] { question, answer }\n  ]\n}': DISCOVERY_QUERY_RESULT;
     '\n  *[_type == "legalDoc" && defined(slug.current)] | order(order asc){ "slug": slug.current, "updatedAt": _updatedAt }\n': LEGAL_SLUGS_QUERY_RESULT;
     '\n  *[_type == "legalDoc" && defined(slug.current)] | order(order asc){\n    _id,\n    title,\n    "slug": slug.current,\n    label,\n    intro,\n    updatedAt\n  }\n': LEGAL_DOCS_QUERY_RESULT;
     '\n  *[_type == "legalDoc" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    label,\n    eyebrow,\n    entity,\n    updatedAt,\n    intro,\n    sections[]{\n      _key,\n      title,\n      blocks[]{ ... }\n    },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': LEGAL_DOC_QUERY_RESULT;

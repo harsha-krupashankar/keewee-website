@@ -19,6 +19,7 @@ import {
 } from "./objects/primitives";
 import { promptCategory, promptEntry } from "./objects/promptLibrary";
 import { feedTile } from "./objects/links";
+import { aiDiscovery } from "./objects/aiDiscovery";
 import { cookieConsent } from "./objects/cookieConsent";
 import {
   legalClause,
@@ -97,6 +98,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   legalSection,
   promptEntry,
   promptCategory,
+  aiDiscovery,
   cookieConsent,
   feedTile,
 

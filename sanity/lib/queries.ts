@@ -97,6 +97,7 @@ export const SITE_SETTINGS_QUERY = defineQuery(/* groq */ `
 
 export const HOME_PAGE_QUERY = defineQuery(/* groq */ `
   *[_type == "homePage"][0]{
+    _updatedAt,
     heroBadge,
     heroHeadline,
     heroIntro,
@@ -380,6 +381,7 @@ export const POST_SLUGS_QUERY = defineQuery(/* groq */ `
 export const POST_QUERY = defineQuery(/* groq */ `
   *[_type == "post" && slug.current == $slug][0]{
     _id,
+    _updatedAt,
     title,
     "slug": slug.current,
     dek,
@@ -431,6 +433,56 @@ export const SERVICE_PAGE_QUERY = defineQuery(/* groq */ `
     seo ${SEO}
   }
 `);
+
+// --- AI discovery ---------------------------------------------------------
+
+/**
+ * Everything the machine-readable feeds need in one read: `/llms.txt`,
+ * `/ai/*.json`, `/.well-known/ai.txt` and the blog RSS feed.
+ *
+ * `pages` is keyed by `_type`; the route each singleton lives at is code
+ * (`lib/discovery.ts`), not content. Posts with an empty body are left out for
+ * the same reason the post route marks them `noindex`: they are stubs.
+ */
+export const DISCOVERY_QUERY = defineQuery(/* groq */ `{
+  "settings": *[_type == "siteSettings"][0]{
+    title,
+    contactEmail,
+    socialLinks[] { platform, href },
+    defaultSeo { title, description },
+    aiDiscovery { summary, pagesHeading, servicesHeading, postsHeading }
+  },
+  "pages": *[_type in [
+    "homePage", "aboutPage", "servicesPage", "blogIndexPage", "faqPage",
+    "freeAuditPage", "newsletterPage", "promptLibraryPage"
+  ] && seo.noIndex != true]{
+    _type,
+    "title": seo.title,
+    "description": seo.description
+  },
+  "services": *[_type == "servicePage" && defined(slug.current) && seo.noIndex != true]
+    | order(category asc){
+      category,
+      "slug": slug.current,
+      heroSub,
+      "description": seo.description,
+      offerings[] { title }
+    },
+  "posts": *[_type == "post" && defined(slug.current) && count(body) > 0 && seo.noIndex != true]
+    | order(publishedAt desc){
+      title,
+      "slug": slug.current,
+      dek,
+      publishedAt,
+      _updatedAt,
+      "author": author->name,
+      "category": category->title
+    },
+  "faqs": [
+    ...*[_type == "homePage"][0].faqItems[] ${FAQ_ITEM},
+    ...(*[_type == "faqGroup"] | order(order asc, title asc))[].items[] ${FAQ_ITEM}
+  ]
+}`);
 
 // --- Legal ----------------------------------------------------------------
 
