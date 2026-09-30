@@ -598,6 +598,7 @@ export type AiDiscovery = {
   pagesHeading: string;
   servicesHeading: string;
   postsHeading: string;
+  faqHeading: string;
 };
 
 export type CookieConsent = {
@@ -2020,7 +2021,7 @@ export type SERVICE_PAGE_QUERY_RESULT = {
 
 // Source: sanity/lib/queries.ts
 // Variable: DISCOVERY_QUERY
-// Query: {  "settings": *[_type == "siteSettings"][0]{    title,    contactEmail,    socialLinks[] { platform, href },    defaultSeo { title, description },    aiDiscovery { summary, pagesHeading, servicesHeading, postsHeading }  },  "pages": *[_type in [    "homePage", "aboutPage", "servicesPage", "blogIndexPage", "faqPage",    "freeAuditPage", "newsletterPage", "promptLibraryPage"  ] && seo.noIndex != true]{    _type,    "title": seo.title,    "description": seo.description  },  "services": *[_type == "servicePage" && defined(slug.current) && seo.noIndex != true]    | order(category asc){      category,      "slug": slug.current,      heroSub,      "description": seo.description,      offerings[] { title }    },  "posts": *[_type == "post" && defined(slug.current) && count(body) > 0 && seo.noIndex != true]    | order(publishedAt desc){      title,      "slug": slug.current,      dek,      publishedAt,      _updatedAt,      "author": author->name,      "category": category->title    },  "faqs": [    ...*[_type == "homePage"][0].faqItems[] { question, answer },    ...(*[_type == "faqGroup"] | order(order asc, title asc))[].items[] { question, answer }  ]}
+// Query: {  "settings": *[_type == "siteSettings"][0]{    title,    contactEmail,    socialLinks[] { platform, href },    defaultSeo { title, description },    aiDiscovery { summary, pagesHeading, servicesHeading, postsHeading, faqHeading }  },  "pages": *[_type in [    "homePage", "aboutPage", "servicesPage", "blogIndexPage", "faqPage",    "freeAuditPage", "newsletterPage", "promptLibraryPage"  ] && seo.noIndex != true]{    _type,    "title": seo.title,    "description": seo.description  },  "services": *[_type == "servicePage" && defined(slug.current) && seo.noIndex != true]    | order(category asc){      category,      "slug": slug.current,      heroSub,      "description": seo.description,      offerings[] { title }    },  "posts": *[_type == "post" && defined(slug.current) && count(body) > 0 && seo.noIndex != true]    | order(publishedAt desc){      title,      "slug": slug.current,      dek,      publishedAt,      _updatedAt,      "author": author->name,      "category": category->title    },  "faqs": [    ...*[_type == "homePage"][0].faqItems[] { question, answer },    ...(*[_type == "faqGroup"] | order(order asc, title asc))[].items[] { question, answer }  ]}
 export type DISCOVERY_QUERY_RESULT = {
   settings: {
     title: string;
@@ -2038,6 +2039,7 @@ export type DISCOVERY_QUERY_RESULT = {
       pagesHeading: string;
       servicesHeading: string;
       postsHeading: string;
+      faqHeading: string;
     } | null;
   } | null;
   pages: Array<
@@ -2103,6 +2105,37 @@ export type DISCOVERY_QUERY_RESULT = {
   faqs: Array<{
     question: string;
     answer: RichText;
+  }>;
+};
+
+// Source: sanity/lib/queries.ts
+// Variable: LLMS_FULL_QUERY
+// Query: {  "services": *[_type == "servicePage" && defined(slug.current) && seo.noIndex != true]    | order(category asc){      category,      "slug": slug.current,      heroSub,      problemHeadline,      problemBody,      offerings[] { title, description, tag },      differently,      faq[] { question, answer }    },  "posts": *[_type == "post" && defined(slug.current) && count(body) > 0 && seo.noIndex != true]    | order(publishedAt desc){      title,      "slug": slug.current,      dek,      publishedAt,      "author": author->name,      body    }}
+export type LLMS_FULL_QUERY_RESULT = {
+  services: Array<{
+    category: string;
+    slug: string;
+    heroSub: string;
+    problemHeadline: string;
+    problemBody: RichText | null;
+    offerings: Array<{
+      title: string;
+      description: string;
+      tag: string | null;
+    }>;
+    differently: Array<string> | null;
+    faq: Array<{
+      question: string;
+      answer: RichText;
+    }> | null;
+  }>;
+  posts: Array<{
+    title: string;
+    slug: string;
+    dek: string;
+    publishedAt: string;
+    author: string;
+    body: PostBody | null;
   }>;
 };
 
@@ -2221,7 +2254,8 @@ declare module "@sanity/client" {
     '\n  *[_type == "post" && slug.current == $slug][0]{\n    _id,\n    _updatedAt,\n    title,\n    "slug": slug.current,\n    dek,\n    publishedAt,\n    "readTime": coalesce(\n      readTime,\n      math::max([1, round(length(pt::text(body)) / 5 / 220)])\n    ),\n    heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    category-> { _id, title, "slug": slug.current },\n    author-> {\n  _id,\n  name,\n  role,\n  initials,\n  photo {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  bio,\n  funFact\n},\n    body[]{\n      ...,\n      _type == "figure" => { ..., "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions }\n    },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} },\n    "related": select(\n      count(related) > 0 => related[]-> {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n},\n      *[_type == "post" && slug.current != $slug && category._ref == ^.category._ref]\n        | order(publishedAt desc)[0...3] {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n}\n    )\n  }\n': POST_QUERY_RESULT;
     '\n  *[_type == "servicePage" && defined(slug.current)]{ "slug": slug.current, "updatedAt": _updatedAt }\n': SERVICE_SLUGS_QUERY_RESULT;
     '\n  *[_type == "servicePage" && slug.current == $slug][0]{\n    _id,\n    category,\n    "slug": slug.current,\n    heroHeadline,\n    heroSub,\n    problemHeadline,\n    problemBody,\n    offerings[] { title, description, tag },\n    differently,\n    testimonial,\n    faq[] { question, answer },\n    quoteHeadline,\n    serviceScope,\n    serviceCheckboxes,\n    talkHeadline,\n    talkBody,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': SERVICE_PAGE_QUERY_RESULT;
-    '{\n  "settings": *[_type == "siteSettings"][0]{\n    title,\n    contactEmail,\n    socialLinks[] { platform, href },\n    defaultSeo { title, description },\n    aiDiscovery { summary, pagesHeading, servicesHeading, postsHeading }\n  },\n  "pages": *[_type in [\n    "homePage", "aboutPage", "servicesPage", "blogIndexPage", "faqPage",\n    "freeAuditPage", "newsletterPage", "promptLibraryPage"\n  ] && seo.noIndex != true]{\n    _type,\n    "title": seo.title,\n    "description": seo.description\n  },\n  "services": *[_type == "servicePage" && defined(slug.current) && seo.noIndex != true]\n    | order(category asc){\n      category,\n      "slug": slug.current,\n      heroSub,\n      "description": seo.description,\n      offerings[] { title }\n    },\n  "posts": *[_type == "post" && defined(slug.current) && count(body) > 0 && seo.noIndex != true]\n    | order(publishedAt desc){\n      title,\n      "slug": slug.current,\n      dek,\n      publishedAt,\n      _updatedAt,\n      "author": author->name,\n      "category": category->title\n    },\n  "faqs": [\n    ...*[_type == "homePage"][0].faqItems[] { question, answer },\n    ...(*[_type == "faqGroup"] | order(order asc, title asc))[].items[] { question, answer }\n  ]\n}': DISCOVERY_QUERY_RESULT;
+    '{\n  "settings": *[_type == "siteSettings"][0]{\n    title,\n    contactEmail,\n    socialLinks[] { platform, href },\n    defaultSeo { title, description },\n    aiDiscovery { summary, pagesHeading, servicesHeading, postsHeading, faqHeading }\n  },\n  "pages": *[_type in [\n    "homePage", "aboutPage", "servicesPage", "blogIndexPage", "faqPage",\n    "freeAuditPage", "newsletterPage", "promptLibraryPage"\n  ] && seo.noIndex != true]{\n    _type,\n    "title": seo.title,\n    "description": seo.description\n  },\n  "services": *[_type == "servicePage" && defined(slug.current) && seo.noIndex != true]\n    | order(category asc){\n      category,\n      "slug": slug.current,\n      heroSub,\n      "description": seo.description,\n      offerings[] { title }\n    },\n  "posts": *[_type == "post" && defined(slug.current) && count(body) > 0 && seo.noIndex != true]\n    | order(publishedAt desc){\n      title,\n      "slug": slug.current,\n      dek,\n      publishedAt,\n      _updatedAt,\n      "author": author->name,\n      "category": category->title\n    },\n  "faqs": [\n    ...*[_type == "homePage"][0].faqItems[] { question, answer },\n    ...(*[_type == "faqGroup"] | order(order asc, title asc))[].items[] { question, answer }\n  ]\n}': DISCOVERY_QUERY_RESULT;
+    '{\n  "services": *[_type == "servicePage" && defined(slug.current) && seo.noIndex != true]\n    | order(category asc){\n      category,\n      "slug": slug.current,\n      heroSub,\n      problemHeadline,\n      problemBody,\n      offerings[] { title, description, tag },\n      differently,\n      faq[] { question, answer }\n    },\n  "posts": *[_type == "post" && defined(slug.current) && count(body) > 0 && seo.noIndex != true]\n    | order(publishedAt desc){\n      title,\n      "slug": slug.current,\n      dek,\n      publishedAt,\n      "author": author->name,\n      body\n    }\n}': LLMS_FULL_QUERY_RESULT;
     '\n  *[_type == "legalDoc" && defined(slug.current)] | order(order asc){ "slug": slug.current, "updatedAt": _updatedAt }\n': LEGAL_SLUGS_QUERY_RESULT;
     '\n  *[_type == "legalDoc" && defined(slug.current)] | order(order asc){\n    _id,\n    title,\n    "slug": slug.current,\n    label,\n    intro,\n    updatedAt\n  }\n': LEGAL_DOCS_QUERY_RESULT;
     '\n  *[_type == "legalDoc" && slug.current == $slug][0]{\n    _id,\n    title,\n    "slug": slug.current,\n    label,\n    eyebrow,\n    entity,\n    updatedAt,\n    intro,\n    sections[]{\n      _key,\n      title,\n      blocks[]{ ... }\n    },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': LEGAL_DOC_QUERY_RESULT;

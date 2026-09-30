@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { buildFaq, buildLlmsTxt, buildRss, buildService } from "@/lib/discovery";
+import {
+  buildFaq,
+  buildLlmsFullTxt,
+  buildLlmsTxt,
+  buildRss,
+  buildService,
+  portableTextToMarkdown,
+} from "@/lib/discovery";
 import type { Discovery } from "@/sanity/lib/types";
 
 const answer = (text: string) => [
@@ -16,6 +23,7 @@ const data: Discovery = {
       pagesHeading: "Pages",
       servicesHeading: "Services",
       postsHeading: "Articles",
+      faqHeading: "FAQ",
     },
   },
   pages: [
@@ -85,5 +93,84 @@ describe("buildRss", () => {
     expect(rss).toContain("<title>SEO &lt;vs&gt; GEO &amp; AEO</title>");
     expect(rss).toContain("<dc:creator>Kanan Parmar</dc:creator>");
     expect(rss).not.toContain("<category>");
+  });
+});
+
+const block = (style: string, text: string, extra: object = {}) => ({
+  _type: "block",
+  _key: text,
+  style,
+  markDefs: [],
+  children: [{ _type: "span", _key: "s", text, marks: [] }],
+  ...extra,
+});
+
+describe("portableTextToMarkdown", () => {
+  it("nests headings under the document title and keeps lists and quotes", () => {
+    const md = portableTextToMarkdown(
+      [
+        block("h2", "Why it matters"),
+        block("normal", "First", { listItem: "number", level: 1 }),
+        block("normal", "Second", { listItem: "number", level: 1 }),
+        block("normal", "Point", { listItem: "bullet", level: 1 }),
+        block("blockquote", "Quoted."),
+        { _type: "pullQuote", _key: "q", text: "Sharp.", attribution: "Kanan" },
+      ] as never,
+      3
+    );
+    expect(md).toBe("#### Why it matters\n\n1. First\n2. Second\n- Point\n\n> Quoted.\n\n> Sharp. — Kanan");
+  });
+
+  it("renders bold, italic and links", () => {
+    const md = portableTextToMarkdown(
+      [
+        {
+          _type: "block",
+          _key: "b",
+          style: "normal",
+          markDefs: [{ _key: "l", _type: "link", href: "https://x.com" }],
+          children: [
+            { _type: "span", _key: "1", text: "bold", marks: ["strong"] },
+            { _type: "span", _key: "2", text: " and ", marks: [] },
+            { _type: "span", _key: "3", text: "link", marks: ["l"] },
+          ],
+        },
+      ] as never,
+      3
+    );
+    expect(md).toBe("**bold** and [link](https://x.com)");
+  });
+});
+
+describe("buildLlmsFullTxt", () => {
+  const txt = buildLlmsFullTxt(data, {
+    services: [
+      {
+        category: "Conversion",
+        slug: "conversion",
+        heroSub: "CRO & landing pages.",
+        offerings: [{ title: "CRO audit", description: "Find the leaks." }],
+        faq: [{ question: "How long?", answer: answer("Six weeks.") }],
+      },
+    ],
+    posts: [
+      {
+        title: "SEO vs GEO",
+        slug: "seo-vs-geo",
+        dek: "How search is changing.",
+        publishedAt: "2026-09-01T00:00:00Z",
+        author: "Kanan Parmar",
+        body: [block("h2", "The shift")] as never,
+      },
+    ],
+  });
+
+  it("puts full service, FAQ and post content under the editor's headings", () => {
+    expect(txt).toContain("## Services\n\n### [Conversion](https://www.keewee.in/services/conversion)");
+    expect(txt).toContain("- **CRO audit**: Find the leaks.");
+    expect(txt).toContain("#### How long?\n\nSix weeks.");
+    expect(txt).toContain("## FAQ\n\n### What do you do?\n\nFull-funnel marketing for B2B SaaS.");
+    expect(txt).toContain("_2026-09-01 · Kanan Parmar_");
+    expect(txt).toContain("#### The shift");
   });
 });

@@ -450,7 +450,7 @@ export const DISCOVERY_QUERY = defineQuery(/* groq */ `{
     contactEmail,
     socialLinks[] { platform, href },
     defaultSeo { title, description },
-    aiDiscovery { summary, pagesHeading, servicesHeading, postsHeading }
+    aiDiscovery { summary, pagesHeading, servicesHeading, postsHeading, faqHeading }
   },
   "pages": *[_type in [
     "homePage", "aboutPage", "servicesPage", "blogIndexPage", "faqPage",
@@ -482,6 +482,33 @@ export const DISCOVERY_QUERY = defineQuery(/* groq */ `{
     ...*[_type == "homePage"][0].faqItems[] ${FAQ_ITEM},
     ...(*[_type == "faqGroup"] | order(order asc, title asc))[].items[] ${FAQ_ITEM}
   ]
+}`);
+
+/**
+ * `/llms-full.txt`: the full text behind the links in `/llms.txt`. Kept apart
+ * from `DISCOVERY_QUERY` so the small files don't pull every post body.
+ */
+export const LLMS_FULL_QUERY = defineQuery(/* groq */ `{
+  "services": *[_type == "servicePage" && defined(slug.current) && seo.noIndex != true]
+    | order(category asc){
+      category,
+      "slug": slug.current,
+      heroSub,
+      problemHeadline,
+      problemBody,
+      offerings[] ${CARD},
+      differently,
+      faq[] ${FAQ_ITEM}
+    },
+  "posts": *[_type == "post" && defined(slug.current) && count(body) > 0 && seo.noIndex != true]
+    | order(publishedAt desc){
+      title,
+      "slug": slug.current,
+      dek,
+      publishedAt,
+      "author": author->name,
+      body
+    }
 }`);
 
 // --- Legal ----------------------------------------------------------------

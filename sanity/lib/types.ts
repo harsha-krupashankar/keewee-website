@@ -482,6 +482,7 @@ export type Discovery = {
       pagesHeading?: string | null;
       servicesHeading?: string | null;
       postsHeading?: string | null;
+      faqHeading?: string | null;
     } | null;
   } | null;
   pages: {
@@ -506,6 +507,27 @@ export type Discovery = {
     category?: string | null;
   }[];
   faqs: FaqItem[];
+};
+
+export type LlmsFull = {
+  services: {
+    category: string;
+    slug: string;
+    heroSub: string;
+    problemHeadline?: string | null;
+    problemBody?: RichText | null;
+    offerings?: TitledCard[] | null;
+    differently?: string[] | null;
+    faq?: FaqItem[] | null;
+  }[];
+  posts: {
+    title: string;
+    slug: string;
+    dek: string;
+    publishedAt: string;
+    author?: string | null;
+    body?: RichText | null;
+  }[];
 };
 
 // --- Legal ----------------------------------------------------------------

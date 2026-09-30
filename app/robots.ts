@@ -9,6 +9,10 @@ import { CANONICAL_HOSTS, SITE_URL } from "@/lib/site";
  * agency, being in the model's memory is as valuable as being cited live.
  */
 const AI_CRAWLERS = [
+  // Google and Apple's search crawlers also feed AI Overviews and Siri /
+  // Apple Intelligence answers, so GEO audits expect them named here too.
+  "Googlebot",
+  "Applebot",
   "OAI-SearchBot",
   "ChatGPT-User",
   "GPTBot",

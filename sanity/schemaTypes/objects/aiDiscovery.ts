@@ -2,9 +2,9 @@ import { defineField, defineType } from "sanity";
 
 /**
  * Copy for the machine-readable files AI search engines read: `/llms.txt`,
- * `/ai/summary.json` and friends. Page titles, descriptions, services, posts
- * and FAQs are pulled in from their own documents — only the words that exist
- * nowhere else on the site live here.
+ * `/llms-full.txt`, `/ai/summary.json` and friends. Page titles, descriptions,
+ * services, posts and FAQs are pulled in from their own documents — only the
+ * words that exist nowhere else on the site live here.
  */
 export const aiDiscovery = defineType({
   name: "aiDiscovery",
@@ -31,14 +31,21 @@ export const aiDiscovery = defineType({
       name: "servicesHeading",
       title: "Services section heading",
       type: "string",
-      description: "Heading over the list of service pages in /llms.txt.",
+      description: "Heading over the service pages in /llms.txt and /llms-full.txt.",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "postsHeading",
       title: "Articles section heading",
       type: "string",
-      description: "Heading over the list of blog posts in /llms.txt.",
+      description: "Heading over the list of blog posts in /llms.txt and /llms-full.txt.",
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "faqHeading",
+      title: "FAQ section heading",
+      type: "string",
+      description: "Heading over the full FAQ in /llms-full.txt.",
       validation: (rule) => rule.required(),
     }),
   ],

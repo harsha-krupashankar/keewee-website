@@ -206,6 +206,18 @@ export async function getDiscovery() {
   );
 }
 
+/** `/llms-full.txt` — service pages and full post bodies. */
+export async function getLlmsFull() {
+  "use cache";
+  return run<T.LlmsFull>(
+    { perspective: "published", stega: false },
+    {
+      query: Q.LLMS_FULL_QUERY,
+      tags: [TAG.servicePage, TAG.post, TAG.person],
+    }
+  );
+}
+
 // --- Legal ----------------------------------------------------------------
 
 export async function getLegalDoc(slug: string, opts: FetchOptions) {
