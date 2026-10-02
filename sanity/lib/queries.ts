@@ -252,6 +252,20 @@ export const NEWSLETTER_PAGE_QUERY = defineQuery(/* groq */ `
   }
 `);
 
+// --- 404 page -------------------------------------------------------------
+
+export const NOT_FOUND_PAGE_QUERY = defineQuery(/* groq */ `
+  *[_type == "notFoundPage"][0]{
+    sticker,
+    headline,
+    intro,
+    signoff,
+    blogHeadline,
+    blogButton ${LINK},
+    socialsHeadline
+  }
+`);
+
 // --- Links page -----------------------------------------------------------
 
 export const LINKS_PAGE_QUERY = defineQuery(/* groq */ `

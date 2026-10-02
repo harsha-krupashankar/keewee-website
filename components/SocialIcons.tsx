@@ -24,6 +24,16 @@ export const SOCIAL_ICON_PATHS: Record<string, string> = {
 };
 
 /**
+ * Per-mark viewBox for artwork whose ink is not centred in its 24×24 box.
+ * Facebook's "f" is cut from the round logo, so it sits in the lower part of
+ * the box (x 6.6–17.6, y 4.5–23.7); shifting the viewBox by the offset of its
+ * bounding-box centre puts it in the middle of the chip.
+ */
+const SOCIAL_ICON_VIEWBOX: Record<string, string> = {
+  facebook: "0.1 2.09 24 24",
+};
+
+/**
  * How each platform is announced. The stored `platform` value is a lowercase
  * slug, which is what a screen reader would otherwise read out.
  */
@@ -63,7 +73,11 @@ export function SocialGlyph({
   }
 
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
+    <svg
+      viewBox={SOCIAL_ICON_VIEWBOX[platform] ?? "0 0 24 24"}
+      aria-hidden="true"
+      className={className}
+    >
       <path d={path} fill="currentColor" />
     </svg>
   );

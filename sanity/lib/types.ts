@@ -280,6 +280,16 @@ export type NewsletterPage = {
   seo?: Seo | null;
 };
 
+export type NotFoundPage = {
+  sticker?: string | null;
+  headline?: Headline | null;
+  intro?: string | null;
+  signoff?: string | null;
+  blogHeadline?: string | null;
+  blogButton?: Link | null;
+  socialsHeadline?: string | null;
+};
+
 /** Which of the five shapes the design gives a category band on `/services`. */
 export type ServiceCategoryLayout =
   | "feature"

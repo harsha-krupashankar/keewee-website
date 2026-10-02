@@ -198,6 +198,43 @@ export type PostBody = Array<
     }
 >;
 
+export type NotFoundPage = {
+  _id: string;
+  _type: "notFoundPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  sticker?: string;
+  headline?: Headline;
+  intro?: string;
+  signoff?: string;
+  blogHeadline?: string;
+  blogButton?: Link;
+  socialsHeadline?: string;
+};
+
+export type Link = {
+  _type: "link";
+  label: string;
+  href: string;
+  openInNewTab?: boolean;
+};
+
+export type Headline = Array<{
+  children?: Array<{
+    marks?: Array<string>;
+    text?: string;
+    _type: "span";
+    _key: string;
+  }>;
+  style?: "normal";
+  listItem?: never;
+  markDefs?: null;
+  level?: number;
+  _type: "block";
+  _key: string;
+}>;
+
 export type LinksPage = {
   _id: string;
   _type: "linksPage";
@@ -217,13 +254,6 @@ export type LinksPage = {
   >;
   footerNote?: string;
   seo?: Seo;
-};
-
-export type Link = {
-  _type: "link";
-  label: string;
-  href: string;
-  openInNewTab?: boolean;
 };
 
 export type PromptLibraryPage = {
@@ -279,21 +309,6 @@ export type RichText = Array<{
     _type: "link";
     _key: string;
   }>;
-  level?: number;
-  _type: "block";
-  _key: string;
-}>;
-
-export type Headline = Array<{
-  children?: Array<{
-    marks?: Array<string>;
-    text?: string;
-    _type: "span";
-    _key: string;
-  }>;
-  style?: "normal";
-  listItem?: never;
-  markDefs?: null;
   level?: number;
   _type: "block";
   _key: string;
@@ -939,11 +954,12 @@ export type AllSanitySchemaTypes =
   | Figure
   | Category
   | PostBody
-  | LinksPage
+  | NotFoundPage
   | Link
+  | Headline
+  | LinksPage
   | PromptLibraryPage
   | RichText
-  | Headline
   | ServicesPage
   | PageHero
   | NewsletterPage
@@ -1518,6 +1534,23 @@ export type NEWSLETTER_PAGE_QUERY_RESULT = {
       dimensions: SanityImageDimensions | null;
     } | null;
   } | null;
+} | null;
+
+// Source: sanity/lib/queries.ts
+// Variable: NOT_FOUND_PAGE_QUERY
+// Query: *[_type == "notFoundPage"][0]{    sticker,    headline,    intro,    signoff,    blogHeadline,    blogButton { label, href, openInNewTab },    socialsHeadline  }
+export type NOT_FOUND_PAGE_QUERY_RESULT = {
+  sticker: string | null;
+  headline: Headline | null;
+  intro: string | null;
+  signoff: string | null;
+  blogHeadline: string | null;
+  blogButton: {
+    label: string;
+    href: string;
+    openInNewTab: boolean | null;
+  } | null;
+  socialsHeadline: string | null;
 } | null;
 
 // Source: sanity/lib/queries.ts
@@ -2246,6 +2279,7 @@ declare module "@sanity/client" {
     '\n  *[_type == "faqPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    ctaHeadline,\n    ctaBody,\n    ctaButtons { primary { label, href, openInNewTab }, secondary { label, href, openInNewTab } },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} },\n    "groups": *[_type == "faqGroup"] | order(order asc, title asc) {\n      _id,\n      title,\n      navLabel,\n      "slug": slug.current,\n      items[] { question, answer }\n    }\n  }\n': FAQ_PAGE_QUERY_RESULT;
     '\n  *[_type == "freeAuditPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    navCtaLabel,\n    coverHeader { eyebrow, headline, sticker, intro },\n    coverCards[] { title, description, tag },\n    forYouHeader { eyebrow, headline, sticker, intro },\n    forYouPointers,\n    deliverablesHeader { eyebrow, headline, sticker, intro },\n    deliverables[] { title, description, tag },\n    formEyebrow,\n    formHeadline,\n    formIntro,\n    formSuccessSticker,\n    formSuccessText,\n    faqHeader { eyebrow, headline, sticker, intro },\n    faqItems[] { question, answer },\n    proofHeader { eyebrow, headline, sticker, intro },\n    proofSticker,\n    proofBody,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': FREE_AUDIT_PAGE_QUERY_RESULT;
     '\n  *[_type == "newsletterPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    formTitle,\n    formButtonLabel,\n    formDisclaimer,\n    formSuccessSticker,\n    formSuccessText,\n    whyHeader { eyebrow, headline, sticker, intro },\n    whyReasons[] { title, description, tag },\n    insideHeader { eyebrow, headline, sticker, intro },\n    insideItems[] { title, description, tag },\n    afterHoursHeader { eyebrow, headline, sticker, intro },\n    afterHoursBody,\n    ctaEyebrow,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n    ctaSecondaryLabel,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': NEWSLETTER_PAGE_QUERY_RESULT;
+    '\n  *[_type == "notFoundPage"][0]{\n    sticker,\n    headline,\n    intro,\n    signoff,\n    blogHeadline,\n    blogButton { label, href, openInNewTab },\n    socialsHeadline\n  }\n': NOT_FOUND_PAGE_QUERY_RESULT;
     '\n  *[_type == "linksPage"][0]{\n    cta { label, href, openInNewTab },\n\n    feedTiles[] {\n      _key,\n      image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n      href\n    },\n\n    footerLinks[] { label, href, openInNewTab },\n    footerNote,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': LINKS_PAGE_QUERY_RESULT;
     '\n  *[_type == "servicesPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    heroSecondaryCta { label, href, openInNewTab },\n    categories[] {\n      name,\n      headline,\n      intro,\n      layout,\n      featureSticker,\n      items[] { title, description, tag }\n    },\n    auditHeadline,\n    auditBody,\n    auditButton { label, href, openInNewTab },\n    quoteEyebrow,\n    quoteHeadline,\n    quoteIntro,\n    quoteGoalsLabel,\n    quoteGoals,\n    quoteServicesLabel,\n    quoteServiceGroups[] { title, options },\n    quoteMessagePlaceholder,\n    quoteButtonLabel,\n    quoteNote,\n    quoteSuccessSticker,\n    quoteSuccessText,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': SERVICES_PAGE_QUERY_RESULT;
     '\n  *[_type == "promptLibraryPage"][0]{\n    heroBadge,\n    heroStickerA,\n    heroStickerB,\n    heroHeadline,\n    heroIntro,\n    heroCta { label, href, openInNewTab },\n    heroBadges,\n\n    whyLabel,\n    whyHeadline,\n    whyBody,\n\n    aiLabel,\n    aiHeadline,\n    aiIntro,\n    aiPlatforms[] { title, description, tag },\n\n    warningHeadline,\n    warningBody,\n\n    categories[] {\n      name,\n      tagline,\n      prompts[] {\n        title,\n        bestTool,\n        useCase,\n        promptText,\n        tip\n      }\n    },\n\n    ctaLabel,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': PROMPT_LIBRARY_PAGE_QUERY_RESULT;

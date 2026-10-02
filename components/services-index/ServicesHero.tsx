@@ -43,7 +43,6 @@ export default function ServicesHero({
         <div className="max-w-[860px]">
           {hero.badge && (
             <Reveal className="mb-5.5 inline-flex items-center gap-2.5">
-              <span className="h-2 w-2 rounded-full bg-green" />
               <span className="font-display text-[13px] font-bold uppercase tracking-[1.6px] text-green">
                 {hero.badge}
               </span>

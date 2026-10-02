@@ -123,6 +123,14 @@ export async function getLinksPage(opts: FetchOptions) {
   });
 }
 
+export async function getNotFoundPage(opts: FetchOptions) {
+  "use cache";
+  return run<T.NotFoundPage>(opts, {
+    query: Q.NOT_FOUND_PAGE_QUERY,
+    tags: [TAG.notFoundPage],
+  });
+}
+
 // --- Blog -----------------------------------------------------------------
 
 export async function getBlogIndex(opts: FetchOptions) {

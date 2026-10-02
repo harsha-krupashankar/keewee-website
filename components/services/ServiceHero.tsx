@@ -30,7 +30,6 @@ export default function ServiceHero({
       <Container className="relative z-[2]">
         <div className="max-w-[880px]">
           <Reveal className="mb-5.5 inline-flex items-center gap-2.5">
-            <span className="h-2 w-2 rounded-full bg-green" />
             <span className="font-display text-[13px] font-bold uppercase tracking-[0.09em] text-green">
               {doc.category}
             </span>

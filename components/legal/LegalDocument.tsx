@@ -66,7 +66,6 @@ export default function LegalDocument({ doc }: { doc: LegalDoc }) {
           <div className="max-w-[760px]">
             {doc.eyebrow && (
               <div className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-white/[0.18] bg-white/[0.06] px-4 py-1.5">
-                <span className="h-2 w-2 rounded-full bg-lime-bright" />
                 <span className="font-display text-xs font-bold uppercase tracking-[1.6px] text-lime-bright">
                   {doc.eyebrow}
                 </span>

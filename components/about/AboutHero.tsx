@@ -39,7 +39,6 @@ export default function AboutHero({ hero }: { hero?: PageHero | null }) {
         <div className="mx-auto flex max-w-[820px] flex-col items-center text-center">
           {hero.badge && (
             <Reveal className="mb-5.5 inline-flex items-center gap-2.5 rounded-full border border-border bg-white px-4 py-1.5 shadow-[0_6px_18px_rgba(28,27,25,0.05)]">
-              <span className="h-2 w-2 rounded-full bg-green" />
               <span className="font-display text-xs font-bold uppercase tracking-[0.1em] text-green">
                 {hero.badge}
               </span>

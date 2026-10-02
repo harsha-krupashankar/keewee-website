@@ -47,6 +47,7 @@ import { freeAuditPage } from "./pages/freeAuditPage";
 import { homePage } from "./pages/homePage";
 import { linksPage } from "./pages/linksPage";
 import { newsletterPage } from "./pages/newsletterPage";
+import { notFoundPage } from "./pages/notFoundPage";
 import { promptLibraryPage } from "./pages/promptLibraryPage";
 import { servicesPage } from "./pages/servicesPage";
 
@@ -66,6 +67,7 @@ export const SINGLETON_TYPES = [
   "servicesPage",
   "promptLibraryPage",
   "linksPage",
+  "notFoundPage",
 ] as const;
 
 export type SingletonType = (typeof SINGLETON_TYPES)[number];
@@ -113,6 +115,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   servicesPage,
   promptLibraryPage,
   linksPage,
+  notFoundPage,
 
   // Collections.
   post,

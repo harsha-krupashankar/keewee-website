@@ -57,6 +57,10 @@ export const structure: StructureResolver = (S) =>
         .title("Links page")
         .id("linksPage")
         .child(S.document().schemaType("linksPage").documentId("linksPage")),
+      S.listItem()
+        .title("404 page")
+        .id("notFoundPage")
+        .child(S.document().schemaType("notFoundPage").documentId("notFoundPage")),
 
       S.divider(),
 
