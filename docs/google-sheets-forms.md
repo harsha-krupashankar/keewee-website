@@ -63,8 +63,10 @@ const SHEET_ID = PropertiesService.getScriptProperties().getProperty('SHEET_ID')
 const TABS = {
   subscribe: {
     name: 'Subscribes',
-    headers: ['Timestamp', 'Email', 'Source'],
-    row: (d, now) => [now, safe(d.email), safe(d.source)],
+    // Name was added after launch, so it goes last: existing rows keep their
+    // columns and appendRow() extends the header row in place.
+    headers: ['Timestamp', 'Email', 'Source', 'Name'],
+    row: (d, now) => [now, safe(d.email), safe(d.source), safe(d.name)],
   },
   quote: {
     name: 'Quotes',
@@ -132,6 +134,10 @@ function appendRow(tab, row) {
   }
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(tab.headers);
+  } else if (sheet.getLastColumn() < tab.headers.length) {
+    // A column was added to this tab after it was created — write the new
+    // header labels into row 1 so the sheet stays labelled.
+    sheet.getRange(1, 1, 1, tab.headers.length).setValues([tab.headers]);
   }
   sheet.appendRow(row);
 }
@@ -149,7 +155,7 @@ Sent by `lib/submit-form.ts`, validated in `app/api/forms/route.ts`:
 
 ```jsonc
 // subscribe
-{ "formType": "subscribe", "source": "newsletter-page", "email": "you@co.com" }
+{ "formType": "subscribe", "source": "newsletter-page", "name": "...", "email": "you@co.com" }
 
 // quote
 {

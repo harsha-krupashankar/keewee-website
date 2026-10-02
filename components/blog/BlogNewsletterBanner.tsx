@@ -9,6 +9,7 @@ import { SubmissionThrottledError, submitForm } from "@/lib/submit-form";
 import type { BlogIndexPage } from "@/sanity/lib/types";
 
 export default function BlogNewsletterBanner({ page }: { page: BlogIndexPage }) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -16,13 +17,14 @@ export default function BlogNewsletterBanner({ page }: { page: BlogIndexPage }) 
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email || submitting) return;
+    if (!name.trim() || !email || submitting) return;
     setSubmitting(true);
     setError(null);
     try {
       await submitForm({
         formType: "subscribe",
         source: "blog-newsletter-banner",
+        name: name.trim(),
         email,
       });
       setSubscribed(true);
@@ -71,6 +73,19 @@ export default function BlogNewsletterBanner({ page }: { page: BlogIndexPage }) 
                 </div>
               ) : (
                 <form onSubmit={handleSubmit}>
+                  <label htmlFor="blog-newsletter-name" className="sr-only">
+                    Name
+                  </label>
+                  <input
+                    id="blog-newsletter-name"
+                    type="text"
+                    autoComplete="name"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Your name"
+                    className="mb-2.5 w-full rounded-xl border border-dark-border bg-dark-card px-4 py-3.5 font-body text-[15px] text-paper outline-none placeholder:text-faint focus:border-lime focus:shadow-[0_0_0_3px_rgba(198,240,0,0.25)]"
+                  />
                   <div className="mb-3 flex gap-2.5">
                     <label htmlFor="blog-newsletter-email" className="sr-only">
                       Work email

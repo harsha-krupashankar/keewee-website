@@ -9,6 +9,7 @@ import { SubmissionThrottledError, submitForm } from "@/lib/submit-form";
 import type { NewsletterPage } from "@/sanity/lib/types";
 
 export default function NewsletterHero({ page }: { page: NewsletterPage }) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -16,13 +17,14 @@ export default function NewsletterHero({ page }: { page: NewsletterPage }) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email || submitting) return;
+    if (!name.trim() || !email || submitting) return;
     setSubmitting(true);
     setError(null);
     try {
       await submitForm({
         formType: "subscribe",
         source: "newsletter-page",
+        name: name.trim(),
         email,
       });
       setSubscribed(true);
@@ -115,6 +117,18 @@ export default function NewsletterHero({ page }: { page: NewsletterPage }) {
                 >
                   {page.formTitle}
                 </label>
+                <input
+                  id="newsletter-name"
+                  name="name"
+                  type="text"
+                  autoComplete="name"
+                  required
+                  aria-label="Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your name"
+                  className="w-full rounded-[10px] border border-border-soft bg-paper px-3.5 py-3.5 font-body text-[15px] font-medium text-ink outline-none placeholder:text-faint focus:border-green focus:shadow-[0_0_0_3px_rgba(198,240,0,0.35)]"
+                />
                 <input
                   id="newsletter-email"
                   name="email"

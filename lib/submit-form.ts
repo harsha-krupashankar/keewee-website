@@ -9,6 +9,7 @@
 export type SubscribeSubmission = {
   formType: "subscribe";
   source: string;
+  name: string;
   email: string;
 };
 

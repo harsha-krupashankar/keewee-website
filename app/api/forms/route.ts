@@ -17,6 +17,7 @@ import { after, type NextRequest } from "next/server";
 type SubscribePayload = {
   formType: "subscribe";
   source: string;
+  name: string;
   email: string;
 };
 
@@ -81,9 +82,11 @@ function validate(body: unknown): Payload | Rejection {
 
   if (b.formType === "subscribe") {
     if (!isEmail(b.email)) return "bad-email";
+    if (typeof b.name !== "string" || !b.name.trim()) return "empty-name";
     return {
       formType: "subscribe",
       source: sanitize(typeof b.source === "string" ? b.source : "unknown", FIELD_MAX),
+      name: sanitize(b.name.trim(), FIELD_MAX),
       email: b.email,
     };
   }
