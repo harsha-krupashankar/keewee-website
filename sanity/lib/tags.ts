@@ -25,6 +25,7 @@ export const TAG = {
   promptLibraryPage: "promptLibraryPage",
   linksPage: "linksPage",
   notFoundPage: "notFoundPage",
+  referralPage: "referralPage",
 } as const;
 
 export type Tag = (typeof TAG)[keyof typeof TAG];

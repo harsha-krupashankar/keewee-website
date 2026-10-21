@@ -12,6 +12,7 @@ const STATIC_ROUTES = [
   "/legal",
   "/newsletter",
   "/prompt-library",
+  "/referral-program",
   "/services",
 ];
 

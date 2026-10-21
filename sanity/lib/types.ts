@@ -290,6 +290,81 @@ export type NotFoundPage = {
   socialsHeadline?: string | null;
 };
 
+/** Every label, step title and message on the referral form. */
+export type ReferralFormCopy = {
+  stepLabel?: string | null;
+  step1Title?: string | null;
+  step2Title?: string | null;
+  step3Title?: string | null;
+  nameLabel?: string | null;
+  emailLabel?: string | null;
+  phoneLabel?: string | null;
+  linkedinLabel?: string | null;
+  companyLabel?: string | null;
+  websiteLabel?: string | null;
+  contactNameLabel?: string | null;
+  contactRoleLabel?: string | null;
+  contactEmailLabel?: string | null;
+  contactPhoneLabel?: string | null;
+  contactLinkedinLabel?: string | null;
+  spokeQuestion?: string | null;
+  spokeYesLabel?: string | null;
+  spokeNoLabel?: string | null;
+  mentionQuestion?: string | null;
+  mentionYesLabel?: string | null;
+  mentionNoLabel?: string | null;
+  notesLabel?: string | null;
+  agreeLabel?: string | null;
+  requiredError?: string | null;
+  emailError?: string | null;
+  linkedinError?: string | null;
+  pickOneError?: string | null;
+  agreeError?: string | null;
+  genericError?: string | null;
+  throttledError?: string | null;
+  backLabel?: string | null;
+  nextLabel?: string | null;
+  submitLabel?: string | null;
+  submittingLabel?: string | null;
+};
+
+export type ReferralPage = {
+  eyebrow?: string | null;
+  sticker?: string | null;
+  headline?: Headline | null;
+  intro?: string | null;
+  note?: string | null;
+  form?: ReferralFormCopy | null;
+  stepsHeadline?: Headline | null;
+  steps?: TitledCard[] | null;
+  earnHeadline?: string | null;
+  earnAmount?: string | null;
+  earnBody?: string | null;
+  earnNote?: string | null;
+  whoHeadline?: string | null;
+  whoAmount?: string | null;
+  whoBody?: string | null;
+  termsHeadline?: string | null;
+  terms?: string[] | null;
+  faqHeadline?: string | null;
+  faqItems?: FaqItem[] | null;
+  ctaHeadline?: Headline | null;
+  ctaBody?: string | null;
+  ctaButton?: Link | null;
+  ctaContact?: RichText | null;
+  thankYouSticker?: string | null;
+  thankYouHeadline?: Headline | null;
+  thankYouBody?: string | null;
+  thankYouCompanyFallback?: string | null;
+  thankYouNote?: string | null;
+  anotherHeadline?: string | null;
+  anotherBody?: string | null;
+  anotherButton?: Link | null;
+  callHeadline?: string | null;
+  callBody?: RichText | null;
+  seo?: Seo | null;
+};
+
 /** Which of the five shapes the design gives a category band on `/services`. */
 export type ServiceCategoryLayout =
   | "feature"

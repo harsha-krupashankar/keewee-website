@@ -38,7 +38,33 @@ export type AuditSubmission = {
   message?: string;
 };
 
-export type FormSubmission = SubscribeSubmission | QuoteSubmission | AuditSubmission;
+/** The `/referral-program` form. Lands in its own sheet tab, `Referrals`. */
+export type ReferralSubmission = {
+  formType: "referral";
+  source: string;
+  name: string;
+  email: string;
+  phone: string;
+  linkedin?: string;
+  company: string;
+  website: string;
+  contactName: string;
+  contactRole: string;
+  contactEmail: string;
+  contactPhone?: string;
+  contactLinkedin?: string;
+  /** Whether the referrer has already told the company about Keewee. */
+  spoken: "yes" | "no";
+  /** Cold leads only: whether we may name the referrer when reaching out. */
+  mentionName?: "yes" | "no";
+  notes?: string;
+};
+
+export type FormSubmission =
+  | SubscribeSubmission
+  | QuoteSubmission
+  | AuditSubmission
+  | ReferralSubmission;
 
 /**
  * Thrown when the submission was *throttled* rather than broken — the payload
@@ -70,9 +96,10 @@ declare global {
  * granted / before GTM has loaded — `window.dataLayer` is a plain array that
  * queues events; GTM (components/analytics/GoogleTagManager.tsx) reads through
  * it from the start once it mounts, so nothing is lost, just delayed until the
- * visitor accepts the cookie banner. No PII goes in here — GTM already fires
- * two Custom Event triggers, "Trigger - Free Audit Submit" (free_audit_submit)
- * and "Trigger - Newsletter Signup" (newsletter_signup) — see GTM-P4G38MZB.
+ * visitor accepts the cookie banner. No PII goes in here — GTM fires three
+ * Custom Event triggers, "Trigger - Free Audit Submit" (free_audit_submit),
+ * "Trigger - Newsletter Signup" (newsletter_signup) and "Trigger - Referral
+ * Submit" (referral_submit) — see GTM-P4G38MZB.
  */
 function pushDataLayerEvent(event: string, params: Record<string, unknown> = {}) {
   if (typeof window === "undefined") return;
@@ -123,5 +150,7 @@ export async function submitForm(payload: FormSubmission): Promise<void> {
     pushDataLayerEvent("newsletter_signup", { source: payload.source });
   } else if (payload.formType === "audit") {
     pushDataLayerEvent("free_audit_submit", { source: payload.source });
+  } else if (payload.formType === "referral") {
+    pushDataLayerEvent("referral_submit", { source: payload.source, spoken: payload.spoken });
   }
 }

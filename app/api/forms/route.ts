@@ -3,10 +3,11 @@ import { after, type NextRequest } from "next/server";
 /**
  * Form-submission sink.
  *
- * The five public forms (two newsletter subscribes, two custom-quote requests,
- * the free-audit booking) POST here. This route forwards each submission to a
- * Google Apps Script Web App that appends a row to one spreadsheet, on a
- * separate tab per form type (Subscribes / Quotes / Audits). See
+ * The six public forms (two newsletter subscribes, two custom-quote requests,
+ * the free-audit booking, the referral program) POST here. This route forwards
+ * each submission to a Google Apps Script Web App that appends a row to one
+ * spreadsheet, on a separate tab per form type (Subscribes / Quotes / Audits /
+ * Referrals). See
  * `docs/google-sheets-forms.md` for the Apps Script and setup.
  *
  * The Apps Script URL lives server-side (`GOOGLE_SHEETS_WEBHOOK_URL`, no
@@ -45,11 +46,33 @@ type AuditPayload = {
   message?: string;
 };
 
-type Payload = SubscribePayload | QuotePayload | AuditPayload;
+type ReferralPayload = {
+  formType: "referral";
+  source: string;
+  name: string;
+  email: string;
+  phone: string;
+  linkedin: string;
+  company: string;
+  website: string;
+  contactName: string;
+  contactRole: string;
+  contactEmail: string;
+  contactPhone: string;
+  contactLinkedin: string;
+  spoken: "yes" | "no";
+  mentionName: "yes" | "no" | "";
+  notes: string;
+};
+
+type Payload = SubscribePayload | QuotePayload | AuditPayload | ReferralPayload;
 
 const FIELD_MAX = 500;
 const MESSAGE_MAX = 2000;
 const ARRAY_MAX = 20;
+
+const LINKEDIN_URL =
+  /^(https?:\/\/)?([a-z]{2,3}\.)?linkedin\.com\/(in|pub|company)\/[^\s/?#]+\/?([?#]\S*)?$/i;
 
 const isEmail = (v: unknown): v is string =>
   typeof v === "string" && v.length <= FIELD_MAX && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v);
@@ -74,6 +97,8 @@ type Rejection =
   | "not-an-object"
   | "bad-email"
   | "empty-name"
+  | "missing-field"
+  | "bad-linkedin"
   | "unknown-form-type";
 
 function validate(body: unknown): Payload | Rejection {
@@ -104,6 +129,44 @@ function validate(body: unknown): Payload | Rejection {
       company: str(b.company),
       website: str(b.website),
       message: str(b.message, MESSAGE_MAX),
+    };
+  }
+
+  if (b.formType === "referral") {
+    if (!isEmail(b.email) || !isEmail(b.contactEmail)) return "bad-email";
+    if (typeof b.name !== "string" || !b.name.trim()) return "empty-name";
+    const required = ["phone", "company", "website", "contactName", "contactRole"] as const;
+    if (required.some((k) => typeof b[k] !== "string" || !(b[k] as string).trim())) {
+      return "missing-field";
+    }
+    if (b.spoken !== "yes" && b.spoken !== "no") return "missing-field";
+    // Optional, but if given it has to be a LinkedIn URL — same rule as the form.
+    const linkedinOk = (v: unknown) =>
+      v === undefined || v === "" || (typeof v === "string" && LINKEDIN_URL.test(v.trim()));
+    if (!linkedinOk(b.linkedin) || !linkedinOk(b.contactLinkedin)) return "bad-linkedin";
+    // Only a cold lead is asked whether we may use their name.
+    const mentionName =
+      b.spoken === "no" && (b.mentionName === "yes" || b.mentionName === "no")
+        ? b.mentionName
+        : "";
+    if (b.spoken === "no" && !mentionName) return "missing-field";
+    return {
+      formType: "referral",
+      source: str(b.source) || "unknown",
+      name: sanitize(b.name.trim(), FIELD_MAX),
+      email: b.email,
+      phone: str(b.phone),
+      linkedin: str(b.linkedin),
+      company: str(b.company),
+      website: str(b.website),
+      contactName: str(b.contactName),
+      contactRole: str(b.contactRole),
+      contactEmail: b.contactEmail,
+      contactPhone: str(b.contactPhone),
+      contactLinkedin: str(b.contactLinkedin),
+      spoken: b.spoken,
+      mentionName,
+      notes: str(b.notes, MESSAGE_MAX),
     };
   }
 

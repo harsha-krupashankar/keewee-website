@@ -266,6 +266,47 @@ export const NOT_FOUND_PAGE_QUERY = defineQuery(/* groq */ `
   }
 `);
 
+// --- Referral program ----------------------------------------------------
+
+export const REFERRAL_PAGE_QUERY = defineQuery(/* groq */ `
+  *[_type == "referralPage"][0]{
+    eyebrow,
+    sticker,
+    headline,
+    intro,
+    note,
+    form,
+    stepsHeadline,
+    steps[] ${CARD},
+    earnHeadline,
+    earnAmount,
+    earnBody,
+    earnNote,
+    whoHeadline,
+    whoAmount,
+    whoBody,
+    termsHeadline,
+    terms,
+    faqHeadline,
+    faqItems[] ${FAQ_ITEM},
+    ctaHeadline,
+    ctaBody,
+    ctaButton ${LINK},
+    ctaContact,
+    thankYouSticker,
+    thankYouHeadline,
+    thankYouBody,
+    thankYouCompanyFallback,
+    thankYouNote,
+    anotherHeadline,
+    anotherBody,
+    anotherButton ${LINK},
+    callHeadline,
+    callBody,
+    seo ${SEO}
+  }
+`);
+
 // --- Links page -----------------------------------------------------------
 
 export const LINKS_PAGE_QUERY = defineQuery(/* groq */ `

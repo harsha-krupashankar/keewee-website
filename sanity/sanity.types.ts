@@ -198,20 +198,110 @@ export type PostBody = Array<
     }
 >;
 
-export type NotFoundPage = {
+export type ReferralPage = {
   _id: string;
-  _type: "notFoundPage";
+  _type: "referralPage";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  eyebrow?: string;
   sticker?: string;
   headline?: Headline;
   intro?: string;
-  signoff?: string;
-  blogHeadline?: string;
-  blogButton?: Link;
-  socialsHeadline?: string;
+  note?: string;
+  form?: {
+    stepLabel?: string;
+    step1Title?: string;
+    step2Title?: string;
+    step3Title?: string;
+    nameLabel?: string;
+    emailLabel?: string;
+    phoneLabel?: string;
+    linkedinLabel?: string;
+    companyLabel?: string;
+    websiteLabel?: string;
+    contactNameLabel?: string;
+    contactRoleLabel?: string;
+    contactEmailLabel?: string;
+    contactPhoneLabel?: string;
+    contactLinkedinLabel?: string;
+    spokeQuestion?: string;
+    spokeYesLabel?: string;
+    spokeNoLabel?: string;
+    mentionQuestion?: string;
+    mentionYesLabel?: string;
+    mentionNoLabel?: string;
+    notesLabel?: string;
+    agreeLabel?: string;
+    requiredError?: string;
+    emailError?: string;
+    linkedinError?: string;
+    pickOneError?: string;
+    agreeError?: string;
+    genericError?: string;
+    throttledError?: string;
+    backLabel?: string;
+    nextLabel?: string;
+    submitLabel?: string;
+    submittingLabel?: string;
+  };
+  stepsHeadline?: Headline;
+  steps?: Array<
+    {
+      _key: string;
+    } & TitledCard
+  >;
+  earnHeadline?: string;
+  earnAmount?: string;
+  earnBody?: string;
+  earnNote?: string;
+  whoHeadline?: string;
+  whoAmount?: string;
+  whoBody?: string;
+  termsHeadline?: string;
+  terms?: Array<string>;
+  faqHeadline?: string;
+  faqItems?: Array<
+    {
+      _key: string;
+    } & FaqItem
+  >;
+  ctaHeadline?: Headline;
+  ctaBody?: string;
+  ctaButton?: Link;
+  ctaContact?: RichText;
+  thankYouSticker?: string;
+  thankYouHeadline?: Headline;
+  thankYouBody?: string;
+  thankYouCompanyFallback?: string;
+  thankYouNote?: string;
+  anotherHeadline?: string;
+  anotherBody?: string;
+  anotherButton?: Link;
+  callHeadline?: string;
+  callBody?: RichText;
+  seo?: Seo;
 };
+
+export type RichText = Array<{
+  children?: Array<{
+    marks?: Array<string>;
+    text?: string;
+    _type: "span";
+    _key: string;
+  }>;
+  style?: "normal" | "h3" | "h4" | "blockquote";
+  listItem?: "bullet" | "number";
+  markDefs?: Array<{
+    href: string;
+    openInNewTab?: boolean;
+    _type: "link";
+    _key: string;
+  }>;
+  level?: number;
+  _type: "block";
+  _key: string;
+}>;
 
 export type Link = {
   _type: "link";
@@ -234,6 +324,21 @@ export type Headline = Array<{
   _type: "block";
   _key: string;
 }>;
+
+export type NotFoundPage = {
+  _id: string;
+  _type: "notFoundPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  sticker?: string;
+  headline?: Headline;
+  intro?: string;
+  signoff?: string;
+  blogHeadline?: string;
+  blogButton?: Link;
+  socialsHeadline?: string;
+};
 
 export type LinksPage = {
   _id: string;
@@ -293,26 +398,6 @@ export type PromptLibraryPage = {
   ctaButton?: Link;
   seo?: Seo;
 };
-
-export type RichText = Array<{
-  children?: Array<{
-    marks?: Array<string>;
-    text?: string;
-    _type: "span";
-    _key: string;
-  }>;
-  style?: "normal" | "h3" | "h4" | "blockquote";
-  listItem?: "bullet" | "number";
-  markDefs?: Array<{
-    href: string;
-    openInNewTab?: boolean;
-    _type: "link";
-    _key: string;
-  }>;
-  level?: number;
-  _type: "block";
-  _key: string;
-}>;
 
 export type ServicesPage = {
   _id: string;
@@ -954,12 +1039,13 @@ export type AllSanitySchemaTypes =
   | Figure
   | Category
   | PostBody
-  | NotFoundPage
+  | ReferralPage
+  | RichText
   | Link
   | Headline
+  | NotFoundPage
   | LinksPage
   | PromptLibraryPage
-  | RichText
   | ServicesPage
   | PageHero
   | NewsletterPage
@@ -1551,6 +1637,111 @@ export type NOT_FOUND_PAGE_QUERY_RESULT = {
     openInNewTab: boolean | null;
   } | null;
   socialsHeadline: string | null;
+} | null;
+
+// Source: sanity/lib/queries.ts
+// Variable: REFERRAL_PAGE_QUERY
+// Query: *[_type == "referralPage"][0]{    eyebrow,    sticker,    headline,    intro,    note,    form,    stepsHeadline,    steps[] { title, description, tag },    earnHeadline,    earnAmount,    earnBody,    earnNote,    whoHeadline,    whoAmount,    whoBody,    termsHeadline,    terms,    faqHeadline,    faqItems[] { question, answer },    ctaHeadline,    ctaBody,    ctaButton { label, href, openInNewTab },    ctaContact,    thankYouSticker,    thankYouHeadline,    thankYouBody,    thankYouCompanyFallback,    thankYouNote,    anotherHeadline,    anotherBody,    anotherButton { label, href, openInNewTab },    callHeadline,    callBody,    seo { title, description, noIndex, image {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions} }  }
+export type REFERRAL_PAGE_QUERY_RESULT = {
+  eyebrow: string | null;
+  sticker: string | null;
+  headline: Headline | null;
+  intro: string | null;
+  note: string | null;
+  form: {
+    stepLabel?: string;
+    step1Title?: string;
+    step2Title?: string;
+    step3Title?: string;
+    nameLabel?: string;
+    emailLabel?: string;
+    phoneLabel?: string;
+    linkedinLabel?: string;
+    companyLabel?: string;
+    websiteLabel?: string;
+    contactNameLabel?: string;
+    contactRoleLabel?: string;
+    contactEmailLabel?: string;
+    contactPhoneLabel?: string;
+    contactLinkedinLabel?: string;
+    spokeQuestion?: string;
+    spokeYesLabel?: string;
+    spokeNoLabel?: string;
+    mentionQuestion?: string;
+    mentionYesLabel?: string;
+    mentionNoLabel?: string;
+    notesLabel?: string;
+    agreeLabel?: string;
+    requiredError?: string;
+    emailError?: string;
+    linkedinError?: string;
+    pickOneError?: string;
+    agreeError?: string;
+    genericError?: string;
+    throttledError?: string;
+    backLabel?: string;
+    nextLabel?: string;
+    submitLabel?: string;
+    submittingLabel?: string;
+  } | null;
+  stepsHeadline: Headline | null;
+  steps: Array<{
+    title: string;
+    description: string;
+    tag: string | null;
+  }> | null;
+  earnHeadline: string | null;
+  earnAmount: string | null;
+  earnBody: string | null;
+  earnNote: string | null;
+  whoHeadline: string | null;
+  whoAmount: string | null;
+  whoBody: string | null;
+  termsHeadline: string | null;
+  terms: Array<string> | null;
+  faqHeadline: string | null;
+  faqItems: Array<{
+    question: string;
+    answer: RichText;
+  }> | null;
+  ctaHeadline: Headline | null;
+  ctaBody: string | null;
+  ctaButton: {
+    label: string;
+    href: string;
+    openInNewTab: boolean | null;
+  } | null;
+  ctaContact: RichText | null;
+  thankYouSticker: string | null;
+  thankYouHeadline: Headline | null;
+  thankYouBody: string | null;
+  thankYouCompanyFallback: string | null;
+  thankYouNote: string | null;
+  anotherHeadline: string | null;
+  anotherBody: string | null;
+  anotherButton: {
+    label: string;
+    href: string;
+    openInNewTab: boolean | null;
+  } | null;
+  callHeadline: string | null;
+  callBody: RichText | null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    noIndex: boolean | null;
+    image: {
+      _type: "figure";
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string;
+      caption?: string;
+      lqip: string | null;
+      dimensions: SanityImageDimensions | null;
+    } | null;
+  } | null;
 } | null;
 
 // Source: sanity/lib/queries.ts
@@ -2280,6 +2471,7 @@ declare module "@sanity/client" {
     '\n  *[_type == "freeAuditPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    navCtaLabel,\n    coverHeader { eyebrow, headline, sticker, intro },\n    coverCards[] { title, description, tag },\n    forYouHeader { eyebrow, headline, sticker, intro },\n    forYouPointers,\n    deliverablesHeader { eyebrow, headline, sticker, intro },\n    deliverables[] { title, description, tag },\n    formEyebrow,\n    formHeadline,\n    formIntro,\n    formSuccessSticker,\n    formSuccessText,\n    faqHeader { eyebrow, headline, sticker, intro },\n    faqItems[] { question, answer },\n    proofHeader { eyebrow, headline, sticker, intro },\n    proofSticker,\n    proofBody,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': FREE_AUDIT_PAGE_QUERY_RESULT;
     '\n  *[_type == "newsletterPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    formTitle,\n    formButtonLabel,\n    formDisclaimer,\n    formSuccessSticker,\n    formSuccessText,\n    whyHeader { eyebrow, headline, sticker, intro },\n    whyReasons[] { title, description, tag },\n    insideHeader { eyebrow, headline, sticker, intro },\n    insideItems[] { title, description, tag },\n    afterHoursHeader { eyebrow, headline, sticker, intro },\n    afterHoursBody,\n    ctaEyebrow,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n    ctaSecondaryLabel,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': NEWSLETTER_PAGE_QUERY_RESULT;
     '\n  *[_type == "notFoundPage"][0]{\n    sticker,\n    headline,\n    intro,\n    signoff,\n    blogHeadline,\n    blogButton { label, href, openInNewTab },\n    socialsHeadline\n  }\n': NOT_FOUND_PAGE_QUERY_RESULT;
+    '\n  *[_type == "referralPage"][0]{\n    eyebrow,\n    sticker,\n    headline,\n    intro,\n    note,\n    form,\n    stepsHeadline,\n    steps[] { title, description, tag },\n    earnHeadline,\n    earnAmount,\n    earnBody,\n    earnNote,\n    whoHeadline,\n    whoAmount,\n    whoBody,\n    termsHeadline,\n    terms,\n    faqHeadline,\n    faqItems[] { question, answer },\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n    ctaContact,\n    thankYouSticker,\n    thankYouHeadline,\n    thankYouBody,\n    thankYouCompanyFallback,\n    thankYouNote,\n    anotherHeadline,\n    anotherBody,\n    anotherButton { label, href, openInNewTab },\n    callHeadline,\n    callBody,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': REFERRAL_PAGE_QUERY_RESULT;
     '\n  *[_type == "linksPage"][0]{\n    cta { label, href, openInNewTab },\n\n    feedTiles[] {\n      _key,\n      image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n      href\n    },\n\n    footerLinks[] { label, href, openInNewTab },\n    footerNote,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': LINKS_PAGE_QUERY_RESULT;
     '\n  *[_type == "servicesPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    heroSecondaryCta { label, href, openInNewTab },\n    categories[] {\n      name,\n      headline,\n      intro,\n      layout,\n      featureSticker,\n      items[] { title, description, tag }\n    },\n    auditHeadline,\n    auditBody,\n    auditButton { label, href, openInNewTab },\n    quoteEyebrow,\n    quoteHeadline,\n    quoteIntro,\n    quoteGoalsLabel,\n    quoteGoals,\n    quoteServicesLabel,\n    quoteServiceGroups[] { title, options },\n    quoteMessagePlaceholder,\n    quoteButtonLabel,\n    quoteNote,\n    quoteSuccessSticker,\n    quoteSuccessText,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': SERVICES_PAGE_QUERY_RESULT;
     '\n  *[_type == "promptLibraryPage"][0]{\n    heroBadge,\n    heroStickerA,\n    heroStickerB,\n    heroHeadline,\n    heroIntro,\n    heroCta { label, href, openInNewTab },\n    heroBadges,\n\n    whyLabel,\n    whyHeadline,\n    whyBody,\n\n    aiLabel,\n    aiHeadline,\n    aiIntro,\n    aiPlatforms[] { title, description, tag },\n\n    warningHeadline,\n    warningBody,\n\n    categories[] {\n      name,\n      tagline,\n      prompts[] {\n        title,\n        bestTool,\n        useCase,\n        promptText,\n        tip\n      }\n    },\n\n    ctaLabel,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': PROMPT_LIBRARY_PAGE_QUERY_RESULT;

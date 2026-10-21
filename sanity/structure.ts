@@ -54,6 +54,10 @@ export const structure: StructureResolver = (S) =>
           S.document().schemaType("promptLibraryPage").documentId("promptLibraryPage")
         ),
       S.listItem()
+        .title("Referral program page")
+        .id("referralPage")
+        .child(S.document().schemaType("referralPage").documentId("referralPage")),
+      S.listItem()
         .title("Links page")
         .id("linksPage")
         .child(S.document().schemaType("linksPage").documentId("linksPage")),
