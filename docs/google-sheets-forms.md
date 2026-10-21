@@ -1,6 +1,6 @@
 # Form submissions → Google Sheets
 
-The five public forms POST to `app/api/forms/route.ts`, which forwards each
+The six public forms POST to `app/api/forms/route.ts`, which forwards each
 submission server-side to a **Google Apps Script Web App**. The script appends a
 row to one **spreadsheet**, on a separate **tab** per form type:
 
@@ -9,6 +9,7 @@ row to one **spreadsheet**, on a separate **tab** per form type:
 | `subscribe` | Newsletter page hero, Blog newsletter banner       | `Subscribes` |
 | `quote`     | Per-service quote form, Services-index quote form  | `Quotes` |
 | `audit`     | `/free-audit` booking form                         | `Audits` |
+| `referral`  | `/referral` form                                   | `Referrals` |
 
 The script creates a missing tab on first write, so renaming or deleting one
 just makes a fresh empty tab appear on the next submission — rename the tab
@@ -101,6 +102,33 @@ const TABS = {
       safe(d.source),
     ],
   },
+  referral: {
+    name: 'Referrals',
+    headers: [
+      'Timestamp', 'Referrer name', 'Referrer email', 'Referrer phone', 'Referrer LinkedIn',
+      'Company', 'Website', 'Contact name', 'Contact role', 'Contact email',
+      'Contact phone', 'Contact LinkedIn', 'Warm intro', 'May mention referrer',
+      'Notes', 'Source',
+    ],
+    row: (d, now) => [
+      now,
+      safe(d.name),
+      safe(d.email),
+      safe(d.phone),
+      safe(d.linkedin),
+      safe(d.company),
+      safe(d.website),
+      safe(d.contactName),
+      safe(d.contactRole),
+      safe(d.contactEmail),
+      safe(d.contactPhone),
+      safe(d.contactLinkedin),
+      safe(d.warmIntro),
+      safe(d.mentionName),
+      safe(d.message),
+      safe(d.source),
+    ],
+  },
 };
 
 function doPost(e) {
@@ -175,7 +203,8 @@ Sent by `lib/submit-form.ts`, validated in `app/api/forms/route.ts`:
 ```
 
 `source` values: `newsletter-page`, `blog-newsletter-banner` (subscribes);
-`services-index`, `service-page:<scope>` (quotes); `free-audit-page` (audit).
+`services-index`, `service-page:<scope>` (quotes); `free-audit-page` (audit);
+`referral-page` (referral).
 
 ## Rate limiting
 
@@ -187,7 +216,7 @@ Vercel's `{"error":{...}}` envelope rather than the route's `{"message":...}`.
 
 Two things to know when this looks like "the form is broken":
 
-- **All five public forms share the one path**, so they share one counter per IP.
+- **All six public forms share the one path**, so they share one counter per IP.
 - The limit was originally `5 / 600s`, which a single visitor could exhaust by
   retrying — and which unrelated visitors behind one mobile CGNAT or office NAT
   address share. That is what made legitimate submissions fail.

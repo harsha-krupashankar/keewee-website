@@ -37,7 +37,7 @@ Everything lives in `sanity/schemaTypes/`.
 
 | Group          | Types                                                                                      |
 | -------------- | ------------------------------------------------------------------------------------------ |
-| **Singletons** | `siteSettings`, `homePage`, `aboutPage`, `blogIndexPage`, `faqPage`, `freeAuditPage`, `newsletterPage` |
+| **Singletons** | `siteSettings`, `homePage`, `aboutPage`, `blogIndexPage`, `faqPage`, `freeAuditPage`, `newsletterPage`, `referralPage` |
 | **Collections**| `post`, `category`, `person`, `servicePage`, `faqGroup`, `legalDoc`                          |
 | **Objects**    | `headline`, `richText`, `postBody`, `pageHero`, `sectionHeader`, `titledCard`, `funnelStage`, `faqItem`, `link`, `cta`, `figure`, `seo`, the `legal*` blocks |
 
@@ -105,6 +105,14 @@ Two things the seed cannot recover, because they never existed:
   author photos and OG images in the Studio.
 
 Delete `scripts/legacy/` and `scripts/seed.ts` once the seed has run everywhere.
+
+The referral page (`/referral`) came later and has its own seed. It uses
+`createIfNotExists`, so it never touches the document once it exists:
+
+```bash
+npm run seed-referral:dry   # print the document
+npm run seed-referral       # create it
+```
 
 ### Never put a dot in a document `_id`
 

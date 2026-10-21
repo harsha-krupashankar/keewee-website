@@ -3,10 +3,11 @@ import { after, type NextRequest } from "next/server";
 /**
  * Form-submission sink.
  *
- * The five public forms (two newsletter subscribes, two custom-quote requests,
- * the free-audit booking) POST here. This route forwards each submission to a
- * Google Apps Script Web App that appends a row to one spreadsheet, on a
- * separate tab per form type (Subscribes / Quotes / Audits). See
+ * The six public forms (two newsletter subscribes, two custom-quote requests,
+ * the free-audit booking, the referral form) POST here. This route forwards
+ * each submission to a Google Apps Script Web App that appends a row to one
+ * spreadsheet, on a separate tab per form type (Subscribes / Quotes / Audits /
+ * Referrals). See
  * `docs/google-sheets-forms.md` for the Apps Script and setup.
  *
  * The Apps Script URL lives server-side (`GOOGLE_SHEETS_WEBHOOK_URL`, no
@@ -45,7 +46,26 @@ type AuditPayload = {
   message?: string;
 };
 
-type Payload = SubscribePayload | QuotePayload | AuditPayload;
+type ReferralPayload = {
+  formType: "referral";
+  source: string;
+  name: string;
+  email: string;
+  phone?: string;
+  linkedin?: string;
+  company?: string;
+  website?: string;
+  contactName?: string;
+  contactRole?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  contactLinkedin?: string;
+  warmIntro?: string;
+  mentionName?: string;
+  message?: string;
+};
+
+type Payload = SubscribePayload | QuotePayload | AuditPayload | ReferralPayload;
 
 const FIELD_MAX = 500;
 const MESSAGE_MAX = 2000;
@@ -103,6 +123,30 @@ function validate(body: unknown): Payload | Rejection {
       email: b.email,
       company: str(b.company),
       website: str(b.website),
+      message: str(b.message, MESSAGE_MAX),
+    };
+  }
+
+  if (b.formType === "referral") {
+    if (!isEmail(b.email)) return "bad-email";
+    if (typeof b.name !== "string" || !b.name.trim()) return "empty-name";
+    const choice = (v: unknown) => (v === "yes" || v === "no" ? v : "");
+    return {
+      formType: "referral",
+      source: str(b.source) || "unknown",
+      name: sanitize(b.name.slice(0, FIELD_MAX), FIELD_MAX),
+      email: b.email,
+      phone: str(b.phone),
+      linkedin: str(b.linkedin),
+      company: str(b.company),
+      website: str(b.website),
+      contactName: str(b.contactName),
+      contactRole: str(b.contactRole),
+      contactEmail: str(b.contactEmail),
+      contactPhone: str(b.contactPhone),
+      contactLinkedin: str(b.contactLinkedin),
+      warmIntro: choice(b.warmIntro),
+      mentionName: choice(b.mentionName),
       message: str(b.message, MESSAGE_MAX),
     };
   }

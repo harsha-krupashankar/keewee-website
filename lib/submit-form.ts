@@ -38,7 +38,33 @@ export type AuditSubmission = {
   message?: string;
 };
 
-export type FormSubmission = SubscribeSubmission | QuoteSubmission | AuditSubmission;
+/** The `/referral` form. `name`/`email` are the referrer; `contact*` the person referred. */
+export type ReferralSubmission = {
+  formType: "referral";
+  source: string;
+  name: string;
+  email: string;
+  phone?: string;
+  linkedin?: string;
+  company?: string;
+  website?: string;
+  contactName?: string;
+  contactRole?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  contactLinkedin?: string;
+  /** "yes" when the referrer has already told them about Keewee. */
+  warmIntro?: "yes" | "no";
+  /** Cold leads only: whether we may say who referred them. */
+  mentionName?: "yes" | "no" | "";
+  message?: string;
+};
+
+export type FormSubmission =
+  | SubscribeSubmission
+  | QuoteSubmission
+  | AuditSubmission
+  | ReferralSubmission;
 
 /**
  * Thrown when the submission was *throttled* rather than broken — the payload
@@ -123,5 +149,7 @@ export async function submitForm(payload: FormSubmission): Promise<void> {
     pushDataLayerEvent("newsletter_signup", { source: payload.source });
   } else if (payload.formType === "audit") {
     pushDataLayerEvent("free_audit_submit", { source: payload.source });
+  } else if (payload.formType === "referral") {
+    pushDataLayerEvent("referral_submit", { source: payload.source });
   }
 }

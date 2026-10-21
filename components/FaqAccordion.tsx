@@ -10,7 +10,8 @@ import type { FaqItem } from "@/sanity/lib/types";
  *
  * `card` gives each question its own bordered panel (home page, FAQ page);
  * `flush` stacks them with hairline rules inside an existing surface (free audit,
- * service pages). Keeping both here means the open/close behaviour and the
+ * service pages); `soft` is borderless shadowed cards with a round +/− badge
+ * (referral page). Keeping them here means the open/close behaviour and the
  * `aria-expanded` wiring only exist once.
  */
 export default function FaqAccordion({
@@ -20,7 +21,7 @@ export default function FaqAccordion({
   animate = true,
 }: {
   items: FaqItem[];
-  variant?: "card" | "flush";
+  variant?: "card" | "flush" | "soft";
   /** Index open on first paint. Pass -1 for all closed. */
   defaultOpen?: number;
   animate?: boolean;
@@ -29,6 +30,70 @@ export default function FaqAccordion({
   const baseId = useId();
 
   if (!items?.length) return null;
+
+  if (variant === "soft") {
+    return (
+      <div className="flex flex-col gap-4">
+        {items.map((item, i) => {
+          const open = openIndex === i;
+          const panelId = `${baseId}-panel-${i}`;
+          return (
+            <div
+              key={item.question}
+              className="rounded-[18px] bg-white shadow-[0_8px_24px_rgba(28,27,25,0.04)]"
+            >
+              <h3>
+                <button
+                  type="button"
+                  onClick={() => setOpenIndex(open ? -1 : i)}
+                  aria-expanded={open}
+                  aria-controls={panelId}
+                  className="flex min-h-[72px] w-full items-center justify-between gap-5 px-8 py-6 text-left font-display text-[19px] font-bold leading-[1.25] text-ink transition-colors duration-150 hover:text-green focus-visible:rounded-[18px] focus-visible:outline focus-visible:outline-[3px] focus-visible:-outline-offset-[3px] focus-visible:outline-lime-bright"
+                >
+                  <span>{item.question}</span>
+                  <span
+                    aria-hidden
+                    className={`flex size-8 flex-shrink-0 items-center justify-center rounded-full transition-colors duration-200 ${
+                      open ? "bg-lime" : "bg-surface"
+                    }`}
+                  >
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      stroke="#1C1B19"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    >
+                      <path d="M1 7h12" />
+                      <path
+                        d="M7 1v12"
+                        className="transition-opacity duration-200"
+                        style={{ opacity: open ? 0 : 1 }}
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </h3>
+              <div
+                id={panelId}
+                className="grid transition-[grid-template-rows] duration-300 ease-in-out"
+                style={{ gridTemplateRows: open ? "1fr" : "0fr" }}
+              >
+                <div className="overflow-hidden">
+                  <Copy
+                    value={item.answer}
+                    className="max-w-[680px] px-8 pb-7 font-body text-base font-medium leading-relaxed text-body"
+                  />
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
 
   if (variant === "flush") {
     return (

@@ -290,6 +290,80 @@ export type NotFoundPage = {
   socialsHeadline?: string | null;
 };
 
+export type ReferralForm = {
+  stepLabel?: string | null;
+  step1Title?: string | null;
+  nameLabel?: string | null;
+  emailLabel?: string | null;
+  phoneLabel?: string | null;
+  linkedinLabel?: string | null;
+  step2Title?: string | null;
+  companyLabel?: string | null;
+  websiteLabel?: string | null;
+  contactNameLabel?: string | null;
+  contactRoleLabel?: string | null;
+  contactEmailLabel?: string | null;
+  contactPhoneLabel?: string | null;
+  contactLinkedinLabel?: string | null;
+  step3Title?: string | null;
+  spokeQuestion?: string | null;
+  spokeYesLabel?: string | null;
+  spokeNoLabel?: string | null;
+  mentionQuestion?: string | null;
+  mentionYesLabel?: string | null;
+  mentionNoLabel?: string | null;
+  notesLabel?: string | null;
+  agreeLabel?: string | null;
+  backLabel?: string | null;
+  nextLabel?: string | null;
+  submitLabel?: string | null;
+  submittingLabel?: string | null;
+  requiredError?: string | null;
+  invalidEmailError?: string | null;
+  pickOneError?: string | null;
+  agreeError?: string | null;
+  submitError?: string | null;
+  throttledError?: string | null;
+};
+
+export type ReferralPage = {
+  heroEyebrow?: string | null;
+  heroSticker?: string | null;
+  heroHeadline?: Headline | null;
+  heroIntro?: string | null;
+  heroNote?: string | null;
+  form?: ReferralForm | null;
+  howItWorksHeadline?: Headline | null;
+  howItWorksSteps?: TitledCard[] | null;
+  earningsHeadline?: Headline | null;
+  earningsFigure?: string | null;
+  earningsBody?: string | null;
+  earningsFootnote?: string | null;
+  eligibilityHeadline?: Headline | null;
+  eligibilityFigure?: string | null;
+  eligibilityBody?: string | null;
+  termsHeadline?: Headline | null;
+  terms?: string[] | null;
+  faqHeadline?: Headline | null;
+  faqItems?: FaqItem[] | null;
+  ctaHeadline?: Headline | null;
+  ctaBody?: string | null;
+  ctaButton?: Link | null;
+  ctaContact?: RichText | null;
+  thankYouSticker?: string | null;
+  thankYouHeadline?: Headline | null;
+  thankYouBody?: string | null;
+  thankYouCompanyFallback?: string | null;
+  thankYouNote?: string | null;
+  anotherHeadline?: Headline | null;
+  anotherBody?: string | null;
+  anotherButton?: Link | null;
+  callHeadline?: Headline | null;
+  callBody?: RichText | null;
+  seo?: Seo | null;
+  thankYouSeo?: Seo | null;
+};
+
 /** Which of the five shapes the design gives a category band on `/services`. */
 export type ServiceCategoryLayout =
   | "feature"
@@ -479,7 +553,8 @@ export type DiscoveryPageType =
   | "faqPage"
   | "freeAuditPage"
   | "newsletterPage"
-  | "promptLibraryPage";
+  | "promptLibraryPage"
+  | "referralPage";
 
 export type Discovery = {
   settings?: {

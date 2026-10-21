@@ -21,6 +21,13 @@ const components: PortableTextComponents = {
         <span className="relative">{children}</span>
       </span>
     ),
+    // Fills the whole word rather than underlining it. Always ink, so it reads
+    // the same on paper and on an ink band.
+    marker: ({ children }) => (
+      <mark className="rounded-[4px] bg-lime px-1.5 py-0.5 text-ink [-webkit-box-decoration-break:clone] [box-decoration-break:clone]">
+        {children}
+      </mark>
+    ),
     green: ({ children }) => <span className="text-green">{children}</span>,
     // For headlines sitting on an ink band, where the green reads as almost black.
     lime: ({ children }) => <span className="text-lime">{children}</span>,

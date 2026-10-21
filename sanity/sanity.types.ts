@@ -198,27 +198,110 @@ export type PostBody = Array<
     }
 >;
 
-export type NotFoundPage = {
+export type ReferralPage = {
   _id: string;
-  _type: "notFoundPage";
+  _type: "referralPage";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  sticker?: string;
-  headline?: Headline;
-  intro?: string;
-  signoff?: string;
-  blogHeadline?: string;
-  blogButton?: Link;
-  socialsHeadline?: string;
+  heroEyebrow?: string;
+  heroSticker?: string;
+  heroHeadline?: Headline;
+  heroIntro?: string;
+  heroNote?: string;
+  form?: {
+    stepLabel?: string;
+    step1Title?: string;
+    nameLabel?: string;
+    emailLabel?: string;
+    phoneLabel?: string;
+    linkedinLabel?: string;
+    step2Title?: string;
+    companyLabel?: string;
+    websiteLabel?: string;
+    contactNameLabel?: string;
+    contactRoleLabel?: string;
+    contactEmailLabel?: string;
+    contactPhoneLabel?: string;
+    contactLinkedinLabel?: string;
+    step3Title?: string;
+    spokeQuestion?: string;
+    spokeYesLabel?: string;
+    spokeNoLabel?: string;
+    mentionQuestion?: string;
+    mentionYesLabel?: string;
+    mentionNoLabel?: string;
+    notesLabel?: string;
+    agreeLabel?: string;
+    backLabel?: string;
+    nextLabel?: string;
+    submitLabel?: string;
+    submittingLabel?: string;
+    requiredError?: string;
+    invalidEmailError?: string;
+    pickOneError?: string;
+    agreeError?: string;
+    submitError?: string;
+    throttledError?: string;
+  };
+  howItWorksHeadline?: Headline;
+  howItWorksSteps?: Array<
+    {
+      _key: string;
+    } & TitledCard
+  >;
+  earningsHeadline?: Headline;
+  earningsFigure?: string;
+  earningsBody?: string;
+  earningsFootnote?: string;
+  eligibilityHeadline?: Headline;
+  eligibilityFigure?: string;
+  eligibilityBody?: string;
+  termsHeadline?: Headline;
+  terms?: Array<string>;
+  faqHeadline?: Headline;
+  faqItems?: Array<
+    {
+      _key: string;
+    } & FaqItem
+  >;
+  ctaHeadline?: Headline;
+  ctaBody?: string;
+  ctaButton?: Link;
+  ctaContact?: RichText;
+  thankYouSticker?: string;
+  thankYouHeadline?: Headline;
+  thankYouBody?: string;
+  thankYouCompanyFallback?: string;
+  thankYouNote?: string;
+  anotherHeadline?: Headline;
+  anotherBody?: string;
+  anotherButton?: Link;
+  callHeadline?: Headline;
+  callBody?: RichText;
+  seo?: Seo;
+  thankYouSeo?: Seo;
 };
 
-export type Link = {
-  _type: "link";
-  label: string;
-  href: string;
-  openInNewTab?: boolean;
-};
+export type RichText = Array<{
+  children?: Array<{
+    marks?: Array<string>;
+    text?: string;
+    _type: "span";
+    _key: string;
+  }>;
+  style?: "normal" | "h3" | "h4" | "blockquote";
+  listItem?: "bullet" | "number";
+  markDefs?: Array<{
+    href: string;
+    openInNewTab?: boolean;
+    _type: "link";
+    _key: string;
+  }>;
+  level?: number;
+  _type: "block";
+  _key: string;
+}>;
 
 export type Headline = Array<{
   children?: Array<{
@@ -234,6 +317,28 @@ export type Headline = Array<{
   _type: "block";
   _key: string;
 }>;
+
+export type Link = {
+  _type: "link";
+  label: string;
+  href: string;
+  openInNewTab?: boolean;
+};
+
+export type NotFoundPage = {
+  _id: string;
+  _type: "notFoundPage";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  sticker?: string;
+  headline?: Headline;
+  intro?: string;
+  signoff?: string;
+  blogHeadline?: string;
+  blogButton?: Link;
+  socialsHeadline?: string;
+};
 
 export type LinksPage = {
   _id: string;
@@ -293,26 +398,6 @@ export type PromptLibraryPage = {
   ctaButton?: Link;
   seo?: Seo;
 };
-
-export type RichText = Array<{
-  children?: Array<{
-    marks?: Array<string>;
-    text?: string;
-    _type: "span";
-    _key: string;
-  }>;
-  style?: "normal" | "h3" | "h4" | "blockquote";
-  listItem?: "bullet" | "number";
-  markDefs?: Array<{
-    href: string;
-    openInNewTab?: boolean;
-    _type: "link";
-    _key: string;
-  }>;
-  level?: number;
-  _type: "block";
-  _key: string;
-}>;
 
 export type ServicesPage = {
   _id: string;
@@ -954,12 +1039,13 @@ export type AllSanitySchemaTypes =
   | Figure
   | Category
   | PostBody
-  | NotFoundPage
-  | Link
+  | ReferralPage
+  | RichText
   | Headline
+  | Link
+  | NotFoundPage
   | LinksPage
   | PromptLibraryPage
-  | RichText
   | ServicesPage
   | PageHero
   | NewsletterPage
@@ -1554,6 +1640,126 @@ export type NOT_FOUND_PAGE_QUERY_RESULT = {
 } | null;
 
 // Source: sanity/lib/queries.ts
+// Variable: REFERRAL_PAGE_QUERY
+// Query: *[_type == "referralPage"][0]{    heroEyebrow,    heroSticker,    heroHeadline,    heroIntro,    heroNote,    form {      stepLabel,      step1Title,      nameLabel,      emailLabel,      phoneLabel,      linkedinLabel,      step2Title,      companyLabel,      websiteLabel,      contactNameLabel,      contactRoleLabel,      contactEmailLabel,      contactPhoneLabel,      contactLinkedinLabel,      step3Title,      spokeQuestion,      spokeYesLabel,      spokeNoLabel,      mentionQuestion,      mentionYesLabel,      mentionNoLabel,      notesLabel,      agreeLabel,      backLabel,      nextLabel,      submitLabel,      submittingLabel,      requiredError,      invalidEmailError,      pickOneError,      agreeError,      submitError,      throttledError    },    howItWorksHeadline,    howItWorksSteps[] { title, description, tag },    earningsHeadline,    earningsFigure,    earningsBody,    earningsFootnote,    eligibilityHeadline,    eligibilityFigure,    eligibilityBody,    termsHeadline,    terms,    faqHeadline,    faqItems[] { question, answer },    ctaHeadline,    ctaBody,    ctaButton { label, href, openInNewTab },    ctaContact,    thankYouSticker,    thankYouHeadline,    thankYouBody,    thankYouCompanyFallback,    thankYouNote,    anotherHeadline,    anotherBody,    anotherButton { label, href, openInNewTab },    callHeadline,    callBody,    seo { title, description, noIndex, image {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions} },    thankYouSeo { title, description, noIndex, image {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions} }  }
+export type REFERRAL_PAGE_QUERY_RESULT = {
+  heroEyebrow: string | null;
+  heroSticker: string | null;
+  heroHeadline: Headline | null;
+  heroIntro: string | null;
+  heroNote: string | null;
+  form: {
+    stepLabel: string | null;
+    step1Title: string | null;
+    nameLabel: string | null;
+    emailLabel: string | null;
+    phoneLabel: string | null;
+    linkedinLabel: string | null;
+    step2Title: string | null;
+    companyLabel: string | null;
+    websiteLabel: string | null;
+    contactNameLabel: string | null;
+    contactRoleLabel: string | null;
+    contactEmailLabel: string | null;
+    contactPhoneLabel: string | null;
+    contactLinkedinLabel: string | null;
+    step3Title: string | null;
+    spokeQuestion: string | null;
+    spokeYesLabel: string | null;
+    spokeNoLabel: string | null;
+    mentionQuestion: string | null;
+    mentionYesLabel: string | null;
+    mentionNoLabel: string | null;
+    notesLabel: string | null;
+    agreeLabel: string | null;
+    backLabel: string | null;
+    nextLabel: string | null;
+    submitLabel: string | null;
+    submittingLabel: string | null;
+    requiredError: string | null;
+    invalidEmailError: string | null;
+    pickOneError: string | null;
+    agreeError: string | null;
+    submitError: string | null;
+    throttledError: string | null;
+  } | null;
+  howItWorksHeadline: Headline | null;
+  howItWorksSteps: Array<{
+    title: string;
+    description: string;
+    tag: string | null;
+  }> | null;
+  earningsHeadline: Headline | null;
+  earningsFigure: string | null;
+  earningsBody: string | null;
+  earningsFootnote: string | null;
+  eligibilityHeadline: Headline | null;
+  eligibilityFigure: string | null;
+  eligibilityBody: string | null;
+  termsHeadline: Headline | null;
+  terms: Array<string> | null;
+  faqHeadline: Headline | null;
+  faqItems: Array<{
+    question: string;
+    answer: RichText;
+  }> | null;
+  ctaHeadline: Headline | null;
+  ctaBody: string | null;
+  ctaButton: {
+    label: string;
+    href: string;
+    openInNewTab: boolean | null;
+  } | null;
+  ctaContact: RichText | null;
+  thankYouSticker: string | null;
+  thankYouHeadline: Headline | null;
+  thankYouBody: string | null;
+  thankYouCompanyFallback: string | null;
+  thankYouNote: string | null;
+  anotherHeadline: Headline | null;
+  anotherBody: string | null;
+  anotherButton: {
+    label: string;
+    href: string;
+    openInNewTab: boolean | null;
+  } | null;
+  callHeadline: Headline | null;
+  callBody: RichText | null;
+  seo: {
+    title: string | null;
+    description: string | null;
+    noIndex: boolean | null;
+    image: {
+      _type: "figure";
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string;
+      caption?: string;
+      lqip: string | null;
+      dimensions: SanityImageDimensions | null;
+    } | null;
+  } | null;
+  thankYouSeo: {
+    title: string | null;
+    description: string | null;
+    noIndex: boolean | null;
+    image: {
+      _type: "figure";
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      alt: string;
+      caption?: string;
+      lqip: string | null;
+      dimensions: SanityImageDimensions | null;
+    } | null;
+  } | null;
+} | null;
+
+// Source: sanity/lib/queries.ts
 // Variable: LINKS_PAGE_QUERY
 // Query: *[_type == "linksPage"][0]{    cta { label, href, openInNewTab },    feedTiles[] {      _key,      image {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions},      href    },    footerLinks[] { label, href, openInNewTab },    footerNote,    seo { title, description, noIndex, image {  ...,  "lqip": asset->metadata.lqip,  "dimensions": asset->metadata.dimensions} }  }
 export type LINKS_PAGE_QUERY_RESULT = {
@@ -2054,7 +2260,7 @@ export type SERVICE_PAGE_QUERY_RESULT = {
 
 // Source: sanity/lib/queries.ts
 // Variable: DISCOVERY_QUERY
-// Query: {  "settings": *[_type == "siteSettings"][0]{    title,    contactEmail,    socialLinks[] { platform, href },    defaultSeo { title, description },    aiDiscovery { summary, pagesHeading, servicesHeading, postsHeading, faqHeading }  },  "pages": *[_type in [    "homePage", "aboutPage", "servicesPage", "blogIndexPage", "faqPage",    "freeAuditPage", "newsletterPage", "promptLibraryPage"  ] && seo.noIndex != true]{    _type,    "title": seo.title,    "description": seo.description  },  "services": *[_type == "servicePage" && defined(slug.current) && seo.noIndex != true]    | order(category asc){      category,      "slug": slug.current,      heroSub,      "description": seo.description,      offerings[] { title }    },  "posts": *[_type == "post" && defined(slug.current) && count(body) > 0 && seo.noIndex != true]    | order(publishedAt desc){      title,      "slug": slug.current,      dek,      publishedAt,      _updatedAt,      "author": author->name,      "category": category->title    },  "faqs": [    ...*[_type == "homePage"][0].faqItems[] { question, answer },    ...(*[_type == "faqGroup"] | order(order asc, title asc))[].items[] { question, answer }  ]}
+// Query: {  "settings": *[_type == "siteSettings"][0]{    title,    contactEmail,    socialLinks[] { platform, href },    defaultSeo { title, description },    aiDiscovery { summary, pagesHeading, servicesHeading, postsHeading, faqHeading }  },  "pages": *[_type in [    "homePage", "aboutPage", "servicesPage", "blogIndexPage", "faqPage",    "freeAuditPage", "newsletterPage", "promptLibraryPage", "referralPage"  ] && seo.noIndex != true]{    _type,    "title": seo.title,    "description": seo.description  },  "services": *[_type == "servicePage" && defined(slug.current) && seo.noIndex != true]    | order(category asc){      category,      "slug": slug.current,      heroSub,      "description": seo.description,      offerings[] { title }    },  "posts": *[_type == "post" && defined(slug.current) && count(body) > 0 && seo.noIndex != true]    | order(publishedAt desc){      title,      "slug": slug.current,      dek,      publishedAt,      _updatedAt,      "author": author->name,      "category": category->title    },  "faqs": [    ...*[_type == "homePage"][0].faqItems[] { question, answer },    ...(*[_type == "faqGroup"] | order(order asc, title asc))[].items[] { question, answer }  ]}
 export type DISCOVERY_QUERY_RESULT = {
   settings: {
     title: string;
@@ -2108,6 +2314,11 @@ export type DISCOVERY_QUERY_RESULT = {
       }
     | {
         _type: "promptLibraryPage";
+        title: string | null;
+        description: string | null;
+      }
+    | {
+        _type: "referralPage";
         title: string | null;
         description: string | null;
       }
@@ -2280,6 +2491,7 @@ declare module "@sanity/client" {
     '\n  *[_type == "freeAuditPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    navCtaLabel,\n    coverHeader { eyebrow, headline, sticker, intro },\n    coverCards[] { title, description, tag },\n    forYouHeader { eyebrow, headline, sticker, intro },\n    forYouPointers,\n    deliverablesHeader { eyebrow, headline, sticker, intro },\n    deliverables[] { title, description, tag },\n    formEyebrow,\n    formHeadline,\n    formIntro,\n    formSuccessSticker,\n    formSuccessText,\n    faqHeader { eyebrow, headline, sticker, intro },\n    faqItems[] { question, answer },\n    proofHeader { eyebrow, headline, sticker, intro },\n    proofSticker,\n    proofBody,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': FREE_AUDIT_PAGE_QUERY_RESULT;
     '\n  *[_type == "newsletterPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    formTitle,\n    formButtonLabel,\n    formDisclaimer,\n    formSuccessSticker,\n    formSuccessText,\n    whyHeader { eyebrow, headline, sticker, intro },\n    whyReasons[] { title, description, tag },\n    insideHeader { eyebrow, headline, sticker, intro },\n    insideItems[] { title, description, tag },\n    afterHoursHeader { eyebrow, headline, sticker, intro },\n    afterHoursBody,\n    ctaEyebrow,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n    ctaSecondaryLabel,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': NEWSLETTER_PAGE_QUERY_RESULT;
     '\n  *[_type == "notFoundPage"][0]{\n    sticker,\n    headline,\n    intro,\n    signoff,\n    blogHeadline,\n    blogButton { label, href, openInNewTab },\n    socialsHeadline\n  }\n': NOT_FOUND_PAGE_QUERY_RESULT;
+    '\n  *[_type == "referralPage"][0]{\n    heroEyebrow,\n    heroSticker,\n    heroHeadline,\n    heroIntro,\n    heroNote,\n    form {\n      stepLabel,\n      step1Title,\n      nameLabel,\n      emailLabel,\n      phoneLabel,\n      linkedinLabel,\n      step2Title,\n      companyLabel,\n      websiteLabel,\n      contactNameLabel,\n      contactRoleLabel,\n      contactEmailLabel,\n      contactPhoneLabel,\n      contactLinkedinLabel,\n      step3Title,\n      spokeQuestion,\n      spokeYesLabel,\n      spokeNoLabel,\n      mentionQuestion,\n      mentionYesLabel,\n      mentionNoLabel,\n      notesLabel,\n      agreeLabel,\n      backLabel,\n      nextLabel,\n      submitLabel,\n      submittingLabel,\n      requiredError,\n      invalidEmailError,\n      pickOneError,\n      agreeError,\n      submitError,\n      throttledError\n    },\n    howItWorksHeadline,\n    howItWorksSteps[] { title, description, tag },\n    earningsHeadline,\n    earningsFigure,\n    earningsBody,\n    earningsFootnote,\n    eligibilityHeadline,\n    eligibilityFigure,\n    eligibilityBody,\n    termsHeadline,\n    terms,\n    faqHeadline,\n    faqItems[] { question, answer },\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n    ctaContact,\n    thankYouSticker,\n    thankYouHeadline,\n    thankYouBody,\n    thankYouCompanyFallback,\n    thankYouNote,\n    anotherHeadline,\n    anotherBody,\n    anotherButton { label, href, openInNewTab },\n    callHeadline,\n    callBody,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} },\n    thankYouSeo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': REFERRAL_PAGE_QUERY_RESULT;
     '\n  *[_type == "linksPage"][0]{\n    cta { label, href, openInNewTab },\n\n    feedTiles[] {\n      _key,\n      image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n      href\n    },\n\n    footerLinks[] { label, href, openInNewTab },\n    footerNote,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': LINKS_PAGE_QUERY_RESULT;
     '\n  *[_type == "servicesPage"][0]{\n    hero { badge, headline, intro, cta { label, href, openInNewTab }, sticker },\n    heroSecondaryCta { label, href, openInNewTab },\n    categories[] {\n      name,\n      headline,\n      intro,\n      layout,\n      featureSticker,\n      items[] { title, description, tag }\n    },\n    auditHeadline,\n    auditBody,\n    auditButton { label, href, openInNewTab },\n    quoteEyebrow,\n    quoteHeadline,\n    quoteIntro,\n    quoteGoalsLabel,\n    quoteGoals,\n    quoteServicesLabel,\n    quoteServiceGroups[] { title, options },\n    quoteMessagePlaceholder,\n    quoteButtonLabel,\n    quoteNote,\n    quoteSuccessSticker,\n    quoteSuccessText,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': SERVICES_PAGE_QUERY_RESULT;
     '\n  *[_type == "promptLibraryPage"][0]{\n    heroBadge,\n    heroStickerA,\n    heroStickerB,\n    heroHeadline,\n    heroIntro,\n    heroCta { label, href, openInNewTab },\n    heroBadges,\n\n    whyLabel,\n    whyHeadline,\n    whyBody,\n\n    aiLabel,\n    aiHeadline,\n    aiIntro,\n    aiPlatforms[] { title, description, tag },\n\n    warningHeadline,\n    warningBody,\n\n    categories[] {\n      name,\n      tagline,\n      prompts[] {\n        title,\n        bestTool,\n        useCase,\n        promptText,\n        tip\n      }\n    },\n\n    ctaLabel,\n    ctaHeadline,\n    ctaBody,\n    ctaButton { label, href, openInNewTab },\n\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': PROMPT_LIBRARY_PAGE_QUERY_RESULT;
@@ -2288,7 +2500,7 @@ declare module "@sanity/client" {
     '\n  *[_type == "post" && slug.current == $slug][0]{\n    _id,\n    _updatedAt,\n    title,\n    "slug": slug.current,\n    dek,\n    publishedAt,\n    "readTime": coalesce(\n      readTime,\n      math::max([1, round(length(pt::text(body)) / 5 / 220)])\n    ),\n    heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n    category-> { _id, title, "slug": slug.current },\n    author-> {\n  _id,\n  name,\n  role,\n  initials,\n  photo {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  bio,\n  funFact\n},\n    body[]{\n      ...,\n      _type == "figure" => { ..., "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions }\n    },\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} },\n    "related": select(\n      count(related) > 0 => related[]-> {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n},\n      *[_type == "post" && slug.current != $slug && category._ref == ^.category._ref]\n        | order(publishedAt desc)[0...3] {\n  _id,\n  title,\n  "slug": slug.current,\n  dek,\n  publishedAt,\n  "readTime": coalesce(\n    readTime,\n    math::max([1, round(length(pt::text(body)) / 5 / 220)])\n  ),\n  heroImage {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n},\n  category-> { _id, title, "slug": slug.current }\n}\n    )\n  }\n': POST_QUERY_RESULT;
     '\n  *[_type == "servicePage" && defined(slug.current)]{ "slug": slug.current, "updatedAt": _updatedAt }\n': SERVICE_SLUGS_QUERY_RESULT;
     '\n  *[_type == "servicePage" && slug.current == $slug][0]{\n    _id,\n    category,\n    "slug": slug.current,\n    heroHeadline,\n    heroSub,\n    problemHeadline,\n    problemBody,\n    offerings[] { title, description, tag },\n    differently,\n    testimonial,\n    faq[] { question, answer },\n    quoteHeadline,\n    serviceScope,\n    serviceCheckboxes,\n    talkHeadline,\n    talkBody,\n    seo { title, description, noIndex, image {\n  ...,\n  "lqip": asset->metadata.lqip,\n  "dimensions": asset->metadata.dimensions\n} }\n  }\n': SERVICE_PAGE_QUERY_RESULT;
-    '{\n  "settings": *[_type == "siteSettings"][0]{\n    title,\n    contactEmail,\n    socialLinks[] { platform, href },\n    defaultSeo { title, description },\n    aiDiscovery { summary, pagesHeading, servicesHeading, postsHeading, faqHeading }\n  },\n  "pages": *[_type in [\n    "homePage", "aboutPage", "servicesPage", "blogIndexPage", "faqPage",\n    "freeAuditPage", "newsletterPage", "promptLibraryPage"\n  ] && seo.noIndex != true]{\n    _type,\n    "title": seo.title,\n    "description": seo.description\n  },\n  "services": *[_type == "servicePage" && defined(slug.current) && seo.noIndex != true]\n    | order(category asc){\n      category,\n      "slug": slug.current,\n      heroSub,\n      "description": seo.description,\n      offerings[] { title }\n    },\n  "posts": *[_type == "post" && defined(slug.current) && count(body) > 0 && seo.noIndex != true]\n    | order(publishedAt desc){\n      title,\n      "slug": slug.current,\n      dek,\n      publishedAt,\n      _updatedAt,\n      "author": author->name,\n      "category": category->title\n    },\n  "faqs": [\n    ...*[_type == "homePage"][0].faqItems[] { question, answer },\n    ...(*[_type == "faqGroup"] | order(order asc, title asc))[].items[] { question, answer }\n  ]\n}': DISCOVERY_QUERY_RESULT;
+    '{\n  "settings": *[_type == "siteSettings"][0]{\n    title,\n    contactEmail,\n    socialLinks[] { platform, href },\n    defaultSeo { title, description },\n    aiDiscovery { summary, pagesHeading, servicesHeading, postsHeading, faqHeading }\n  },\n  "pages": *[_type in [\n    "homePage", "aboutPage", "servicesPage", "blogIndexPage", "faqPage",\n    "freeAuditPage", "newsletterPage", "promptLibraryPage", "referralPage"\n  ] && seo.noIndex != true]{\n    _type,\n    "title": seo.title,\n    "description": seo.description\n  },\n  "services": *[_type == "servicePage" && defined(slug.current) && seo.noIndex != true]\n    | order(category asc){\n      category,\n      "slug": slug.current,\n      heroSub,\n      "description": seo.description,\n      offerings[] { title }\n    },\n  "posts": *[_type == "post" && defined(slug.current) && count(body) > 0 && seo.noIndex != true]\n    | order(publishedAt desc){\n      title,\n      "slug": slug.current,\n      dek,\n      publishedAt,\n      _updatedAt,\n      "author": author->name,\n      "category": category->title\n    },\n  "faqs": [\n    ...*[_type == "homePage"][0].faqItems[] { question, answer },\n    ...(*[_type == "faqGroup"] | order(order asc, title asc))[].items[] { question, answer }\n  ]\n}': DISCOVERY_QUERY_RESULT;
     '{\n  "services": *[_type == "servicePage" && defined(slug.current) && seo.noIndex != true]\n    | order(category asc){\n      category,\n      "slug": slug.current,\n      heroSub,\n      problemHeadline,\n      problemBody,\n      offerings[] { title, description, tag },\n      differently,\n      faq[] { question, answer }\n    },\n  "posts": *[_type == "post" && defined(slug.current) && count(body) > 0 && seo.noIndex != true]\n    | order(publishedAt desc){\n      title,\n      "slug": slug.current,\n      dek,\n      publishedAt,\n      "author": author->name,\n      body\n    }\n}': LLMS_FULL_QUERY_RESULT;
     '\n  *[_type == "legalDoc" && defined(slug.current)] | order(order asc){ "slug": slug.current, "updatedAt": _updatedAt }\n': LEGAL_SLUGS_QUERY_RESULT;
     '\n  *[_type == "legalDoc" && defined(slug.current)] | order(order asc){\n    _id,\n    title,\n    "slug": slug.current,\n    label,\n    intro,\n    updatedAt\n  }\n': LEGAL_DOCS_QUERY_RESULT;

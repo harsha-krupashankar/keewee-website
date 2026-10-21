@@ -266,6 +266,83 @@ export const NOT_FOUND_PAGE_QUERY = defineQuery(/* groq */ `
   }
 `);
 
+// --- Referral page ------------------------------------------------------
+
+/** Backs both `/referral` and `/referral/thank-you`. */
+export const REFERRAL_PAGE_QUERY = defineQuery(/* groq */ `
+  *[_type == "referralPage"][0]{
+    heroEyebrow,
+    heroSticker,
+    heroHeadline,
+    heroIntro,
+    heroNote,
+    form {
+      stepLabel,
+      step1Title,
+      nameLabel,
+      emailLabel,
+      phoneLabel,
+      linkedinLabel,
+      step2Title,
+      companyLabel,
+      websiteLabel,
+      contactNameLabel,
+      contactRoleLabel,
+      contactEmailLabel,
+      contactPhoneLabel,
+      contactLinkedinLabel,
+      step3Title,
+      spokeQuestion,
+      spokeYesLabel,
+      spokeNoLabel,
+      mentionQuestion,
+      mentionYesLabel,
+      mentionNoLabel,
+      notesLabel,
+      agreeLabel,
+      backLabel,
+      nextLabel,
+      submitLabel,
+      submittingLabel,
+      requiredError,
+      invalidEmailError,
+      pickOneError,
+      agreeError,
+      submitError,
+      throttledError
+    },
+    howItWorksHeadline,
+    howItWorksSteps[] ${CARD},
+    earningsHeadline,
+    earningsFigure,
+    earningsBody,
+    earningsFootnote,
+    eligibilityHeadline,
+    eligibilityFigure,
+    eligibilityBody,
+    termsHeadline,
+    terms,
+    faqHeadline,
+    faqItems[] ${FAQ_ITEM},
+    ctaHeadline,
+    ctaBody,
+    ctaButton ${LINK},
+    ctaContact,
+    thankYouSticker,
+    thankYouHeadline,
+    thankYouBody,
+    thankYouCompanyFallback,
+    thankYouNote,
+    anotherHeadline,
+    anotherBody,
+    anotherButton ${LINK},
+    callHeadline,
+    callBody,
+    seo ${SEO},
+    thankYouSeo ${SEO}
+  }
+`);
+
 // --- Links page -----------------------------------------------------------
 
 export const LINKS_PAGE_QUERY = defineQuery(/* groq */ `
@@ -468,7 +545,7 @@ export const DISCOVERY_QUERY = defineQuery(/* groq */ `{
   },
   "pages": *[_type in [
     "homePage", "aboutPage", "servicesPage", "blogIndexPage", "faqPage",
-    "freeAuditPage", "newsletterPage", "promptLibraryPage"
+    "freeAuditPage", "newsletterPage", "promptLibraryPage", "referralPage"
   ] && seo.noIndex != true]{
     _type,
     "title": seo.title,

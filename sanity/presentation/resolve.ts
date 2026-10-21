@@ -20,6 +20,8 @@ export const resolve: PresentationPluginOptions["resolve"] = {
     { route: "/newsletter", filter: `_type == "newsletterPage"` },
     { route: "/prompt-library", filter: `_type == "promptLibraryPage"` },
     { route: "/links", filter: `_type == "linksPage"` },
+    { route: "/referral", filter: `_type == "referralPage"` },
+    { route: "/referral/thank-you", filter: `_type == "referralPage"` },
     // Any unmatched path renders the 404; this one is just a stable preview URL.
     { route: "/__not-found-preview", filter: `_type == "notFoundPage"` },
     {
@@ -74,6 +76,15 @@ export const resolve: PresentationPluginOptions["resolve"] = {
     linksPage: defineLocations({
       select: {},
       resolve: () => ({ locations: [{ title: "Links", href: "/links" }] }),
+    }),
+    referralPage: defineLocations({
+      select: {},
+      resolve: () => ({
+        locations: [
+          { title: "Referral program", href: "/referral" },
+          { title: "Referral thank-you", href: "/referral/thank-you" },
+        ],
+      }),
     }),
     notFoundPage: defineLocations({
       select: {},

@@ -131,6 +131,14 @@ export async function getNotFoundPage(opts: FetchOptions) {
   });
 }
 
+export async function getReferralPage(opts: FetchOptions) {
+  "use cache";
+  return run<T.ReferralPage>(opts, {
+    query: Q.REFERRAL_PAGE_QUERY,
+    tags: [TAG.referralPage],
+  });
+}
+
 // --- Blog -----------------------------------------------------------------
 
 export async function getBlogIndex(opts: FetchOptions) {
@@ -204,6 +212,7 @@ export async function getDiscovery() {
         TAG.freeAuditPage,
         TAG.newsletterPage,
         TAG.promptLibraryPage,
+        TAG.referralPage,
         TAG.servicePage,
         TAG.post,
         TAG.person,

@@ -21,6 +21,8 @@
     "open-calendly-new-tab:dry": "tsx --env-file=.env.local scripts/local/open-calendly-new-tab.ts --dry",
     "fix-ids": "tsx --env-file=.env.local scripts/fix-dotted-ids.ts",
     "fix-ids:dry": "tsx --env-file=.env.local scripts/fix-dotted-ids.ts --dry",
+    "seed-referral": "tsx --env-file=.env.local scripts/seed-referral-page.ts",
+    "seed-referral:dry": "tsx scripts/seed-referral-page.ts --dry",
     "revert-seed": "tsx --env-file=.env.local scripts/local/revert-seed.ts",
     "revert-seed:dry": "tsx --env-file=.env.local scripts/local/revert-seed.ts --dry",
     "blog-label": "tsx --env-file=.env.local scripts/local/blog-label-to-blogs.ts",

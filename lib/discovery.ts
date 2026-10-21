@@ -20,6 +20,7 @@ export const PAGE_PATHS: Record<DiscoveryPageType, string> = {
   freeAuditPage: "/free-audit",
   newsletterPage: "/newsletter",
   promptLibraryPage: "/prompt-library",
+  referralPage: "/referral",
 };
 
 /** Order the pages are listed in `/llms.txt` — most important first. */
