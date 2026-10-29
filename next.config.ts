@@ -32,18 +32,17 @@ const nextConfig: NextConfig = {
    * anything a crawler still has indexed working until the new paths have been
    * picked up.
    *
-   * Deliberately `permanent: false` (307, not 308): a 308 is cached by the
-   * browser indefinitely and is painful to walk back if the path changes again.
-   * The cost is that a 307 passes no ranking signal to the new URL, so these
-   * should not live here forever — three months is the window. When removing
-   * them, check Search Console first: if `/blog/*` still draws real traffic,
-   * switch to `permanent: true` for a while rather than dropping straight to a
-   * 404.
+   * `permanent: true` (308). These started as 307s, but Search Console showed
+   * Google keeping the old `/blog/*` URL as canonical over the `/blogs/*` page
+   * it redirects to, since a temporary redirect tells it the old path is the
+   * real one. Before removing these, check Search Console: if `/blog/*` still
+   * draws real traffic, keep them a while longer rather than dropping straight
+   * to a 404.
    */
   async redirects() {
     return [
-      { source: "/blog", destination: "/blogs", permanent: false },
-      { source: "/blog/:slug", destination: "/blogs/:slug", permanent: false },
+      { source: "/blog", destination: "/blogs", permanent: true },
+      { source: "/blog/:slug", destination: "/blogs/:slug", permanent: true },
     ];
   },
 

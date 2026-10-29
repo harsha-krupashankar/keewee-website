@@ -21,7 +21,7 @@ export default function LinksFooter({
         {links && links.length > 0 && (
           <nav className="flex items-center gap-3.5">
             {links.map((link, i) => (
-              <span key={link.href + link.label} className="flex items-center gap-3.5">
+              <span key={`${link.label}-${i}`} className="flex items-center gap-3.5">
                 {i > 0 && (
                   <span aria-hidden className="size-1 rounded-full bg-faint" />
                 )}
