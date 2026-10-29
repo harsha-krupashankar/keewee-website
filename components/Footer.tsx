@@ -63,7 +63,7 @@ export default function Footer({ settings }: { settings: SiteSettings | null }) 
                 <div className="flex flex-col gap-2 font-medium text-body">
                   {group.links?.map((item) => (
                     <Link
-                      key={`${item.href}-${item.label}`}
+                      key={item.label}
                       href={safeHref(item.href)}
                       className="hover:text-green"
                     >

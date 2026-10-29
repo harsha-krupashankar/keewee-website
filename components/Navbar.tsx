@@ -126,7 +126,7 @@ export default function Navbar({
                 />
               ) : (
                 <NavLink
-                  key={`${item.href}-${item.label}`}
+                  key={`link-${item.label}`}
                   link={item}
                   isActive={item.href === pathname}
                 />
@@ -191,7 +191,7 @@ export default function Navbar({
                     <div className="flex flex-col">
                       {item.links.map((link) => (
                         <MobileNavLink
-                          key={`${link.href}-${link.label}`}
+                          key={`mobile-link-${link.label}`}
                           link={link}
                           isActive={link.href === pathname}
                           onNavigate={() => setMobileOpen(false)}
@@ -201,7 +201,7 @@ export default function Navbar({
                   </div>
                 ) : (
                   <MobileNavLink
-                    key={`${item.href}-${item.label}`}
+                    key={`mobile-link-${item.label}`}
                     link={item}
                     isActive={item.href === pathname}
                     onNavigate={() => setMobileOpen(false)}
@@ -341,7 +341,7 @@ function NavDropdown({
           <div className="min-w-[228px] rounded-xl border border-border bg-white p-2 shadow-[0_14px_36px_rgba(28,27,25,0.12)]">
             {links.map((link) => (
               <a
-                key={`${link.href}-${link.label}`}
+                key={`menu-link-${link.label}`}
                 href={safeHref(link.href)}
                 target={link.openInNewTab ? "_blank" : undefined}
                 rel={link.openInNewTab ? "noopener noreferrer" : undefined}
